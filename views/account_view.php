@@ -1,10 +1,10 @@
 <?php
     $lang = $_COOKIE['lang'];
 ?>
-<ul>
-    <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/history_list">documents history</a></li>
-    <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/documents_to_download">download documents</a></li>
-    <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/for_signature">documents for signature</a></li>
+<ul id="docsList">
+    <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/history_list"><?php echo $$lang['history.acc'];?></a></li>
+    <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/documents_to_download"><?php echo $$lang['download.acc'];?></a></li>
+    <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/for_signature"><?php echo $$lang['sign.acc'];?></a></li>
 </ul>
 
 <?php
@@ -14,8 +14,7 @@
         header("Location: http://localhost/System_of_electronic_document_circulation/index.php/");
     }
     else{
-       echo '<p>your acc</p>';
-       echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/logOut">'.$$lang['out.acc'].'</a>';
+       echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/logOut" id="out">'.$$lang['out.acc'].'</a>';
     }
 
 ?>
@@ -24,3 +23,11 @@
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
 
+<style>
+    .docsList{
+        
+    }
+    #out{
+        font-size: 30px;;
+    }
+</style>

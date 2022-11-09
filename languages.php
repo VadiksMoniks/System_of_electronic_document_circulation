@@ -8,12 +8,15 @@
         'account.menu'=>'Account',
         'list.docs'=>'Document`s list',
         'example.doc'=>'Show Example',
-        //'doc1.docs'=>'Accrual of social scholarship',
+        'doc1.docs'=>'Accrual of social scholarship',
         //here all the rest docs must be!!!!
         'create.docs'=>'Create',
         'goSignIn.reg'=>'Allready have an account?',
         'signInLink'=>'Sign in',
         //'ur.acc'=>'Your account',
+        'history.acc'=>'Documents history',
+        'download.acc'=>'Download',
+        'sign.acc'=>'Sign the document',
         'out.acc'=>'Log out'
     );
 
@@ -25,12 +28,15 @@
         'account.menu'=>'Акаунт',
         'list.docs'=>'Список документів',
         'example.doc'=>'Переглянути приклад',
-        //'doc1.docs'=>'Accrual of social scholarship',
+        'doc1.docs'=>'Accrual of social scholarship',
         //here all the rest docs must be!!!!
         'create.docs'=>'Створити',
         'goSignIn.reg'=>'Вже є маєте акаунт?',
         'signInLink'=>'Увійти',
         //'ur.acc'=>'Ваш акаунт',
+        'history.acc'=>'Історія документів',
+        'download.acc'=>'Завантажити',
+        'sign.acc'=>'Підписати документи',
         'out.acc'=>'Вийти'
     );
 

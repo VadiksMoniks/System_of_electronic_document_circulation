@@ -8,13 +8,10 @@
             $this->model = new Model_Documents();
         }
 
-        function action_document_list(){
+        function action_document(){
             $this->view->generate('document_view.php', 'template_view.php');
         }
 
-        function action_getExample(){
-            echo $this->model->getExample($_POST['example']);
-        }
 
         function action_generate(){
             echo $this->model->generateDoc($_POST);

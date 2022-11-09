@@ -29,32 +29,10 @@
 
 <p><?php echo $$lang['list.docs'];?></p>
 <ul>
-    <li><button class="example" id="1"><?php echo $$lang['example.doc'];?></button><?php echo $$lang['doc1.docs'];?><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=a"><?php echo $$lang['create.docs'];?></a></li>
+    <li><?php echo $$lang['doc1.docs'];?><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=a"><?php echo $$lang['create.docs'];?></a></li>
 
    
 </ul>
 <p id="example_show"></p>
 <script>
-    $(document).ready(function(){
-        $(document).on('click','.example', function(){
-            var example = $(this).attr('id');
-            console.log(example);
-
-            $.ajax({
-                type:'POST',
-                url:'http://localhost/System_of_electronic_document_circulation/index.php/documents/getExample',
-                data:{example:example},
-                
-                success:function(data){
-                        $('#example_show').fadeIn();
-                        $('#example_show').html(data);
-                        //console.log($('#answer').val());
-                        //if(data == "OK"){
-                         //   location.reload();
-                        //}
-                }
-            });
-        });
-    });
-        
 </script>

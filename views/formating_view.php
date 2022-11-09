@@ -4,7 +4,7 @@
   crossorigin="anonymous"></script>
 
 <form enctype="multipart/form-data">
-    <input type="text" placeholder='initials' id="initials" autocomplete="<?php $_COOKIE['username'];?>"><br/>
+    <input type="text" placeholder='initials' id="initials"><br/>
     <input type="text" placeholder='group' id="group"><br/>
     <input type="text" placeholder="recipient" id="recipient"><br/>
     <input type="file" id="signature"><br/>
@@ -29,8 +29,8 @@
     imagettftext($example, 15, 0, 50, 140, imagecolorallocate($example,0,0,0), 'Lato-Black.ttf', $textarr[1]);
     imagettftext($example, 15, 0, 50, 180, imagecolorallocate($example,0,0,0), 'Lato-Black.ttf', $textarr[2]);
              imagepng($example, 'ticket.png');
-             imagedestroy($example);
-            echo '<img src="http://localhost/System_of_electronic_document_circulation/ticket.png">';;*/
+             imagedestroy($example);*/
+            echo '<img src="http://localhost/System_of_electronic_document_circulation/ticket.png">';
 ?>
 
 <script>

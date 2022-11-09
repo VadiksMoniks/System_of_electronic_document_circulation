@@ -3,7 +3,6 @@
     if(empty($_COOKIE['lang'])){
         setcookie('lang', 'en',strtotime( '+30 days' ) ,'/');
     }
-    
      $lang = $_COOKIE['lang'];
 ?>
 <script
@@ -15,33 +14,132 @@
 <html>
     <head>
         <tittle></tittle>
+        <style>
+            body{
+                margin: 0;
+                overflow-x: hidden;
+                height: 100%;
+            }
+            ul{
+                list-style-type: none;
+            }
+            .list{
+                width: 100%;
+                margin-left: 20%;
+                display: inline-flex;
+            }
+            .menuP{
+                margin-left: 100px;
+                font-size: 23px;
+            }
+            li{
+                
+            }
+
+            a{
+                font-size: 20px;
+                
+                text-decoration: none;
+                color: #000;
+            }
+            a:hover{
+                color: #F64C72;
+            }
+
+            #headerMenu{
+                min-width: 100%;
+                height: 90px;
+                background-color: #A8D0E6;
+                padding-top: 30px;
+                margin: 0;
+            }
+
+            #langs li{
+                margin-top: 5px;
+                
+            }
+            .lang{
+                width: 70px;
+            }
+
+            #logo{
+                margin-top: -10px;
+                margin-left: 100px;
+                margin-right: 50px;
+            }
+            #acc:hover #outBlock{
+                visibility: visible;
+
+            }
+            #langs #out{
+                margin-top: 100px;
+                font-size: 20px;
+             }
+
+            #langDiv{
+                margin-top: -15px;
+                width: 150px;
+                margin-left: 50px;
+                padding-left: 50px;
+            }
+
+            #content{
+                min-height: 100%;
+                padding: 50px;
+            }
+
+            #footer{
+                margin-left: 0;
+                margin-right: 0;
+                width: 100%;
+                height: 300px;
+                background-color: #07575B;
+                flex: 0 0 auto;
+            }
+        </style>
     </head>
     
     <body>
         <p id="result"></p>
         <!--<p>template view</p>-->
-        <ul>
-            <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/main"><?php echo $$lang['main.menu'];?></a></li>
-            <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/document_list"><?php echo $$lang['documents.menu'];?></a></li>
-            <li><a href=""><?php echo $$lang['nANDu.menu'];?></a></li>
+        <div id="headerMenu">
+            <ul class="list">
+                <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/main" class="menuP"><?php echo $$lang['main.menu'];?></a></li>
+                <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/document" class="menuP"><?php echo $$lang['documents.menu'];?></a></li>
+                <li ><a href="https://web.kpi.kharkov.ua/infiz/uk/home/" class="menuP"><img src="http://localhost/System_of_electronic_document_circulation/img/logo.png" id="logo"></a></li>
+                <li ><a href="" class="menuP"><?php echo $$lang['nANDu.menu'];?></a></li>
+                    <?php
+                        if(!empty($_COOKIE['username'])){
+                            echo '<li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/account" class="menuP">'.$$lang['account.menu'].'</a></li>';
+                        }
+                        else{
+                            echo '<li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/registre" class="menuP" id="acc">'.$$lang['reg.menu'].'</a></li>';
+                        }
+                    ?>
+                        
+                <li>
+                    <div id="langDiv">
+                        <ul id="langs">
+                            <li><button class="lang" id="ua">UA</button></li>
+                            <li><button class="lang" id="en">EN</button></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div id="content">
         <?php
-            if(!empty($_COOKIE['username'])){
-                echo '<li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/account">'.$$lang['account.menu'].'</a></li>';
-            }
-            else{
-                echo '<li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/registre">'.$$lang['reg.menu'].'</a></li>';
-            }
+        
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/'.basename($_SERVER['PATH_INFO']).'_view.php';
         ?>
-            <li>
-                <ul>
-                    <li><button class="lang" id="ua">UA</button></li>
-                    <li><button class="lang" id="en">EN</button></li>
-                </ul>
-            </li>
-    </ul>
+        </div>
+        <div id="footer"></div>
     </body>
 <script>
     $(document).ready(function(){
+
+
+
         $(document).on('click', '.lang', function(event){
             event.preventDefault();
             

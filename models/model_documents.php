@@ -2,20 +2,6 @@
 
     class Model_Documents extends Model{
 
-        function getExample($example_num){
-            $docs = array('a', 'b', 'c');
-            $file=null;
-            if(!empty($example_num)){
-
-                $file = file_get_contents('E:/xampp/htdocs/System_of_electronic_document_circulation/document_examples/'.$docs[$example_num-1].'.txt');
-
-            } 
-            else{
-                return "No such file";
-            }
-            return $file;
-        }
-
   /*      function downloadBlank($name){
             $file = 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.$name.'.pdf';
             if(file_exists($file)){

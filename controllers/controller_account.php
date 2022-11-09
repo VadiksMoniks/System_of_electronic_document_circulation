@@ -68,7 +68,7 @@
             $this->view->generate('for_signature_view.php', 'template_view.php');
         }
 
-        function action_sign_page(){
+        function action_sign(){
             $this->view->generate('sign_view.php', 'template_view.php');
         }
 
