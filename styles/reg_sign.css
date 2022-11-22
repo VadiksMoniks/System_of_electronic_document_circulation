@@ -1,0 +1,67 @@
+#answer{
+    color: rgba(224, 12, 12, 0.877);
+    font-size: 25px;
+}
+
+#formDiv{
+    box-shadow: rgb(214, 42, 128) 0px 20px 30px -10px;
+    margin-left: 35%;
+    width: 600px;
+    height: 700px;
+    border-radius: 8px;
+    background-color: #2C3531;
+    vertical-align: middle;
+}
+
+form{
+    width: 400px;
+    height: 300px;
+    margin-left: 30%;
+    margin-top: 70px;
+}
+
+input{
+    width: 300px;
+    margin-left: -20px;
+    margin-bottom: 30px;
+    height: 50px;
+    border-radius: 3px;
+    font-size: 20px;
+    outline:none;
+    border: none;
+}
+
+#check{
+    width: 30px;
+}
+
+#reg{
+    margin-left: 50px;
+    width: 150px;
+    height: 50px;
+    outline: none;
+    border: none;
+}
+
+#signin{
+    margin-left: 50px;
+    width: 150px;
+    height: 50px;
+    outline: none;
+    border: none;
+}
+
+#check,button:hover{
+    cursor: pointer;
+}
+
+.text, label{
+    margin-left: 30%;
+    padding-top: 50px;
+    color: #E3E2DF;
+    font-size: 25px;
+}
+
+a.text:hover{
+    color:#C3073F;
+}

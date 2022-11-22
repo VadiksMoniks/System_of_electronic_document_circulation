@@ -1,3 +1,4 @@
+
 <?php
 
     //session_start();
@@ -9,27 +10,36 @@
     $lang = $_COOKIE['lang'];
        // <input type="file" name="seal" id="seal">
 ?>
-
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="http://localhost/System_of_electronic_document_circulation/styles/reg_sign.css" rel="stylesheet" type="text/css" />
+        <tittle></tittle>
+    </head>
+    <body>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
+<div id="formDiv">
+    <p class="text"><?php  echo $$lang['goSignIn.reg'];  ?></p>
+    <a href='http://localhost/System_of_electronic_document_circulation/index.php/account/signIn' class="text"><?php  echo $$lang['signInLink'];?></a>
 
-<p><?php  echo $$lang['goSignIn.reg'];  ?></p><a href='http://localhost/System_of_electronic_document_circulation/index.php/account/signIn'><?php  echo $$lang['signInLink'];?></a>
-<form id="form">
-    <input type="text" placeholder="e-mail" id="mail"><br>
-    <input type="text" placeholder="username" id="username"><br>
-    <input type="password" placeholder="password" id="password"><br>
-    <p>Your role:</p>
-    <input type="text" placeholder="status" id="status"><br>
-
-    <button value="reg" id="reg">Registrate</button><br>
-    <p id="answer"></p>
-</form>
-
+    <form id="form">
+        <input type="text" placeholder="e-mail" id="mail"><br>
+        <input type="text" placeholder="username" id="username"><br>
+        <input type="password" placeholder="password" id="password"><br>
+        <label for="check" >Keep me signed in</label>
+        <input type="checkbox" id="check"></br>
+        <button value="reg" id="reg">Registrate</button><br>
+        <p id="answer"></p>
+        
+    </form>
+</div>
+</body>
+</html>
 <script>
  $(document).ready(function(){
-    //$('#reg').prop('disabled', true);
     $(document).on('click', '#reg', function(event){
         event.preventDefault()
         //function uploadfiles(){
@@ -37,10 +47,13 @@
             var mail = $('#mail').val();
             var username = $('#username').val();
             var password = $('#password').val();
-            console.log(mail);
-            console.log(username);
-            console.log(password);
-            var status = $('#status').val();
+            var keepSigned = '';
+            if($('#check').is(":checked")){
+                   keepSigned = 'keep';
+                }
+            else{
+                keepSigned = 'no';
+                }
             /*if($('#stud').val()=="on"){
                  = 'student';
             }
@@ -64,7 +77,7 @@
             $.ajax({
                 type:'POST',
                 url:'http://localhost/System_of_electronic_document_circulation/index.php/account/regMe',
-                data:{mail:mail, username:username, password:password, status:status},
+                data:{mail:mail, username:username, password:password, keepSigned:keepSigned},
                 //cache: false,
                 //contentType: false,
                 //processData: false,

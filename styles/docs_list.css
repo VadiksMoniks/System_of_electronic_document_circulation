@@ -1,0 +1,21 @@
+p, li{
+    font-size: 20px;
+}
+
+#h{
+    align: center;
+    font-size: 30px;
+}
+.link{
+    margin-left: 20px;
+}
+
+#doclist{
+    list-style: disc;
+}
+
+#docs{
+    width: 30%;
+    float: left;
+
+}

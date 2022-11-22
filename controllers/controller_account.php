@@ -17,7 +17,7 @@
         }
 
         function action_login(){
-            echo $this->model->signIn($_POST);
+            echo $this->model->signIn($_POST, $_COOKIE['lang']);
             
         }
 
@@ -29,7 +29,7 @@
 
         function action_regMe(){
              //echo $_POST['username'];
-             echo $this->model->registre($_POST);
+             echo $this->model->registre($_POST, $_COOKIE['lang']);
 
             
         }
@@ -49,15 +49,15 @@
         }
 
         function action_docList(){
-            echo $this->model->dwnlist($_POST['user']);
+            echo $this->model->dwnlist($_POST['user'],$_COOKIE['lang']);
         }
 
         function action_deleteDoc(){
-            echo $this->model->deleteDocument($_POST['docName']);
+            echo $this->model->deleteDocument($_POST['docName'],$_COOKIE['lang']);
         }
 
         function action_history(){
-            echo $this->model->historyList($_POST['user']);
+            echo $this->model->historyList($_POST['user'],$_COOKIE['lang']);
         }
 
         function action_history_list(){
@@ -73,11 +73,11 @@
         }
 
         function action_docs_for_sign(){
-            echo $this->model->signList($_POST['user']);
+            echo $this->model->signList($_POST['user'],$_COOKIE['lang']);
         }
 
         function action_show(){
-            echo $this->model->show_doc($_POST['docName']);
+            echo $this->model->show_doc($_POST['docName'],$_COOKIE['lang']);
         }
 
         /*function action_sign_document(){
@@ -85,7 +85,7 @@
         }*/
 
         function action_signDoc(){
-            echo $this->model->sign_document($_POST['docName']);
+            echo $this->model->sign_document($_POST['docName'],$_COOKIE['lang']);
         }
 
         function action_logOut(){

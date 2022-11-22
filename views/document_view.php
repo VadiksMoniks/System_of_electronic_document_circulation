@@ -22,17 +22,29 @@
     </li>*/
 
 ?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <tittle></tittle>
+        <link href="http://localhost/System_of_electronic_document_circulation/styles/docs_list.css" rel="stylesheet" type="text/css" />
+    </head>
+    
+    <body>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
 
-<p><?php echo $$lang['list.docs'];?></p>
-<ul>
-    <li><?php echo $$lang['doc1.docs'];?><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=a"><?php echo $$lang['create.docs'];?></a></li>
+    <div id="docs">
+        <p id="h"><?php echo $$lang['list.docs'];?></p>
+        <ul id="doclist">
+            <li><?php echo $$lang['doc1.docs'];?><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=a" class="link"><?php echo $$lang['create.docs'];?></a></li>
 
-   
-</ul>
-<p id="example_show"></p>
+        
+        </ul>
+    </div>
+
+</body>
+</html>
 <script>
 </script>

@@ -1,4 +1,5 @@
 <?php
+    require 'E:/xampp/htdocs/System_of_electronic_document_circulation/vendor/autoload.php';
     include 'languages.php';
     if(empty($_COOKIE['lang'])){
         setcookie('lang', 'en',strtotime( '+30 days' ) ,'/');
@@ -25,7 +26,7 @@
             }
             .list{
                 width: 100%;
-                margin-left: 20%;
+                margin-left: 15%;
                 display: inline-flex;
             }
             .menuP{
@@ -92,7 +93,7 @@
                 margin-left: 0;
                 margin-right: 0;
                 width: 100%;
-                height: 300px;
+                height: 200px;
                 background-color: #07575B;
                 flex: 0 0 auto;
             }
@@ -107,7 +108,7 @@
                 <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/main" class="menuP"><?php echo $$lang['main.menu'];?></a></li>
                 <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/document" class="menuP"><?php echo $$lang['documents.menu'];?></a></li>
                 <li ><a href="https://web.kpi.kharkov.ua/infiz/uk/home/" class="menuP"><img src="http://localhost/System_of_electronic_document_circulation/img/logo.png" id="logo"></a></li>
-                <li ><a href="" class="menuP"><?php echo $$lang['nANDu.menu'];?></a></li>
+                <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/newsANDupdates/newsANDupdates" class="menuP"><?php echo $$lang['nANDu.menu'];?></a></li>
                     <?php
                         if(!empty($_COOKIE['username'])){
                             echo '<li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/account" class="menuP">'.$$lang['account.menu'].'</a></li>';
@@ -129,7 +130,19 @@
         </div>
         <div id="content">
         <?php
-            
+        use \PhpOffice\PhpWord\PhpWord;
+           /* $phpWord = new \PhpOffice\PhpWord\PhpWord();
+
+            $section = $phpWord->addSection();
+            $section->addText(
+                '"Learn from yesterday, live for today, hope for tomorrow. '
+                    . 'The important thing is not to stop questioning." '
+                    . '(Albert Einstein)'
+            );
+            $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+            $objWriter->save('E:/xampp/htdocs/System_of_electronic_document_circulation/helloWorld.docx');*/
+
+
             if(!isset($_SERVER['PATH_INFO'])){
                 include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/main_view.php';
             }

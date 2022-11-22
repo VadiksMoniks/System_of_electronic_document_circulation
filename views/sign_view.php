@@ -1,11 +1,19 @@
-<p id="result"></p>
-<div id="answer">
+<!DOCTYPE html>
+<html>
+    <head>
+        <tittle></tittle>
+    </head>
+    
+<body>
 
-</div>
-<form enctype="multipart/form-data">
-    <input type="file" id="signature"><br/>
-    <button id="sign">sign</button>
-</form>
+    <form enctype="multipart/form-data">
+        <input type="file" id="signature"><br/>
+        <button id="sign">sign</button>
+    </form>
+    <div id="answer">
+
+    </div>
+</body></html>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
@@ -40,7 +48,7 @@
 
                 success:function(data){
                     //$('#dwnld').attr('href', 'http://localhost/System_of_electronic_document_circulation/index.php/documents/download?name='+data); 
-                    $('#result').html(data);
+                    $('#answer').html(data);
                 }
             });
         });

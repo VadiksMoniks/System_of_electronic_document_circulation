@@ -1,5 +1,5 @@
 <?php
-
+    include 'languages.php';
     class Model_Documents extends Model{
 
   /*      function downloadBlank($name){
@@ -24,36 +24,41 @@
             }
         }*/
 
-        function generateDoc($data){
+        function generateDoc($data, $lang){
             //
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             $data['initials']=trim($data['initials']);
             $data['group']=trim($data['group']);
             $data['recipient']=trim($data['recipient']);
-
+            $data['text'] = trim($data['text']);
             if($data['initials']==""){
-                return 'You must fill all the fields';
+                return $$lang['docError1'];
             }
             else if($data['group']==""){
-                return 'You must fill all the fields';
+                return $$lang['docError1'];
             }
 
             else if($data['recipient']==""){
-                return 'You must fill all the fields';
+                return $$lang['docError1'];
             }
 
             else if($data['initials']===$data['recipient']){
-                return "You can't send documents to yourself";
+                return $$lang['docError2'];
+            }
+
+            else if($data['text']==''){
+                return $$lang['docError3'];
             }
 
             else if (empty($_FILES['file']['name'])){
-                return "You must add your signature";
+                return $$lang['docError4'];
             }
             
 
             $filetype = new SplFileInfo($_FILES['file']['name']);
             
             if($filetype->getExtension() != 'png'){
-                return 'Filetype must be only PNG';
+                return $$lang['docError5'];
             }
 
             else{
@@ -67,10 +72,12 @@
             $recipientMailSQL->execute([$data['recipient']]);
             $recipientMail=$recipientMailSQL->fetch();
             if($recipientMail==null){
-                return "There is no such user who you are trying to send this document ";
+                return $$lang['wrongRecipient'];
             }
 
             else{
+
+                
 
                 $example = imagecreatefrompng('http://localhost/System_of_electronic_document_circulation/document_examples/canvas.png');
                 $userSignature = imagecreatefrompng($removeSig);
@@ -80,12 +87,34 @@
                 $filetext=preg_replace('/ПІБ/', $data['initials'], $filetext);
                 $filetext=preg_replace('/ГРУПА/', $data['group'], $filetext);
                 $filetext=preg_replace('/КОГО/', $data['recipient'], $filetext);
+                $filetext=preg_replace('/ що я великий молодець і зробив цю курсову/', $data['text'], $filetext);
                 $textarr = explode(';',$filetext);
                 //fclose($handle);
-                imagettftext($example, 15, 0, 250, 100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[0]);
-                imagettftext($example, 15, 0, 50, 140, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[1]);
-                imagettftext($example, 15, 0, 50, 180, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[2]);
-                imagecopy($example, $userSignature, 350, 600, 0, 0 ,126, 100);
+                imagettftext($example, 15, 0, 450, 100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[0]);
+                imagettftext($example, 15, 0, 450, 140, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[1]);
+                imagettftext($example, 15, 0, 350, 180, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[2]);
+                imagettftext($example, 15, 0, 380, 300, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[3]);
+                imagettftext($example, 15, 0, 150, 350, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[4]);
+
+                $text = str_split($textarr[5], 50);
+                $x=150;
+                $y=380;
+                for($i=0; $i<count($text); $i++){
+                    if($i===0){
+                        imagettftext($example, 15, 0, $x, $y, imagecolorallocate($example,0,0,0), 'arial.ttf', $text[$i]);
+                    }
+                    else{
+                        imagettftext($example, 15, 0, $x, $y+($i*20), imagecolorallocate($example,0,0,0), 'arial.ttf', $text[$i]);
+                    }
+                    
+                }
+               // 
+                imagettftext($example, 15, 0, 200, 800, imagecolorallocate($example,0,0,0), 'arial.ttf', date('d m Y'));
+                imagettftext($example, 15, 0, 200, 850, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[6]);
+                imagettftext($example, 15, 0, 300, 800, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[7]);
+                imagettftext($example, 15, 0, 650, 850, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[8]);
+                imagettftext($example, 15, 0, 550, 1100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[9]);
+                imagecopy($example, $userSignature, 600, 700, 0, 0 ,126, 100);
                 $picName=$data['initials'].'_'.date("Ymd_His");
                 imagepng($example, $data['name'].'_'.$picName.'.png');
                 imagedestroy($example);
@@ -105,46 +134,45 @@
                 $sql = parent::connection()->prepare('INSERT INTO `docs` VALUES(?,?,?,?,?)');
                 $sql->execute([NULL, $_COOKIE['username'], $data['recipient'], $fName, 'unsigned']);
     
-                return "Your document was generated and sended to recipient to sign it";
+                return $$lang['docMsg'];
             }
 
         }
 
-        /*function sign_document($docName){
 
-            $filetype = new SplFileInfo($_FILES['file']['name']);
-            
-            if($filetype->getExtension() != 'png'){
-                return 'Filetype must be only PNG';
+        /*function downloadExample($docName){
+            $dir = 'E:/xampp/htdocs/System_of_electronic_document_circulation/document_examples';
+            $docName = $dir.$docName.'.txt';
+
+            if(file_exists($docName)){
+                //зробити пнг документу і перевести в пдф потім віддати користувачу
             }
-
             else{
-                $dir = 'E:/xampp/htdocs/System_of_electronic_document_circulation/';
-                $removeSig = $dir.basename($_FILES['file']['name']);
-                move_uploaded_file($_FILES['file']['tmp_name'], $removeSig);
+                return "such file doesn't exists";
             }
+        }*/
 
-            $example = imagecreatefrompng('http://localhost/System_of_electronic_document_circulation/document_examples/canvas.png');
-            $userSignature = imagecreatefrompng($removeSig);
 
-            imagecopy($example, $userSignature, 150, 600, 0, 0 ,126, 100);
-            $picName=$dir.$docName;
-            imagepng($example, $picName);
-            imagedestroy($example);
-            imagedestroy($userSignature);
 
-            $newFile = new Imagick();
-            $newFile->readImage($picName);
-            //$newFile->readImage();
-            $newFile->setFormat('pdf');
-            $fName = basename($picName, '.png').".".$newFile->getFormat();
-            $newFile->writeImage($fName);
-            unlink($removeSig);
-            unlink($picName);
 
-            $sql = parent::connection()->prepare('UPDATE `docs` SET `status`=?');
-            $sql->execute(['signed']);
-            return "Document was signed";
+       /* function recipientList(){
+            $recName = trim($_GET['recName']);
+            if($recName!=''){
+                $sql = parent::connection()->prepare('SELECT `mail` FROM `recipients` WHERE `mail` LIKE ?');
+                $sql->execute(['%' . $recName . '%']);
+                
+                $result = $sql->fetchAll();
+                if($result!=NULL){
+                    $output='<ul>';
+                    foreach($result as $name){
+                        $output.='<li style="font-size:15px;">'.$name->mail.'</li>';
+                    }
+                    return $output.'</ul>';
+                }
+                else{
+                    return 'No such user';
+                }
+            }
         }*/
 
     }
