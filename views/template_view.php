@@ -1,5 +1,4 @@
 <?php
-    require 'E:/xampp/htdocs/System_of_electronic_document_circulation/vendor/autoload.php';
     include 'languages.php';
     if(empty($_COOKIE['lang'])){
         setcookie('lang', 'en',strtotime( '+30 days' ) ,'/');
