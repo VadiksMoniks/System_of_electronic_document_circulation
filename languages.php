@@ -41,7 +41,8 @@
         'docError4'=>"You must add your signature",
         'docError5'=>'Filetype must be only PNG',
         'wrongRecipient'=>"There is no such user who you are trying to send this document",
-        'docMsg'=>"Your document was generated and sended to recipient to sign it"
+        'docMsg'=>"Your document was generated and sended to recipient to sign it",
+        'goHome'=>'Take me back home'
 
     );
 
@@ -86,7 +87,8 @@
         'docError4'=>"Ви маєте додати свій підпис",
         'docError5'=>'Тип файлу міє бути ТІЛЬКИ PNG',
         'wrongRecipient'=>"Користувача, якому ви намагаєтесь надіслати документ НЕ існує",
-        'docMsg'=>"Ваш документ було створено і надіслано отримувасу для підписання"
+        'docMsg'=>"Ваш документ було створено і надіслано отримувасу для підписання",
+        'goHome'=>'На головну'
     );
 
 ?>

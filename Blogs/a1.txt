@@ -1,1 +1,7 @@
-Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odit minima similique animi est modi, ut hic necessitatibus inventore quam, commodi suscipit, vitae sed iste quasi incidunt ducimus repudiandae facilis magnam?Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odit minima similique animi est modi, ut hic necessitatibus inventore quam, commodi suscipit, vitae sed iste quasi incidunt ducimus repudiandae facilis magnam?Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odit minima similique animi est modi, ut hic necessitatibus inventore quam, commodi suscipit, vitae sed iste quasi incidunt ducimus repudiandae facilis magnam?Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odit minima similique animi est modi, ut hic necessitatibus inventore quam, commodi suscipit, vitae sed iste quasi incidunt ducimus repudiandae facilis magnam?
+Tasks:;
+	-Add more mail domains;
+	-Add more documents;
+	-Improve appearance;
+	-Add content to main page;
+Release date: in 1 month
+

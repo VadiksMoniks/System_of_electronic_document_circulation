@@ -69,6 +69,7 @@
 
             else{
                 Router::ErrorPage404();
+                exit;
             }
 
             $controller = new $controller_name;
@@ -91,7 +92,7 @@
         }
 
         static function ErrorPage404(){
-            echo 'page not found';
+           include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/404_view.php';
         }
 
 

@@ -96,7 +96,22 @@
                 height: 200px;
                 background-color: #07575B;
                 flex: 0 0 auto;
+                padding: 30px;
+                
             }
+            #wishess{
+                float: left;
+            }
+            #bugReport{
+                
+                float: left;
+                margin-left:150px
+            }
+            .h{
+                font-size: 20px;
+                color: #fff;
+            }
+
         </style>
     </head>
     
@@ -130,18 +145,6 @@
         </div>
         <div id="content">
         <?php
-        use \PhpOffice\PhpWord\PhpWord;
-           /* $phpWord = new \PhpOffice\PhpWord\PhpWord();
-
-            $section = $phpWord->addSection();
-            $section->addText(
-                '"Learn from yesterday, live for today, hope for tomorrow. '
-                    . 'The important thing is not to stop questioning." '
-                    . '(Albert Einstein)'
-            );
-            $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-            $objWriter->save('E:/xampp/htdocs/System_of_electronic_document_circulation/helloWorld.docx');*/
-
 
             if(!isset($_SERVER['PATH_INFO'])){
                 include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/main_view.php';
@@ -156,7 +159,22 @@
             }
         ?>
         </div>
-        <div id="footer"></div>
+        <div id="footer">
+            <div id="wishess">
+                <p class="h">Your wishess</p>
+                <form >         
+                    <textarea></textarea>
+                    <button>Send</button>
+                </form>
+            </div>
+            <div id="bugReport">
+                <p class="h">Report a bug</p>
+                <form >
+                    <textarea placeholder="description of a bug"></textarea>
+                    <button>Send</button>
+                </form>
+            </div>
+        </div>
     </body>
 <script>
     $(document).ready(function(){

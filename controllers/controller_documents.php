@@ -17,10 +17,6 @@
             echo $this->model->generateDoc($_POST, $_COOKIE['lang']);
         }
 
-      /*  function action_download(){
-            echo $this->model->downloadBlank($_GET['name']);
-        }
-     */
         function action_formating(){
             $this->view->generate('formating_view.php', 'template_view.php');
         }

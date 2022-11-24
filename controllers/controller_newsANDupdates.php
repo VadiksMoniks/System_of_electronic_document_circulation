@@ -17,11 +17,18 @@
             $blogsList = scandir('E:/xampp/htdocs/System_of_electronic_document_circulation/Blogs/', SCANDIR_SORT_NONE);
            // var_dump($blogsList);
             for($i=2; $i<count($blogsList); $i++){
-                if($i===2){
-                    $output.='<div class="blog" style="margin-bottom:50px;">'.file_get_contents('E:/xampp/htdocs/System_of_electronic_document_circulation/Blogs/'.$blogsList[$i]).'</br><p>Release update: 1 month</p></div>';
-                }
-                else{
-                    $output.='<div class="blog" style="margin-bottom:50px;">'.file_get_contents('E:/xampp/htdocs/System_of_electronic_document_circulation/Blogs/'.$blogsList[$i]).'</br><p>Release update: TBA</p></div>';
+                $text = explode(';',file_get_contents('E:/xampp/htdocs/System_of_electronic_document_circulation/Blogs/'.$blogsList[$i]));
+                for($j=0; $j<count($text); $j++){
+                    if($j===0){
+                        $output.='<p class="paragraph">';
+                    }
+                    else if($j===count($text)-1){
+                        $output.=$text[$j].'</p></br>';
+                    }
+                    else{
+                        $output.=$text[$j].'</br>';
+                    }
+                    
                 }
                 
             }

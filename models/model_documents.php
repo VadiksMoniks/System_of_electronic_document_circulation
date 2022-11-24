@@ -120,17 +120,9 @@
                 imagedestroy($example);
                 imagedestroy($userSignature);
                 $fName='E:/xampp/htdocs/System_of_electronic_document_circulation/'.$data['name'].'_'.$picName.'.png';
-                /*$newFile = new Imagick();
-                $newFile->readImage('E:/xampp/htdocs/System_of_electronic_document_circulation/'.$picName.'.png');
-                //$newFile->readImage();
-                $newFile->setFormat('pdf');
-                $fName = 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.$data['name'].'_'.$picName.".".$newFile->getFormat();
-                $newFile->writeImage($fName);*/
-                //return $data['initials'];
+
                 unlink($removeSig);
-                /*$recipientMailSQL = parent::connection('SELECT `mail` FROM `users` WHERE `username` =?');
-                $recipientMailSQL->execute([$data['recipient']]);
-                $recipientMail=$recipientMailSQL->fetch();*/
+
                 $sql = parent::connection()->prepare('INSERT INTO `docs` VALUES(?,?,?,?,?)');
                 $sql->execute([NULL, $_COOKIE['username'], $data['recipient'], $fName, 'unsigned']);
     
