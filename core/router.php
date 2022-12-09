@@ -2,7 +2,7 @@
 
     class Router{
 
-        static function start(){
+        public static function start(){
             
             $controller_name = 'Main';
             $action_name = 'index';
@@ -91,7 +91,7 @@
             }
         }
 
-        static function ErrorPage404(){
+        public static function ErrorPage404(){
            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/404_view.php';
         }
 

@@ -30,7 +30,8 @@
                 url:'http://localhost/System_of_electronic_document_circulation/index.php/account/deleteDoc',
                 data:{docName:docName},
                 success:function(data){
-                    if(data==='Document was deleted'){
+                    $('#answer').html(data);
+                    if(data==='Document was deleted' || data==='Документ було видалено'){
                         location.reload();
                     }
                 }

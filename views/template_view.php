@@ -159,27 +159,14 @@
         ?>
         </div>
         <div id="footer">
-            <div id="wishess">
-                <p class="h">Your wishess</p>
-                <form >         
-                    <textarea></textarea>
-                    <button>Send</button>
-                </form>
-            </div>
-            <div id="bugReport">
-                <p class="h">Report a bug</p>
-                <form >
-                    <textarea placeholder="description of a bug"></textarea>
-                    <button>Send</button>
-                </form>
-            </div>
+
         </div>
     </body>
 <script>
     $(document).ready(function(){
 
 
-
+    //change language
         $(document).on('click', '.lang', function(event){
             event.preventDefault();
             
@@ -195,6 +182,7 @@
                 }
             });
         });
+    
     });
 </script>
 </html>

@@ -4,7 +4,7 @@
 
         protected $pdo;
 
-        public function connection(){
+        protected function connection(){
             $host = "localhost";
             $userLog = "root";
             $passwordUser = "";

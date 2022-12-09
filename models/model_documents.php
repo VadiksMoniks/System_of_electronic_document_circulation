@@ -24,7 +24,7 @@
             }
         }*/
 
-        function generateDoc($data, $lang){
+        public function generateDoc($data, $lang){
             //
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             $data['initials']=trim($data['initials']);
@@ -53,6 +53,18 @@
             else if (empty($_FILES['file']['name'])){
                 return $$lang['docError4'];
             }
+
+
+            if(preg_match('/[a-zA-Z]+[0-9]+/',$data['initials'] )===1){
+                return 'only ukr';
+            }
+            else if(preg_match('/[a-zA-Z]+/',$data['group'] )===1){
+                return 'only ukr';
+            }
+            else if(preg_match('/[a-zA-Z]+/',$data['text'] )===1){
+                return 'only ukr';
+            }
+
             
 
             $filetype = new SplFileInfo($_FILES['file']['name']);
@@ -77,7 +89,12 @@
 
             else{
 
-                
+                //username
+                $senderName=parent::connection()->prepare('SELECT `username` FROM `users` WHERE `mail`=?');
+                $senderName->execute([$_COOKIE['username']]);
+                $sName= $senderName->fetch();
+
+                //
 
                 $example = imagecreatefrompng('http://localhost/System_of_electronic_document_circulation/document_examples/canvas.png');
                 $userSignature = imagecreatefrompng($removeSig);
@@ -90,15 +107,21 @@
                 $filetext=preg_replace('/ що я великий молодець і зробив цю курсову/', $data['text'], $filetext);
                 $textarr = explode(';',$filetext);
                 //fclose($handle);
+
+
                 imagettftext($example, 15, 0, 450, 100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[0]);
                 imagettftext($example, 15, 0, 450, 140, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[1]);
                 imagettftext($example, 15, 0, 350, 180, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[2]);
-                imagettftext($example, 15, 0, 380, 300, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[3]);
-                imagettftext($example, 15, 0, 150, 350, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[4]);
+                imagettftext($example, 15, 0, 450, 240, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[3]);
+                imagettftext($example, 15, 0, 380, 350, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[4]);
+                imagettftext($example, 15, 0, 150, 400, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[5]);
+                /*
 
-                $text = str_split($textarr[5], 50);
+                    З УКРАЇНСЬКОЮ РОЗКЛАДКОЮ З'ЯВЛЯЮТЬСЯ ДИВНІ СИМВОЛИ В ТЕКСТІ ПОКИ НЕ ЗНАЮ, ЯК ТО ВИПРАВИТИ
+                */
+                $text = str_split($textarr[6], 100);
                 $x=150;
-                $y=380;
+                $y=420;
                 for($i=0; $i<count($text); $i++){
                     if($i===0){
                         imagettftext($example, 15, 0, $x, $y, imagecolorallocate($example,0,0,0), 'arial.ttf', $text[$i]);
@@ -110,12 +133,12 @@
                 }
                // 
                 imagettftext($example, 15, 0, 200, 800, imagecolorallocate($example,0,0,0), 'arial.ttf', date('d m Y'));
-                imagettftext($example, 15, 0, 200, 850, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[6]);
-                imagettftext($example, 15, 0, 300, 800, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[7]);
-                imagettftext($example, 15, 0, 650, 850, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[8]);
-                imagettftext($example, 15, 0, 550, 1100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[9]);
+                imagettftext($example, 15, 0, 200, 850, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[7]);
+                imagettftext($example, 15, 0, 300, 800, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[8]);
+                imagettftext($example, 15, 0, 650, 850, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[9]);
+                imagettftext($example, 15, 0, 550, 1100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[10]);
                 imagecopy($example, $userSignature, 600, 700, 0, 0 ,126, 100);
-                $picName=$data['initials'].'_'.date("Ymd_His");
+                $picName=$sName->username.'_'.date("Ymd_His");
                 imagepng($example, $data['name'].'_'.$picName.'.png');
                 imagedestroy($example);
                 imagedestroy($userSignature);

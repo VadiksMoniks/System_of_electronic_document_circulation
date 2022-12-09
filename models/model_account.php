@@ -107,36 +107,8 @@
             }
         }
 
-      /*  public function newMessages(){
 
-            //$mailSQL = parent::connection()->prepare('SELECT * FROM `users` WHERE `mail`=?');
-            //$mailSQL->execute([$_COOKIE['username']]);
-
-            //$mail = $mailSQL->fetch();
-
-            $newMsg = NULL;
-            $sql = parent::connection()->prepare('SELECT * FROM `docs` WHERE `reciever`=?');
-            $sql->execute([$_COOKIE['username']]);
-            $result = $sql->fetch();
-
-            if($result!=NULL){
-
-                $newMsg+= count($result);
-                
-            }
-
-            $sql = parent::connection()->prepare('SELECT * FROM `docs` WHERE `sender`=?');
-            $sql->execute([$_COOKIE['username']]);
-            $result = $sql->fetch();
-
-            if($result!=null){
-                $newMsg+= count($result);
-            }
-
-            return $newMsg;
-        }*/
-
-        function downloadBlank($name){
+        public function downloadBlank($name){
             
             $file = 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.$name.'.pdf';
             if(file_exists($file)){
@@ -159,7 +131,7 @@
             }
         }
 
-        function historyList($user, $lang){
+        public function historyList($user, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             $answer ='';
             if(!empty($user)){
@@ -186,7 +158,7 @@
             return "Wrong user data";
         }
 
-        function dwnlist($user, $lang){
+        public function dwnlist($user, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             $answer ='';
             if(!empty($user)){
@@ -208,7 +180,7 @@
             
         }
 
-        function signList($user, $lang){
+        public function signList($user, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             $answer='';
             $sql= parent::connection()->prepare("SELECT `username` FROM `users` WHERE `mail`=?");
@@ -234,7 +206,7 @@
             return "Wrong user data";
         }
 
-        function show_doc($docName, $lang){
+        public function show_doc($docName, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             if(file_exists('E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName)){
                 return '<img src="http://localhost/System_of_electronic_document_circulation/'.$docName.'">';
@@ -245,7 +217,7 @@
         }
 
 
-        function sign_document($docName, $lang){
+        public function sign_document($docName, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             $filetype = new SplFileInfo($_FILES['file']['name']);
             
@@ -283,7 +255,8 @@
         }
 
 
-        function deleteDocument($docName, $lang){
+        public function deleteDocument($docName, $lang){
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             $sql= parent::connection()->prepare("SELECT * FROM `docs` WHERE `document_name`=? AND `sender`=?");
             $sql->execute([$docName, $_COOKIE['username']]);
             $result = $sql->fetchAll();
