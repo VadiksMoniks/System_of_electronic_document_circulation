@@ -159,7 +159,7 @@
         ?>
         </div>
         <div id="footer">
-
+            <p>hello</p>
         </div>
     </body>
 <script>
