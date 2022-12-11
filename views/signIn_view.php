@@ -19,7 +19,7 @@
 
     <div id="formDiv">
         <p class="text"><?php  echo $$lang['goSignIn.reg'];  ?></p>
-        <a href='http://localhost/System_of_electronic_document_circulation/index.php/account/signIn' class="text"><?php  echo $$lang['signInLink'];?></a>
+        <a href='http://localhost/System_of_electronic_document_circulation/index.php/account/registre' class="text"><?php  echo $$lang['registreLink'];?></a>
         <form>
             <input type="text" placeholder="e-mail" id="mail"><br>
             <input type="password" placeholder="password" id="password"><br> 

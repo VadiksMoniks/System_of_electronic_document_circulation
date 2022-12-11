@@ -1,5 +1,4 @@
 Tasks:;
-	-Add more mail domains;
 	-Add more documents;
 	-Improve appearance;
 	-Add content to main page;

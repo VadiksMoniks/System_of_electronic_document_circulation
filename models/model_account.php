@@ -140,7 +140,7 @@
                 $result=$sql->fetchAll(PDO::FETCH_ASSOC);
                 if($result!=NULL){
                     for($i=0; $i<count($result); $i++){
-                        if($result[$i]['status']=="unsigned"){
+                        if($result[$i]['status']!="signed"){
                             $answer.='<p>'.basename($result[$i]['document_name']).'</p> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
                         }
                         else{

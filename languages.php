@@ -12,6 +12,7 @@
         //here all the rest docs must be!!!!
         'create.docs'=>'Create',
         'goSignIn.reg'=>'Allready have an account?',
+        'registreLink'=>'Regisre',
         'signInLink'=>'Sign in',
         //'ur.acc'=>'Your account',
         'history.acc'=>'Documents history',
@@ -58,6 +59,7 @@
         //here all the rest docs must be!!!!
         'create.docs'=>'Створити',
         'goSignIn.reg'=>'Вже є маєте акаунт?',
+        'registreLink'=>'Зареєструватися',
         'signInLink'=>'Увійти',
         //'ur.acc'=>'Ваш акаунт',
         'history.acc'=>'Історія документів',

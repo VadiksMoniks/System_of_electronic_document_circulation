@@ -55,13 +55,13 @@
             }
 
 
-            if(preg_match('/[a-zA-Z]+[0-9]+/',$data['initials'] )===1){
+            if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ\s`]+/',$data['initials'] )){
                 return 'only ukr';
             }
-            else if(preg_match('/[a-zA-Z]+/',$data['group'] )===1){
+            else if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ0-9\s-]+/',$data['group'] )){
                 return 'only ukr';
             }
-            else if(preg_match('/[a-zA-Z]+/',$data['text'] )===1){
+            else if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ0-9\/\s\-,:.]+/',$data['text'] )){
                 return 'only ukr';
             }
 
