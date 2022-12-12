@@ -8,7 +8,7 @@
             $data['mail']=trim($data['mail']);
             $data['username']=trim($data['username']);
             $data['password']=trim($data['password']);
-            $pattern='/[\w]+@infiz.khpi.edu.ua/';
+            $pattern='/[a-zA-Z_\s.]+@infiz.khpi.edu.ua/';
 
             if($data['mail']==""){
                 return $$lang['errorRegEmptyMail'];

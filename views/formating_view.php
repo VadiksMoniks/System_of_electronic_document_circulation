@@ -15,6 +15,10 @@
                 border: 5px solid;
                 border-color: #000;
             }
+            #list{
+                width: 177px;
+                padding-right: 50px;
+            }
         </style>
         </head>
     
@@ -23,6 +27,7 @@
     <input type="text" placeholder='initials' id="initials"><br/>
     <input type="text" placeholder='group' id="group"><br/>
     <input type="text" placeholder="recipient" id="recipient"><br/>
+    <div id="list"></div>
     <textarea  maxlength="250" id="text"style="height: 100px; width:150px"></textarea></br>
     <input type="file" id="signature"><br/>
     <button id="generate">generate</button>
@@ -105,9 +110,31 @@
 
         });
 
+        $('#recipient').keyup(function(){
+
+            var recipientName = $(this).val();
+                if(recipientName != ''){
+                    $.ajax({
+                        url:'http://localhost/System_of_electronic_document_circulation/index.php/documents/getList',
+                        method:'POST',
+                        data:{recipientName:recipientName},
+                        success:function(data){
+                            $('#list').fadeIn();
+                            $('#list').attr('visibility', 'visible');
+                            $('#list').attr('opacity', '1');
+                            $('#list').html(data);
+                        }
+                    });
+                }
+                else{
+                    $('#list').fadeOut();
+                }
+
+        });
+
 
         /*$(document).on('click', '#exampleDwn', function(event){
-            var name = "<?php echo  $_GET['name'];?>";
+            var name = "<?php //echo  $_GET['name'];?>";
             $.ajax({
                     type:'POST',
                     url:'http://localhost/System_of_electronic_document_circulation/index.php/documents/downloadExample',

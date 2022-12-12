@@ -170,25 +170,26 @@
 
 
 
-       /* function recipientList(){
-            $recName = trim($_GET['recName']);
-            if($recName!=''){
-                $sql = parent::connection()->prepare('SELECT `mail` FROM `recipients` WHERE `mail` LIKE ?');
-                $sql->execute(['%' . $recName . '%']);
-                
+        public function recipientList($searchingName){
+            $searchingName = trim($searchingName);
+            if($searchingName!=''){
+                $sql = parent::connection()->prepare('SELECT `mail` FROM `users` WHERE `username` LIKE ?');
+                $sql->execute(["%$searchingName%"]);
+                $output='<ul>';
                 $result = $sql->fetchAll();
                 if($result!=NULL){
-                    $output='<ul>';
+                    
                     foreach($result as $name){
-                        $output.='<li style="font-size:15px;">'.$name->mail.'</li>';
+                        $output.='<li style="font-size:15px; font-color:#000;">'.$name->mail.'</li>';
                     }
-                    return $output.'</ul>';
                 }
                 else{
-                    return 'No such user';
+                    $output.= '<li style="font-size:15px;font-color:#000;">No such user</li>';
                 }
+                 $output.='</ul>';
+                 return $output;
             }
-        }*/
+        }
 
     }
 

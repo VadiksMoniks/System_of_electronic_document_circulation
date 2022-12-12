@@ -25,6 +25,10 @@
             return "E:/xampp/htdocs/System_of_electronic_document_circulation/ticket.png";
         }
 
+        public function action_getList(){
+            echo $this->model->recipientList($_POST['recipientName']);
+        }
+
         /*function action_downloadExample(){
             $this->model->downloadExample($_GET['name']);
         }*/
