@@ -180,7 +180,7 @@
                 if($result!=NULL){
                     
                     foreach($result as $name){
-                        $output.='<li style="font-size:15px; font-color:#000;">'.$name->mail.'</li>';
+                        $output.='<a name='.$name->mail.' class="variants"><li style="font-size:15px; font-color:#000;">'.$name->mail.'</li></a>';
                     }
                 }
                 else{

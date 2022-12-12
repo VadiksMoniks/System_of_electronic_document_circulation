@@ -132,6 +132,10 @@
 
         });
 
+        $(document).on('click', '.variants', function(){
+            $('#recipient').val($(this).attr('name'));
+        });
+
 
         /*$(document).on('click', '#exampleDwn', function(event){
             var name = "<?php //echo  $_GET['name'];?>";
