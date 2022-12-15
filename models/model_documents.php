@@ -25,6 +25,11 @@
         }*/
 
         public function generateDoc($data, $lang){
+            /*
+                значит смотри сюда, урод. ты когда эту хуету кодил, вызывал функцию '( $userSignature = imagecreatefrompng($removeSig);)' строка 105 - так вот она толбко для пнг изображений, какой сюрприз блять. короче
+                нужно либо создать переменную, которая будет хранить формат и потом вызывать функцию для этого формата или так же в переменную записать формат ,
+                но потом ее конкатенировать с названием метода(хз можно ли так) и нужно глянуть в мануале, какие функции есть кропе png i jpeg
+            */ 
             //
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             $data['initials']=trim($data['initials']);
@@ -55,13 +60,13 @@
             }
 
 
-            if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ\s`]+/',$data['initials'] )){
+            if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ\s\-`]+/',$data['initials'] )){
                 return 'only ukr';
             }
-            else if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ0-9\s-]+/',$data['group'] )){
+            else if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ0-9\-]+/',$data['group'] )){
                 return 'only ukr';
             }
-            else if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ0-9\/\s\-,:.]+/',$data['text'] )){
+            else if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ0-9\/\s\-,:.`]+/',$data['text'] )){
                 return 'only ukr';
             }
 
@@ -173,7 +178,7 @@
         public function recipientList($searchingName){
             $searchingName = trim($searchingName);
             if($searchingName!=''){
-                $sql = parent::connection()->prepare('SELECT `mail` FROM `users` WHERE `username` LIKE ?');
+                $sql = parent::connection()->prepare('SELECT `mail` FROM `users` WHERE `mail` LIKE ?');
                 $sql->execute(["%$searchingName%"]);
                 $output='<ul>';
                 $result = $sql->fetchAll();

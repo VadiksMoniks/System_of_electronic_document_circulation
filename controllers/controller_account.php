@@ -12,7 +12,7 @@
 
         public function action_signIn(){
 
-            $this->view->generate('signIn_view.php', 'template_view.php');
+            $this->view->generate('template_view.php');
 
         }
 
@@ -23,7 +23,7 @@
 
         public function action_registre(){
 
-            $this->view->generate('registre_view.php', 'template_view.php');
+            $this->view->generate('template_view.php');
 
         }
 
@@ -36,12 +36,12 @@
 
         public function action_account(){
 
-            $this->view->generate('account_view.php', 'template_view.php');
+            $this->view->generate('template_view.php');
 
         }
 
         public function action_documents_to_download(){
-            $this->view->generate('downloadPage_view.php','template_view.php');
+            $this->view->generate('template_view.php');
         }
 
         public function action_download(){
@@ -61,15 +61,15 @@
         }
 
         public function action_history_list(){
-            $this->view->generate('history_view.php','template_view.php');
+            $this->view->generate('template_view.php');
         }
 
         public function action_for_signature(){
-            $this->view->generate('for_signature_view.php', 'template_view.php');
+            $this->view->generate('template_view.php');
         }
 
         public function action_sign(){
-            $this->view->generate('sign_view.php', 'template_view.php');
+            $this->view->generate('template_view.php');
         }
 
         public function action_docs_for_sign(){
@@ -90,6 +90,11 @@
 
         public function action_logOut(){
             $this->model->signOut();
+            
+        }
+
+        public function action_showDoc(){
+            echo $this->model->show_doc($_GET['name'],$_COOKIE['lang']);
         }
     }
 

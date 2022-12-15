@@ -141,7 +141,7 @@
                 if($result!=NULL){
                     for($i=0; $i<count($result); $i++){
                         if($result[$i]['status']!="signed"){
-                            $answer.='<p>'.basename($result[$i]['document_name']).'</p> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
+                            $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
                         }
                         else{
                             $answer.='<p>'.basename($result[$i]['document_name']).'</p><br/>';
@@ -206,13 +206,29 @@
             return "Wrong user data";
         }
 
-        public function show_doc($docName, $lang){
+        public function show_doc($docName, $lang){//now it can return also a msg from admin if doc was deleted by admins
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             if(file_exists('E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName)){
                 return '<img src="http://localhost/System_of_electronic_document_circulation/'.$docName.'">';
             }
             else{
                 return $$lang['show_docError'];
+                //$msgSQL = parent::connection()->prepare("SELECT `status` FROM `docs` WHERE `document_name` = ?");
+                //$msgSQL->execute([$docName]);
+                //$msg = $msgSQL->fetch();
+                //if($msg===NULL){
+                //     return $$lang['show_docError'];
+                //}
+//МОЖНО ПОТОМ ПОПРОБОВАТЬ СДЕЛАТЬ УВЕДОМЛЕНИЯ ДЛЯ ПОЛЬЗОВАТЕЛЯ, ЕСЛИ ЕГО ФАЙЛ БЫЛ УДАЛЕН АДМИНОМ, ПОТОМ КОГДА НИБУДЬ
+                /*else{//хуевая конструкция в будущем исправлю
+                    if($msg->status!='unsigned'){
+                        if($msg->status!='signed'){
+                             return $msg->status;
+                        }
+                    }
+                   
+                }*/
+               
             }
         }
 

@@ -9,7 +9,7 @@
         }
 
         public function action_document(){
-            $this->view->generate('document_view.php', 'template_view.php');
+            $this->view->generate('template_view.php');
         }
 
 
@@ -18,7 +18,7 @@
         }
 
         public function action_formating(){
-            $this->view->generate('formating_view.php', 'template_view.php');
+            $this->view->generate('template_view.php');
         }
 
         public function action_showExample(){

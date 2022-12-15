@@ -1,5 +1,6 @@
 Tasks:;
 	-Add more documents;
+	-добавить форматы изображений отличные от pdf;
 	-Improve appearance;
 	-Add content to main page;
 Release date: in 1 month

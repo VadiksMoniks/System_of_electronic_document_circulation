@@ -16,8 +16,10 @@
                 border-color: #000;
             }
             #list{
+                background-color: #d3d3d3;
                 width: 177px;
-                padding-right: 50px;
+                z-index: 99;
+                position: absolute;
             }
         </style>
         </head>
@@ -120,8 +122,6 @@
                         data:{recipientName:recipientName},
                         success:function(data){
                             $('#list').fadeIn();
-                            $('#list').attr('visibility', 'visible');
-                            $('#list').attr('opacity', '1');
                             $('#list').html(data);
                         }
                     });
@@ -134,6 +134,8 @@
 
         $(document).on('click', '.variants', function(){
             $('#recipient').val($(this).attr('name'));
+            //$('#list').attr('display', 'none');
+            $('#list').css("display", "none");
         });
 
 

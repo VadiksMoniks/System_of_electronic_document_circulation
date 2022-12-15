@@ -19,7 +19,7 @@
         </head>
     
 <body>
-<p id="header">Future updates</p>
+<p id="header"><?php echo $$lang['blogHeader'];?></p>
  <div id="blog">
 
  </div>

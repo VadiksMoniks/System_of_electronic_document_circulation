@@ -9,7 +9,7 @@
         }
 
         public function action_newsANDupdates(){
-            $this->view->generate('newsANDupdates_view.php', 'template_view.php');
+            $this->view->generate('template_view.php');
         }
 
         public function action_readBlog(){

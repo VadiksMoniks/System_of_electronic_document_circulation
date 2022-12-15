@@ -43,6 +43,7 @@
         'docError5'=>'Filetype must be only PNG',
         'wrongRecipient'=>"There is no such user who you are trying to send this document",
         'docMsg'=>"Your document was generated and sended to recipient to sign it",
+        'blogHeader'=>'Future updates',
         'goHome'=>'Take me back home'
 
     );
@@ -90,6 +91,7 @@
         'docError5'=>'Тип файлу міє бути ТІЛЬКИ PNG',
         'wrongRecipient'=>"Користувача, якому ви намагаєтесь надіслати документ НЕ існує",
         'docMsg'=>"Ваш документ було створено і надіслано отримувасу для підписання",
+        'blogHeader'=>'Майбутні оновлення',
         'goHome'=>'На головну'
     );
 
