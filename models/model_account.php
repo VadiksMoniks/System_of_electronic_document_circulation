@@ -141,7 +141,12 @@
                 if($result!=NULL){
                     for($i=0; $i<count($result); $i++){
                         if($result[$i]['status']!="signed"){
-                            $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
+                            if($result[$i]['status']=="signed"){
+                                $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
+                            }
+                            else{
+                                $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a><br/>';
+                            }
                         }
                         else{
                             $answer.='<p>'.basename($result[$i]['document_name']).'</p><br/>';
@@ -212,22 +217,24 @@
                 return '<img src="http://localhost/System_of_electronic_document_circulation/'.$docName.'">';
             }
             else{
-                return $$lang['show_docError'];
-                //$msgSQL = parent::connection()->prepare("SELECT `status` FROM `docs` WHERE `document_name` = ?");
-                //$msgSQL->execute([$docName]);
-                //$msg = $msgSQL->fetch();
-                //if($msg===NULL){
-                //     return $$lang['show_docError'];
-                //}
-//МОЖНО ПОТОМ ПОПРОБОВАТЬ СДЕЛАТЬ УВЕДОМЛЕНИЯ ДЛЯ ПОЛЬЗОВАТЕЛЯ, ЕСЛИ ЕГО ФАЙЛ БЫЛ УДАЛЕН АДМИНОМ, ПОТОМ КОГДА НИБУДЬ
-                /*else{//хуевая конструкция в будущем исправлю
-                    if($msg->status!='unsigned'){
-                        if($msg->status!='signed'){
-                             return $msg->status;
-                        }
+               // return $$lang['show_docError'];
+                $msgSQL = parent::connection()->prepare("SELECT `status` FROM `docs` WHERE `document_name` = ?");
+                $msgSQL->execute(['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName]);
+                $msg = $msgSQL->fetch();
+                if(!$msg){
+                     return $$lang['show_docError'];
+                }
+                
+                else{
+                    if($msg->status!='unsigned' && $msg->status!='signed'){
+
+                        $deleteRecord = parent::connection()->prepare("DELETE FROM `docs` WHERE `document_name` = ?");
+                        $deleteRecord->execute(['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName]);
+
+                        return '<p>'.$msg->status.'</p>';
                     }
                    
-                }*/
+                }
                
             }
         }

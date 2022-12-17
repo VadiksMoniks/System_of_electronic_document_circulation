@@ -96,10 +96,31 @@
             echo '<img src="http://localhost/System_of_electronic_document_circulation/'.basename($docPath->document_name).'">';
         }
 
-       /* public function manipulateDocument($docName)//delete the document from server if there is something wrong and in future return info to sender
-        {
+        public function manipulateDocument($docName, $message)
+       //delete the document from server if there is something wrong and in future return info to sender      I WROTE SOMETHING BUT DON'T KNOW IF IT WORKS NOW IT CAN ONLU DELETE FILE AND DELETE RECORD FROM DB
+        //YOU CAN DELETE THE RECORD FROM DB BY REQUEST FROM AJAX WHEN HUMAN VISIT THE PAGE SEND AJAX REQUEST AFTER LOADING PAGE(DELETE RECORD) AND DON'T RELOAD PAGE(MB ADD BUTTON BY CLICKUNG ON WHICH USER'LL BE RELOCATED TO ACC)
+        {   
+        $message = trim($message);
 
-        }*/
+            if($message===''){
+                return 'Please specify the reasone of deletion of document';
+            }
+
+            $checkValid = parent::connection()->prepare("SELECT * FROM `docs` WHERE `document_name` = ?");
+            $checkValid->execute(["E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
+
+            $result = $checkValid->fetch();
+
+            if($result===NULL){
+                return 'wrong document name';
+            }
+
+            unlink($result->document_name);
+            $deleteStatement = parent::connection()->prepare("UPDATE `docs` SET `status` = ?  WHERE `document_name` = ?");
+            $deleteStatement->execute([$message, "E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
+
+            return "Document Was DELETED";
+        }
 
     }
 

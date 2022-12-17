@@ -1,5 +1,4 @@
 <?php
-
     /*
      тут будет контроллер для админки. нужны: авторизация, въюв для страницы, модель, которая будет делать авторизацию/выход из системы
       и еще нужно сделать, чтобы у админа на странице автоматически подтягивались данные о новых документах(еще страница просмотра документа)
@@ -55,6 +54,11 @@
       public function action_showDocument()//model that returns a pick of document to the view DONE
       {
           return $this->model->showDocument($_POST['docName']);
+      }
+
+      public function action_manipulate()
+      {
+        echo $this->model->manipulateDocument($_POST['docName'], $_POST['message']);
       }
 
     }
