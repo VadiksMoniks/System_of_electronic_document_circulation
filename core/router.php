@@ -7,50 +7,25 @@
             $controller_name = 'Main';
             $action_name = 'index';
             $model_name = '';
-            $getParam = null;
 
-            $routes = explode('/', $_SERVER['REQUEST_URI']);
+            $routes = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 
 
-            if(!empty($routes[3])){
-                $controller_name = $routes[3];
+            if(!empty($routes[0])){
+                $controller_name = $routes[0];
             }
             else{
                 $controller_name = 'Main';
             }
 
-            if(!empty($routes[4])){
+            if(!empty($routes[1])){
 
-                if(preg_match('/\?\w/', $routes[4])==1){
+                $action_name = $routes[1];
 
-                    $check_get = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_QUERY);
-                    $getParam = explode('=',$check_get);
-                   /* if(preg_match('/[&]/', $check_get)==true){ FOR FEW PARAMS!!!!!!!!!!!!!!!!!!!!!!
-                    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        $query_temp = explode('&', $check_get); // Разбиваем _GET запрос в массив
-                        $query = array(); // Задаем пустой массив для будущего вывода
-
-                        // Перебираем массив с GET запросом
-                        foreach($query_temp as $key=>$value) {
-                            $temp = explode('=', $value); // Разбиваем каждый запрос через знак =
-                            $query[$temp['0']] = $temp['1'];
-                        } 
-                    }*/
-
-                    //else{
-                      //  $getParam = $check_get['query'];
-                   // }
-
-                    $r=explode('?',$routes[4]);
-                    $action_name = $r[0];
-                }
-                else{
-                    $action_name = $routes[4];
-                }
             }
 
-            $model_name = 'Model_'.$controller_name;
-            $controller_name = 'Controller_'.$controller_name;
+            $model_name = 'Model_'.ucfirst($controller_name);
+            $controller_name = 'Controller_'.ucfirst($controller_name);
             $action_name = 'action_'.$action_name;
 
             $model_file = strtolower($model_name).'.php';
@@ -77,16 +52,11 @@
 
             if(method_exists($controller, $action)){
 
-       /*         if($getParam!=null){
-                    $controller->$action($getParam[1]);
-                }
-                else{*/
                     $controller->$action();
-            //    / }
-                
-            }
 
-            else{
+           }
+
+           else{
                 Router::ErrorPage404();
             }
         }
