@@ -24,7 +24,7 @@
             }
         }*/
 
-        public function generateDoc($data, $lang){
+        private function document_a($data, $lang){
             /*
                 значит смотри сюда, урод. ты когда эту хуету кодил, вызывал функцию '( $userSignature = imagecreatefrompng($removeSig);)' строка 105 - так вот она толбко для пнг изображений, какой сюрприз блять. короче
                 нужно либо создать переменную, которая будет хранить формат и потом вызывать функцию для этого формата или так же в переменную записать формат ,
@@ -32,6 +32,7 @@
             */ 
             //
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
+
             $data['initials']=trim($data['initials']);
             $data['group']=trim($data['group']);
             $data['recipient']=trim($data['recipient']);
@@ -104,12 +105,12 @@
                 $example = imagecreatefrompng('http://localhost/System_of_electronic_document_circulation/document_examples/canvas.png');
                 $userSignature = imagecreatefrompng($removeSig);
                 $file = 'http://localhost/System_of_electronic_document_circulation/document_examples/'.$data['name'].'.txt';
-            // $handle = fopen($filename, "r");
+                // $handle = fopen($filename, "r");
                 $filetext = mb_convert_encoding(file_get_contents($file), 'UTF-8');
                 $filetext=preg_replace('/ПІБ/', $data['initials'], $filetext);
                 $filetext=preg_replace('/ГРУПА/', $data['group'], $filetext);
                 $filetext=preg_replace('/КОГО/', $data['recipient'], $filetext);
-                $filetext=preg_replace('/ що я великий молодець і зробив цю курсову/', $data['text'], $filetext);
+                $filetext=preg_replace('/ я великий молодець і зробив цю курсову/', $data['text'], $filetext);
                 $textarr = explode(';',$filetext);
                 //fclose($handle);
 
@@ -120,10 +121,7 @@
                 imagettftext($example, 15, 0, 450, 240, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[3]);
                 imagettftext($example, 15, 0, 380, 350, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[4]);
                 imagettftext($example, 15, 0, 150, 400, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[5]);
-                /*
 
-                    З УКРАЇНСЬКОЮ РОЗКЛАДКОЮ З'ЯВЛЯЮТЬСЯ ДИВНІ СИМВОЛИ В ТЕКСТІ ПОКИ НЕ ЗНАЮ, ЯК ТО ВИПРАВИТИ
-                */
                 $text = str_split($textarr[6], 100);
                 $x=150;
                 $y=420;
@@ -149,13 +147,29 @@
                 imagedestroy($userSignature);
                 $fName='E:/xampp/htdocs/System_of_electronic_document_circulation/'.$data['name'].'_'.$picName.'.png';
 
-                unlink($removeSig);
+                unlink($removeSig);     
 
                 $sql = parent::connection()->prepare('INSERT INTO `docs` VALUES(?,?,?,?,?)');
-                $sql->execute([NULL, $_COOKIE['username'], $data['recipient'], $fName, 'unsigned']);
-    
+                $sql->execute([NULL, $_COOKIE['username'], $data['recipient'], $fName, 'unsigned']);//MAYBE CAUSE OF USING $_COOKIE['username'] IT CANE BE BUGS CAUSE MY SERVER HAS MY COOKIES BUT REMOUTE SERVER 
+                //WILL NOT HAVE 'EM
                 return $$lang['docMsg'];
+                //I can make a group of recievers by concationation of strings and than inserting a big one into DB
+                //BUT i need to make this concationation on client side in jQuery
             }
+        }
+
+        public function generateDoc($data, $lang){
+
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
+           
+            $methodName =  'document_'.$data['name'];
+                if(method_exists('Model_Documents', $methodName)){
+                    return self::$methodName($data, $lang);//WARNING!!! be carefull with required params and make something with recievers(if it'll be more than one reciever)
+                }
+                else{
+                    return 'wrong template name';
+                }
+            
 
         }
 
