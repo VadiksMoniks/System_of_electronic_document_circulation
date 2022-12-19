@@ -140,17 +140,16 @@
                 $result=$sql->fetchAll(PDO::FETCH_ASSOC);
                 if($result!=NULL){
                     for($i=0; $i<count($result); $i++){
-                        if($result[$i]['status']!="signed"){
-                            if($result[$i]['status']=="signed"){
+                            if($result[$i]['status']=="unsigned"){
                                 $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
                             }
-                            else{
+                            else if($result[$i]['status']=="signed"){
                                 $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a><br/>';
                             }
-                        }
-                        else{
-                            $answer.='<p>'.basename($result[$i]['document_name']).'</p><br/>';
-                        }
+                            else{
+                                $answer.='<p>'.basename($result[$i]['document_name']).'</p><br/>';
+                            }
+
                     }
                     
                     return $answer;
