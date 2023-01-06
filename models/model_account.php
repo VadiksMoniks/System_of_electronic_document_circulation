@@ -107,7 +107,7 @@
             }
         }
 
-        public function change_password($data){
+        public function change_password($data){//ADD LANGUAGE MSGS
 
             $data['oldPass'] = trim($data['oldPass']);
             $data['newPass'] = trim($data['newPass']);
@@ -174,16 +174,14 @@
                 $result=$sql->fetchAll(PDO::FETCH_ASSOC);
                 if($result!=NULL){
                     for($i=0; $i<count($result); $i++){
-                        if($result[$i]['status']!="signed"){
-                            if($result[$i]['status']=="signed"){
-                                $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
-                            }
-                            else{
-                                $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a><br/>';
-                            }
+                        if($result[$i]['status']=="unsigned"){
+                            $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
+                        }
+                        else if($result[$i]['status']=="signed"){
+                             $answer.='<p>'.basename($result[$i]['document_name']).'</p><br/>';
                         }
                         else{
-                            $answer.='<p>'.basename($result[$i]['document_name']).'</p><br/>';
+                           $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'(Deleted by admin)</p></a><br/>';
                         }
                     }
                     

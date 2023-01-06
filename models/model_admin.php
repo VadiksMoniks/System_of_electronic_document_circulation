@@ -44,35 +44,22 @@
 
         public function documentList()//return list of all records
         {
-            $list = '<table id="list">
-                        <tr> 
-                            <th>sender</th>
-                            <th>reciever</th>   
-                            <th>document</th>
-                        </tr>';
-            /*
-                <tr>
-                   
-                    
+            $list = '';
 
-                
-
-           
-            */
             $sqlData = parent::connection()->prepare("SELECT * FROM `docs` WHERE `status` = 'unsigned'ORDER BY `id` DESC");
             $sqlData->execute();
 
             $resultList = $sqlData->fetchAll();
             foreach($resultList as $docInfo){
-                $list.='<tr><td>'.$docInfo->sender.'</td><td>'.$docInfo->reciever.'</td><td><a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.basename($docInfo->document_name).'">'.$docInfo->document_name.'</a></td></tr>';
+                $list.='<ul><li>'.$docInfo->sender.'</li><li>'.$docInfo->reciever.'</li><li><a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.basename($docInfo->document_name).'">'.basename($docInfo->document_name).'</a></li></ul>';
             }
 
-            $list.=' </table>';
+          //  $list.=' </table>';
             return $list;
 
         }
 
-        public function numOfRecords()//return nunber of recird to understand if there is new records
+        public function numOfRecords()//return nunber of recird to understand if there is new records NOT USING!!!!!!
         {
             $sql = parent::connection()->prepare("SELECT * FROM `docs`");
             $sql->execute();
@@ -84,12 +71,17 @@
         public function showDocument($name)//returns the img of document
         {
             $name = trim($name);
+
+            if($name===""){
+                return 'document name is empty!';
+            }
+
             $docPathSql = parent::connection()->prepare("SELECT * FROM `docs` WHERE `document_name` = ?");
             $docPathSql->execute(['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$name]);
 
             $docPath = $docPathSql->fetch();
 
-            if($docPath===NULL){
+            if($docPath===false){
                 return 'wrong document name';
             }
 

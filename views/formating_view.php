@@ -11,7 +11,8 @@
             #border{
                 margin-top:-200px;
               margin-left:30%;  
-              width:800px;
+              width: 600px;
+              height: 800px;
                 border: 5px solid;
                 border-color: #000;
             }
@@ -21,6 +22,7 @@
                 z-index: 99;
                 position: absolute;
             }
+            img { width: auto; height: 100%; }
         </style>
         </head>
     

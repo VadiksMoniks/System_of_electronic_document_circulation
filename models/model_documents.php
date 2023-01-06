@@ -2,27 +2,6 @@
     include 'languages.php';
     class Model_Documents extends Model{
 
-  /*      function downloadBlank($name){
-            $file = 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.$name.'.pdf';
-            if(file_exists($file)){
-                if(ob_get_level()){
-                    ob_end_clean();
-                }
-            //download
-                //$blank ='ticket.png';
-                header('Content-Description: File Transfer');
-                header('Content-Type: application/octet-stream');
-                header('Content-Disposition: attachment; filename="'.basename($file).'"');
-                header('Expires: 0');
-                header('Cache-Control: must-revalidate');
-                header('Pragma: public');
-                header('Content-Length: ' . filesize($file));
-                flush(); // Flush system output buffer
-                readfile($file);
-                exit;
-            
-            }
-        }*/
 
         public function generateDoc($data, $lang){
             /*
@@ -88,30 +67,35 @@
             $recipientMailSQL = parent::connection()->prepare('SELECT `mail` FROM `users` WHERE `username` =?');
             $recipientMailSQL->execute([$data['recipient']]);
             $recipientMail=$recipientMailSQL->fetch();
-            if($recipientMail==null){
+            if($recipientMail==false){
                 return $$lang['wrongRecipient'];
             }
 
             else{
 
-                //username
-                $senderName=parent::connection()->prepare('SELECT `username` FROM `users` WHERE `mail`=?');
+                return self::document_a($data, $lang, $removeSig);
+   
+            }
+
+        }
+
+        private function document_a($data, $lang, $signature){
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
+
+            $senderName=parent::connection()->prepare('SELECT `username` FROM `users` WHERE `mail`=?');
                 $senderName->execute([$_COOKIE['username']]);
                 $sName= $senderName->fetch();
 
-                //
 
                 $example = imagecreatefrompng('http://localhost/System_of_electronic_document_circulation/document_examples/canvas.png');
-                $userSignature = imagecreatefrompng($removeSig);
+                $userSignature = imagecreatefrompng($signature);
                 $file = 'http://localhost/System_of_electronic_document_circulation/document_examples/'.$data['name'].'.txt';
-            // $handle = fopen($filename, "r");
                 $filetext = mb_convert_encoding(file_get_contents($file), 'UTF-8');
                 $filetext=preg_replace('/ПІБ/', $data['initials'], $filetext);
                 $filetext=preg_replace('/ГРУПА/', $data['group'], $filetext);
                 $filetext=preg_replace('/КОГО/', $data['recipient'], $filetext);
                 $filetext=preg_replace('/ що я великий молодець і зробив цю курсову/', $data['text'], $filetext);
                 $textarr = explode(';',$filetext);
-                //fclose($handle);
 
 
                 imagettftext($example, 15, 0, 450, 100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[0]);
@@ -120,10 +104,7 @@
                 imagettftext($example, 15, 0, 450, 240, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[3]);
                 imagettftext($example, 15, 0, 380, 350, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[4]);
                 imagettftext($example, 15, 0, 150, 400, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[5]);
-                /*
 
-                    З УКРАЇНСЬКОЮ РОЗКЛАДКОЮ З'ЯВЛЯЮТЬСЯ ДИВНІ СИМВОЛИ В ТЕКСТІ ПОКИ НЕ ЗНАЮ, ЯК ТО ВИПРАВИТИ
-                */
                 $text = str_split($textarr[6], 100);
                 $x=150;
                 $y=420;
@@ -149,30 +130,13 @@
                 imagedestroy($userSignature);
                 $fName='E:/xampp/htdocs/System_of_electronic_document_circulation/'.$data['name'].'_'.$picName.'.png';
 
-                unlink($removeSig);
+                unlink($signature);
 
                 $sql = parent::connection()->prepare('INSERT INTO `docs` VALUES(?,?,?,?,?)');
                 $sql->execute([NULL, $_COOKIE['username'], $data['recipient'], $fName, 'unsigned']);
-    
+                
                 return $$lang['docMsg'];
-            }
-
         }
-
-
-        /*function downloadExample($docName){
-            $dir = 'E:/xampp/htdocs/System_of_electronic_document_circulation/document_examples';
-            $docName = $dir.$docName.'.txt';
-
-            if(file_exists($docName)){
-                //зробити пнг документу і перевести в пдф потім віддати користувачу
-            }
-            else{
-                return "such file doesn't exists";
-            }
-        }*/
-
-
 
 
         public function recipientList($searchingName){
