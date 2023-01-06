@@ -16,6 +16,11 @@ else{
     <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/for_signature"><?php echo $$lang['sign.acc'];?></a></li>
 </ul>
 
+
+<p>Settings</p>
+<ul>
+    <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/changePasswordForm">change password</a></li>
+</ul>
 <?php
    // session_start();
    //var_dump($_COOKIE);

@@ -107,6 +107,40 @@
             }
         }
 
+        public function change_password($data){
+
+            $data['oldPass'] = trim($data['oldPass']);
+            $data['newPass'] = trim($data['newPass']);
+
+            if($data['oldPass']=="" || $data['newPass']==""){
+                    
+                return "password field can't be empty";
+
+            }
+
+            $sql = parent::connection()->prepare("SELECT `password` FROM `users` WHERE `mail` =?");
+            $sql->execute([$data['user']]);
+
+            $result = $sql->fetch();
+            if($result!=false){
+                if(password_verify($data['oldPass'], $result->password)==1){
+                    $newPass = password_hash($data['newPass'], PASSWORD_DEFAULT);
+
+                    $newPassSql = parent::connection()->prepare("UPDATE `users` SET `password` =? WHERE `mail` =?");
+                    $newPassSql->execute([$newPass, $data['user']]);
+
+                    return "password was changed";
+                }
+                else{
+                    return "incorect old password";
+                }
+            }
+            else{
+                return "something went wrong";
+            }
+           
+        }
+
 
         public function downloadBlank($name){
             
