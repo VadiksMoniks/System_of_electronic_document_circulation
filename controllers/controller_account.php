@@ -40,6 +40,14 @@
 
         }
 
+        public function action_changePasswordForm(){
+            $this->view->generate('template_view.php');
+        }
+
+        public function action_change_password(){
+            echo $this->model->changePass($_POST);
+        }
+
         public function action_documents_to_download(){
             $this->view->generate('template_view.php');
         }

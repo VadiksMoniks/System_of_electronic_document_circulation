@@ -1,6 +1,6 @@
 <?php
 
-    class Model_Admin extends Model{
+    class Model_Admin extends Model{//add func that will show wishlist and bug report file!!!
 
         public function signIn($data)//authorization
         {
@@ -44,12 +44,7 @@
 
         public function documentList()//return list of all records
         {
-            $list = '<table id="list">
-                        <tr> 
-                            <th>sender</th>
-                            <th>reciever</th>   
-                            <th>document</th>
-                        </tr>';
+            $list = '';
             /*
                 <tr>
                    
@@ -64,10 +59,10 @@
 
             $resultList = $sqlData->fetchAll();
             foreach($resultList as $docInfo){
-                $list.='<tr><td>'.$docInfo->sender.'</td><td>'.$docInfo->reciever.'</td><td><a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.basename($docInfo->document_name).'">'.$docInfo->document_name.'</a></td></tr>';
+                $list.='<ul><li>'.$docInfo->sender.'</li><li>'.$docInfo->reciever.'</li><li><a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.basename($docInfo->document_name).'">'.$docInfo->document_name.'</li></ul>';
             }
 
-            $list.=' </table>';
+           // $list.=' </ul>';
             return $list;
 
         }
@@ -97,7 +92,7 @@
         }
 
         public function manipulateDocument($docName, $message)
-       //delete the document from server if there is something wrong and in future return info to sender      I WROTE SOMETHING BUT DON'T KNOW IF IT WORKS NOW IT CAN ONLU DELETE FILE AND DELETE RECORD FROM DB
+       //delete the document from server if there is something wrong and in future return info to sender
         //YOU CAN DELETE THE RECORD FROM DB BY REQUEST FROM AJAX WHEN HUMAN VISIT THE PAGE SEND AJAX REQUEST AFTER LOADING PAGE(DELETE RECORD) AND DON'T RELOAD PAGE(MB ADD BUTTON BY CLICKUNG ON WHICH USER'LL BE RELOCATED TO ACC)
         {   
         $message = trim($message);

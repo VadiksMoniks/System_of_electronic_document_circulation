@@ -1,5 +1,5 @@
 <?php
-    
+
     class Model_Account extends Model
     {
         public function registre($data, $lang){
@@ -98,6 +98,35 @@
                 }
             }
         }
+        
+        public function changePass($data){
+            $data['oldPass'] = trim($data['oldPass']);
+            $data['newPass'] = trim($data['newPass']);
+            if($data['oldPass']!=''){
+                if($data['newPass']!=''){
+                    $sql = parent::connection()->prepare("SELECT `password` FROM `users` WHERE `mail` =?");
+                    $sql->execute([$data['user']]);
+    
+                    $result = $sql->fetch();
+                    if($result!=NULL){
+                        if(password_verify($data['oldPass'], $result->password)){
+                            $newPass = password_hash($data['newPass'], PASSWORD_DEFAULT);
+                            $sql = parent::connection()->prepare("UPDATE `users` SET `password`=? WHERE `mail`=?");
+                            $sql->execute([$newPass, $data['user']]);
+    
+                            return 'Password was changed';
+                        }
+                        else{
+                            return 'Inncorect old password';
+                        }
+                    }
+                }
+                else{
+                    return "password field can't be empty";
+                }
+            }
+            return "password field can't be empty";
+        }
 
         public function signOut(){
             if(isset($_COOKIE["username"])){
@@ -144,10 +173,10 @@
                                 $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
                             }
                             else if($result[$i]['status']=="signed"){
-                                $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a><br/>';
+                                $answer.='<p>'.basename($result[$i]['document_name']).'</p><br/>';
                             }
                             else{
-                                $answer.='<p>'.basename($result[$i]['document_name']).'</p><br/>';
+                                $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a><br/>';
                             }
 
                     }

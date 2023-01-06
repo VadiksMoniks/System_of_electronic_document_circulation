@@ -23,6 +23,10 @@ else{
  
 
 ?>
+<p>Settings</p>
+<ul>
+    <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/changePasswordForm">Change e-mail</a></li>
+</ul>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
