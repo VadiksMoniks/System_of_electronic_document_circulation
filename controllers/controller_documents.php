@@ -22,7 +22,7 @@
         }
 
         public function action_showExample(){
-            return "E:/xampp/htdocs/System_of_electronic_document_circulation/ticket.png";
+            echo $this->model->showExample($_POST['name']);
         }
 
         public function action_getList(){

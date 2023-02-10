@@ -1,5 +1,5 @@
 <?php
-    
+session_start();
     class Model_Account extends Model
     {
         public function registre($data, $lang){
@@ -45,12 +45,14 @@
                     else{
                             $sql = parent::connection()->prepare("INSERT INTO `users` VALUES(?,?,?,?)");
                             $sql->execute([NULL, $data['mail'], $data['username'], $password]);
-                        if($data['keepSigned']==='keep'){
-                            setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
-                        }
-                        else if($data['keepSigned']==='no'){
-                            setcookie('username', $data['mail'],strtotime( '+1 day' ) ,'/');
-                        }
+                       // if($data['keepSigned']==='keep'){
+                            //setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
+                            $_SESSION['user'] = $data['mail'];
+                       // }
+                      //  else if($data['keepSigned']==='no'){
+                            //setcookie('username', $data['mail'],strtotime( '+1 day' ) ,'/');
+                            $_SESSION['user'] = $data['mail'];
+                      //  }
                         
                         return $$lang['okMsg'];
                     }
@@ -80,13 +82,15 @@
                 $result = $sql->fetch();
                 if($result!=NULL){
                     if(password_verify($data['password'], $result->password)==1){
-                        //$_SESSION['user'] = $data['username'];
-                        if($data['keepSigned']==='keep'){
-                            setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
-                        }
-                        else if($data['keepSigned']==='no'){
-                            setcookie('username', $data['mail'],strtotime( '+1 day' ) ,'/');
-                        }
+                    
+                       // if($data['keepSigned']==='keep'){
+                            //setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
+                            $_SESSION['user'] = $data['mail'];
+                       // }
+                      //  else if($data['keepSigned']==='no'){
+                            //setcookie('username', $data['mail'],strtotime( '+1 day' ) ,'/');
+                            $_SESSION['user'] = $data['mail'];
+                       // }
                         return $$lang['okMsg'];
                     }
                     else{
@@ -100,9 +104,11 @@
         }
 
         public function signOut(){
-            if(isset($_COOKIE["username"])){
-                setcookie('username', 'a', 1, '/');
-                //session_destroy();
+            if(isset($_SESSION['user'])){
+                //setcookie('username', 'a', 1, '/');
+                session_start();
+                unset($_SESSION['user']); // или $_SESSION = array() для очистки всех данных сессии
+                session_destroy();
                 header("Location: http://localhost/System_of_electronic_document_circulation/index.php");
             }
         }
@@ -174,7 +180,7 @@
                 $result=$sql->fetchAll(PDO::FETCH_ASSOC);
                 if($result!=NULL){
                     for($i=0; $i<count($result); $i++){
-                        if($result[$i]['status']=="unsigned"){
+                        if($result[$i]['status']=="unsigned" || $result[$i]['status']=="unchecked"){
                             $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
                         }
                         else if($result[$i]['status']=="signed"){
@@ -310,20 +316,21 @@
         }
 
 
-        public function deleteDocument($docName, $lang){
+        public function deleteDocument($data, $lang){
+
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             $sql= parent::connection()->prepare("SELECT * FROM `docs` WHERE `document_name`=? AND `sender`=?");
-            $sql->execute([$docName, $_COOKIE['username']]);
+            $sql->execute([$data['docName'], $data['user']]);
             $result = $sql->fetchAll();
             if($result==NULL){
                 return $$lang['deleteDocError1'];
             }
 
             else{
-                if(file_exists($docName)){
-                    unlink($docName); 
+                if(file_exists($data['docName'])){
+                    unlink($data['docName']); 
                     $del=parent::connection()->prepare("DELETE FROM `docs` WHERE `document_name`=? AND `sender`=?");
-                    $del->execute([$docName,$_COOKIE['username']]);
+                    $del->execute([$data['docName'], $data['user']]);
                     return $$lang['deleteDocMsg'];
                 }
                 else{

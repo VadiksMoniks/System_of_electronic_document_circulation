@@ -4,7 +4,7 @@
     //session_start();
     //setcookie('username', 'ttt', 1);
     //var_dump($_COOKIE);
-    if(isset($_COOKIE['username'])){
+    if(isset($_SESSION['user'])){
         header("Location:http://localhost/System_of_electronic_document_circulation/index.php/account/account");
     }
     $lang = $_COOKIE['lang'];
@@ -29,8 +29,6 @@
         <input type="text" placeholder="e-mail" id="mail"><br>
         <input type="text" placeholder="username" id="username"><br>
         <input type="password" placeholder="password" id="password"><br>
-        <label for="check" >Keep me signed in</label>
-        <input type="checkbox" id="check"></br>
         <button value="reg" id="reg">Registrate</button><br>
         <p id="answer"></p>
         
@@ -48,12 +46,12 @@
             var username = $('#username').val();
             var password = $('#password').val();
             var keepSigned = '';
-            if($('#check').is(":checked")){
-                   keepSigned = 'keep';
-                }
-            else{
-                keepSigned = 'no';
-                }
+          //  if($('#check').is(":checked")){
+           //        keepSigned = 'keep';
+           //     }
+           // else{
+           //     keepSigned = 'no';
+           //     }
             /*if($('#stud').val()=="on"){
                  = 'student';
             }
@@ -77,7 +75,7 @@
             $.ajax({
                 type:'POST',
                 url:'http://localhost/System_of_electronic_document_circulation/index.php/account/regMe',
-                data:{mail:mail, username:username, password:password, keepSigned:keepSigned},
+                data:{mail:mail, username:username, password:password},
                 //cache: false,
                 //contentType: false,
                 //processData: false,

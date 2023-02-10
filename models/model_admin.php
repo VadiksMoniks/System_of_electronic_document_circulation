@@ -1,5 +1,5 @@
 <?php
-
+session_start();
     class Model_Admin extends Model{
 
         public function signIn($data)//authorization
@@ -29,16 +29,19 @@
                 return 'wrong username or password';
             }
 
-            setcookie('root', 'admin',strtotime( '+30 days' ) ,'/');
+            $_SESSION['admin'] = $data['username'];
             return 'ok';
 
         }
 
-        public function signOut()//signOut from site go to form
+        public function signOut()
         {
-            if(isset($_COOKIE['root'])){
-                setcookie('root', '0', 1 ,'/');
-                header("Location: http://localhost/System_of_electronic_document_circulation/index.php/admin/authorization");
+            if(isset($_SESSION['admin'])){
+                //setcookie('username', 'a', 1, '/');
+                session_start();
+                unset($_SESSION['admin']); // или $_SESSION = array() для очистки всех данных сессии
+                session_destroy();
+                header("Location: http://localhost/System_of_electronic_document_circulation/index.php");
             }
         }
 
@@ -46,12 +49,12 @@
         {
             $list = '';
 
-            $sqlData = parent::connection()->prepare("SELECT * FROM `docs` WHERE `status` = 'unsigned'ORDER BY `id` DESC");
+            $sqlData = parent::connection()->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked 'ORDER BY `id` DESC");
             $sqlData->execute();
 
             $resultList = $sqlData->fetchAll();
             foreach($resultList as $docInfo){
-                $list.='<ul><li>'.$docInfo->sender.'</li><li>'.$docInfo->reciever.'</li><li><a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.basename($docInfo->document_name).'">'.basename($docInfo->document_name).'</a></li></ul>';
+                $list.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.basename($docInfo->document_name).'">'.basename($docInfo->document_name).'</a></br>';
             }
 
           //  $list.=' </table>';
@@ -112,6 +115,32 @@
             $deleteStatement->execute([$message, "E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
 
             return "Document Was DELETED";
+        }
+
+        public function checkDocument($docName)
+        {
+            $checkedStatus = parent::connection()->prepare("UPDATE `docs` SET `status` = ? WHERE `document_name` = ?");
+            $checkedStatus->execute(["unsigned","E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
+
+            return 'Thank You!';
+        }
+
+        //SORTIROVKI
+        public function sortByDocName($docName)
+        {
+            $docName= str_replace(" ", "_", $docName);
+            $list = '';
+
+            $sqlData = parent::connection()->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked' AND `document_name` LIKE ? ORDER BY `id` DESC");
+            $sqlData->execute(["%$docName%"]);
+
+            $resultList = $sqlData->fetchAll();
+            foreach($resultList as $docInfo){
+                $list.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.basename($docInfo->document_name).'">'.basename($docInfo->document_name).'</a></br>';
+            }
+
+          //  $list.=' </table>';
+            return $list;
         }
 
     }

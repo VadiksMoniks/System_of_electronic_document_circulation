@@ -1,7 +1,7 @@
 <?php
-    if(isset($_COOKIE['root'])){
-        echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/adminPanel">main</a>';
-    }
+  //  if(isset($_SESSION['admin'])){
+        
+  //  }
 ?>
 
 <?php

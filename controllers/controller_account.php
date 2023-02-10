@@ -61,7 +61,7 @@
         }
 
         public function action_deleteDoc(){
-            echo $this->model->deleteDocument($_POST['docName'],$_COOKIE['lang']);
+            echo $this->model->deleteDocument($_POST,$_COOKIE['lang']);
         }
 
         public function action_history(){

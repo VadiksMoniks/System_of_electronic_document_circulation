@@ -1,5 +1,6 @@
 <?php
-if(!isset($_COOKIE['username'])){
+//session_start();
+if(!isset($_SESSION['user'])){
     header("Location: http://localhost/System_of_electronic_document_circulation/index.php");
 }
 if(isset($_COOKIE['lang'])){
@@ -9,7 +10,7 @@ else{
    $lang = 'en'; 
 }
 ?>
-<?php   echo '<p>'.$_COOKIE['username'].'</p>';?>
+<?php   echo '<p>'.$_SESSION['user'].'</p>';?>
 <ul id="docsList">
     <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/history_list"><?php echo $$lang['history.acc'];?></a></li>
     <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/documents_to_download"><?php echo $$lang['download.acc'];?></a></li>

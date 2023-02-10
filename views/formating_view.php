@@ -8,7 +8,7 @@
     <head>
         <tittle></tittle>
         <style>
-            #border{
+            #document{
                 margin-top:-200px;
               margin-left:30%;  
               width: 600px;
@@ -28,76 +28,79 @@
     
 <body>
 <form enctype="multipart/form-data">
-    <input type="text" placeholder='initials' id="initials"><br/>
+    <label>course number <select id="course">
+        <option class="variant">1</option>
+        <option class="variant">2</option>
+        <option class="variant">3</option>
+        <option class="variant">4</option>
+        <option class="variant">5</option>
+        <option class="variant">6</option>
+    </select></label></br>
     <input type="text" placeholder='group' id="group"><br/>
-    <input type="text" placeholder="recipient" id="recipient"><br/>
-    <div id="list"></div>
+    <input type="text" placeholder='speciality' id="speciality"><br/>
+    <select id="studyingForm">
+        <option class="variant">daytime</option>
+        <option class="variant">extramural</option>
+    </select></br>
+    <input type="text" placeholder='initials' id="initials"><br/>
+   <!-- <input type="text" placeholder="recipient" id="recipient"><br/> -->
+   <!-- <div id="list"></div> -->
     <textarea  maxlength="250" id="text"style="height: 100px; width:150px"></textarea></br>
     <input type="file" id="signature"><br/>
     <button id="generate">generate</button>
 </form>
+
 <p id="answer"></p>
-
-<?php
-   // header('Content-type: text/html; charset=utf-8');
-    //header('Content-Encoding: gzip');
-    //var_dump($_GET);
-   // header('Content-type: text/html; charset=utf-8');
-
-
-    $example = imagecreatefrompng('http://localhost/System_of_electronic_document_circulation/document_examples/canvas.png');
-    $file = 'http://localhost/System_of_electronic_document_circulation/document_examples/'.$_GET['name'].'.txt';
-   // $handle = fopen($filename, "r");
-    $filetext = mb_convert_encoding(file_get_contents($file), 'UTF-8');
-    $textarr = explode(';',$filetext);
-    //fclose($handle);
-    imagettftext($example, 15, 0, 450, 100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[0]);
-    imagettftext($example, 15, 0, 450, 140, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[1]);
-    imagettftext($example, 15, 0, 350, 180, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[2]);
-    imagettftext($example, 15, 0, 450, 240, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[3]);
-    imagettftext($example, 15, 0, 380, 350, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[4]);
-    imagettftext($example, 15, 0, 150, 400, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[5]);
-    imagettftext($example, 15, 0, 150, 450, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[6]);
-    imagettftext($example, 15, 0, 200, 850, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[7]);
-    imagettftext($example, 15, 0, 300, 800, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[8]);
-    imagettftext($example, 15, 0, 650, 850, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[9]);
-    imagettftext($example, 15, 0, 550, 1100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[10]);
-    
-
-    imagepng($example, 'ticket.png');
-    imagedestroy($example);
-
-            echo '<div id="border">';
-            echo '<img src="http://localhost/System_of_electronic_document_circulation/ticket.png">';
-            echo '</div>';
-?>
+<!--<div id="document"></div>-->
 </body>
 </html>
 <!--<button id="exampleDwn">Download example</button> -->
 <script>
     $(document).ready(function(){
+
+        $.ajax({
+            type:'POST',
+            url:'http://localhost/System_of_electronic_document_circulation/index.php/documents/showExample',
+            data:{name:'<?php   echo $_GET['name'];?>'},
+            success:function(data){ 
+                $('#document').html(data);
+                if(data=='wrong document name'){
+                    $("#generate").css("display", "none");
+                }
+            }
+        });
+
         $(document).on('click', '#generate', function(event){
             event.preventDefault();
-            if('<?php if(isset($_COOKIE['username'])){echo 'regisered';} else{echo 'unregistered';}?>' ==='unregistered'){
+            if('<?php if(isset($_SESSION['user'])){echo 'regisered';} else{echo 'unregistered';}?>' ==='unregistered'){
                 $('#answer').html("You can't seend documents while You unregistered on this site");
             }
             else{
                 var name = "<?php echo  $_GET['name'];?>";
-                var initials = $('#initials').val();
+                var course = $('#course').val();
+                var studyingForm = $('#studyingForm').val();
                 var group = $('#group').val();
-                var recipient = $('#recipient').val();
+                var speciality = $('#speciality').val();
+                var initials = $('#initials').val();
+               // var recipient = $('#recipient').val();
                 var text = $('#text').val();
+                var mail = '<?php echo $_SESSION['user'];?>';
 
                 var img = $('#signature').prop('files')[0];
                 var data = new FormData;
                 data.append('file', img);
                 data.append('name', name);
-                data.append('initials', initials);
+                data.append('mail',mail);
+                data.append('course', course);
+                data.append('studyingForm', studyingForm);
                 data.append('group', group);
-                data.append('recipient', recipient);
+                data.append('speciality', speciality);
+                data.append('initials', initials);
+              //  data.append('recipient', recipient);
                 data.append('text', text);
 
-                console.log(name);
+                console.log(course);
+                console.log(studyingForm);
                 $.ajax({
                     type:'POST',
                     url:'http://localhost/System_of_electronic_document_circulation/index.php/documents/generate',
@@ -114,7 +117,7 @@
 
         });
 
-        $('#recipient').keyup(function(){
+    /*    $('#recipient').keyup(function(){
 
             var recipientName = $(this).val();
                 if(recipientName != ''){
@@ -132,28 +135,13 @@
                     $('#list').fadeOut();
                 }
 
-        });
+        });*/
 
         $(document).on('click', '.variants', function(){
             $('#recipient').val($(this).attr('name'));
             //$('#list').attr('display', 'none');
             $('#list').css("display", "none");
         });
-
-
-        /*$(document).on('click', '#exampleDwn', function(event){
-            var name = "<?php //echo  $_GET['name'];?>";
-            $.ajax({
-                    type:'POST',
-                    url:'http://localhost/System_of_electronic_document_circulation/index.php/documents/downloadExample',
-                    data:{name:name},
-
-                    success:function(){
-                        //$('#dwnld').attr('href', 'http://localhost/System_of_electronic_document_circulation/index.php/documents/download?name='+data); 
-                        
-                    }
-                });
-        });*/
 
     });
 </script>

@@ -38,8 +38,8 @@
     <div id="docs">
         <p id="h"><?php echo $$lang['list.docs'];?></p>
         <ul id="doclist">
-            <li><?php echo $$lang['doc1.docs'];?><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=a" class="link"><?php echo $$lang['create.docs'];?></a></li>
-
+            <li><?php echo $$lang['doc1.docs'];?><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=Accural_of_social_scholarship" class="link"><?php echo $$lang['create.docs'];?></a></li>
+            <li><?php echo $$lang['doc2.docs'];?><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=voluntary_deduction"><?php echo $$lang['create.docs'];?></a></li>
         
         </ul>
     </div>

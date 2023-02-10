@@ -61,6 +61,16 @@
         echo $this->model->manipulateDocument($_POST['docName'], $_POST['message']);
       }
 
+      public function action_checked()
+      {
+        echo  $this->model->checkDocument($_POST['docName']);
+      }
+
+      public function action_byDocName()
+      {
+        echo $this->model->sortByDocName($_POST['docName']);
+      }
+
     }
 
 ?>

@@ -1,5 +1,11 @@
 <?php
     include 'languages.php';
+
+    if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    } 
+    
     if(empty($_COOKIE['lang'])){
         setcookie('lang', 'en',strtotime( '+30 days' ) ,'/');
     }
@@ -124,7 +130,7 @@
                 <li ><a href="https://web.kpi.kharkov.ua/infiz/uk/home/" class="menuP"><img src="http://localhost/System_of_electronic_document_circulation/img/logo.png" id="logo"></a></li>
                 <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/newsANDupdates/newsANDupdates" class="menuP"><?php echo $$lang['nANDu.menu'];?></a></li>
                     <?php
-                        if(!empty($_COOKIE['username'])){
+                        if(isset($_SESSION['user'])){
                             echo '<li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/account" class="menuP">'.$$lang['account.menu'].'</a></li>';
                         }
                         else{

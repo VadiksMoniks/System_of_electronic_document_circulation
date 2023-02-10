@@ -8,7 +8,7 @@
 
   <script>
     $(document).ready(function(){
-        var user = '<?php echo $_COOKIE['username'];?>';
+        var user = '<?php echo $_SESSION['user'];?>';
 
         $.ajax({
             type:'POST',

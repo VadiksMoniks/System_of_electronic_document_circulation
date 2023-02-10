@@ -1,7 +1,7 @@
 <?php
 
     //session_start();
-    if(isset($_COOKIE['username'])){
+    if(isset($_SESSION['user'])){
         header("Location:http://localhost/System_of_electronic_document_circulation/index.php/account/account");
     }
 ?>
@@ -23,8 +23,6 @@
         <form>
             <input type="text" placeholder="e-mail" id="mail"><br>
             <input type="password" placeholder="password" id="password"><br> 
-            <input type="checkbox" id="check"></br>
-            <label >Keep me signed in</label>
             <button id="signin">Sign In</button>
             <p id="answer"></p>
         </form>
@@ -39,16 +37,10 @@
             var mail = $('#mail').val();
             var password = $('#password').val();
             var keepSigned = '';
-            if($('#check').is(":checked")){
-                   keepSigned = 'keep';
-                }
-            else{
-                keepSigned = 'no';
-                }
             $.ajax({
                 type: "POST",
                 url: 'http://localhost/System_of_electronic_document_circulation/index.php/account/logIn',
-                data:{mail:mail, password:password, keepSigned:keepSigned},
+                data:{mail:mail, password:password},
                 success:function(data){
                         $('#answer').fadeIn();
                         $('#answer').html(data);
