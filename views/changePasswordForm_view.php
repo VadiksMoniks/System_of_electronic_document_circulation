@@ -3,31 +3,32 @@
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
 
-<form>
+  <form>
     <input type="password" placeholder="old password" id="old">
     <input type="password" placeholder="new password" id="new">
-    <button id="send">send</button>
     <p id="answer"></p>
-</form>
+    <button id="send">send</button>
+  </form>
 
-<script>
+  <script>
     $(document).ready(function(){
         $(document).on('click', '#send', function(event){
             event.preventDefault();
 
             var oldPass = $('#old').val();
             var newPass = $('#new').val();
-            var user ='<?php echo $_COOKIE['username'];?>';
+            var user = '<?php echo $_SESSION['user'];?>';
 
             $.ajax({
-                type:'POST',
-                url:'http://localhost/System_of_electronic_document_circulation/index.php/account/change_password',
-                data:{oldPass:oldPass, newPass:newPass, user:user},
+                    type:'POST',
+                    url:'http://localhost/System_of_electronic_document_circulation/index.php/account/change_password',
+                    data:{oldPass:oldPass, newPass:newPass, user:user},
 
-                success:function(data){
-                      $('#answer').html(data);
-                 }
-            });
+                    success:function(data){
+                      data = JSON.parse(data);
+                        $('#answer').html(data.answer);
+                    }
+                });
         });
     });
 </script>

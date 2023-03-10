@@ -1,5 +1,5 @@
 <div id="answer">
-
+  <?php echo $data;?>
 </div>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -8,7 +8,7 @@
 
   <script>
     $(document).ready(function(){
-        var user = '<?php echo $_COOKIE['username'];?>';
+       /* var user = '<?php echo $_SESSION['user'];?>';
 
         $.ajax({
             type:'POST',
@@ -17,7 +17,7 @@
             success:function(data){
                 $('#answer').html(data);
             }
-        });
+        });*/
     });
     
     //console.log(user);

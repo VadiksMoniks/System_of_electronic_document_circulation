@@ -1,5 +1,5 @@
 <div id="answer">
-
+    <?php echo $data;?>
 </div>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -9,7 +9,7 @@
   <script>
     $(document).ready(function(){
 
-        var user = '<?php echo $_COOKIE['username'];?>';
+   /*     var user = '<?php echo $_SESSION['user'];?>';
 
         $.ajax({
                 type:'POST',
@@ -18,17 +18,24 @@
                 success:function(data){
                     $('#answer').html(data);
                 }
-            });
+            });*/
 
         $(document).on('click', '.btn', function(event){
             event.preventDefault();
-
-            var docName = $('.btn').val();
-            console.log($('.btn').val());
+            var data = new FormData;
+            var docName = $(this).val();
+            var user = '<?php echo $_SESSION['user'];?>'
+            data.append('docName', docName);
+            data.append('user', user);
+            //console.log(docName);
+            
             $.ajax({
                 type:'POST',
                 url:'http://localhost/System_of_electronic_document_circulation/index.php/account/deleteDoc',
-                data:{docName:docName},
+                data:data,
+                contentType : false,
+                processData: false,
+                
                 success:function(data){
                     $('#answer').html(data);
                     if(data==='Document was deleted' || data==='Документ було видалено'){

@@ -1,6 +1,6 @@
 <?php
 
-if(isset($_COOKIE['root'])){
+if(isset($_SESSION['admin'])){
     header("Location:http://localhost/System_of_electronic_document_circulation/index.php/admin/adminPanel");
 }
 

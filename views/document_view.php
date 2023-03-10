@@ -38,13 +38,25 @@
     <div id="docs">
         <p id="h"><?php echo $$lang['list.docs'];?></p>
         <ul id="doclist">
-            <li><?php echo $$lang['doc1.docs'];?><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=a" class="link"><?php echo $$lang['create.docs'];?></a></li>
-
-        
+            <li><?php echo $$lang['doc1'];?><ul>
+            <li></li></ul></li>
+            <li><?php echo $$lang['doc2.docs'];?> <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=voluntary_deduction"><?php echo $$lang['create.docs'];?></a></li>
+            <li>Повторний курс навчання<ul>
+                <li><?php echo $$lang['doc3.docs'];?> <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=returning_to_study_on_a_repeat_course"><?php echo $$lang['create.docs'];?></a></li>
+                <li><?php echo $$lang['doc4.docs'];?> <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=providing_a_repeat_course"><?php echo $$lang['create.docs'];?></a></li>
+            </ul></li>
+           <li>Академічна відпустка<ul>
+            <li><?php echo $$lang['doc5.docs'];?> <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=granting_academic_leave"><?php echo $$lang['create.docs'];?></a></li>
+            <li><?php echo $$lang['doc6.docs'];?> <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=extension_of_academic_leave"><?php echo $$lang['create.docs'];?></a></li>
+            </ul></li>
+            <li>Переведення здобувачів вищої освіти</li>
+            <li>Поновлення до складу студентів (після відрахування)</li>
+            <li>Зміна джерела фінансування</li>
+            <li>Нарахування додаткових балів до стипендіального рейтингу</li>
         </ul>
     </div>
 
 </body>
 </html>
-<script>
+<script>granting_academic_leave_example
 </script>

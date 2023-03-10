@@ -1,7 +1,13 @@
 <?php
+<<<<<<< HEAD
 
+=======
+session_start();
+>>>>>>> development
     class Model_Account extends Model
     {
+        private $data = array();
+
         public function registre($data, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             //var_dump($_POST);
@@ -11,21 +17,25 @@
             $pattern='/[a-zA-Z_\s.]+@infiz.khpi.edu.ua/';
 
             if($data['mail']==""){
-                return $$lang['errorRegEmptyMail'];
+                $this->data['answer']= $$lang['errorRegEmptyMail'];
+                return json_encode($this->data);
             }
 
             else if($data['username']==""){
-                return $$lang['errorRegEmptyName'];
+                $this->data['answer']= $$lang['errorRegEmptyName'];
+                return json_encode($this->data);
             }
 
             else if($data['password']==""){
-                return $$lang['errorRegEmptyPass'];
+                $this->data['answer']= $$lang['errorRegEmptyPass'];
+                return json_encode($this->data);
             }
 
             else{
 
                 if(preg_match($pattern, $data['mail'])!=1){
-                    return $$lang['errorRegDomain'];
+                    $this->data['answer']= $$lang['errorRegDomain'];
+                    return json_encode($this->data);
                 }
                 $password = password_hash($data['password'], PASSWORD_DEFAULT);
 
@@ -33,26 +43,31 @@
                 $sql->execute([$data['username']]);
                 $result = $sql->fetchAll();
                 if($result!=null){
-                    return $$lang['errorRegununiqName'];//checking username's unicity
+                    $this->data['answer']= $$lang['errorRegununiqName'];//checking username's unicity
+                    return json_encode($this->data);
                 }
                 else{
                     $sql = parent::connection()->prepare("SELECT * FROM `users` WHERE `mail` =?");
                     $sql->execute([$data['mail']]);
                     $result = $sql->fetchAll();
                     if($result!=null){
-                        return $$lang['errorRegununiqMail'];//checking mail unicity
+                        $this->data['answer']= $$lang['errorRegununiqMail'];//checking mail unicity
+                        return json_encode($this->data);
                     }
                     else{
                             $sql = parent::connection()->prepare("INSERT INTO `users` VALUES(?,?,?,?)");
                             $sql->execute([NULL, $data['mail'], $data['username'], $password]);
-                        if($data['keepSigned']==='keep'){
-                            setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
-                        }
-                        else if($data['keepSigned']==='no'){
-                            setcookie('username', $data['mail'],strtotime( '+1 day' ) ,'/');
-                        }
+                       // if($data['keepSigned']==='keep'){
+                            //setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
+                            $_SESSION['user'] = $data['mail'];
+                       // }
+                      //  else if($data['keepSigned']==='no'){
+                            //setcookie('username', $data['mail'],strtotime( '+1 day' ) ,'/');
+                            $_SESSION['user'] = $data['username'];
+                      //  }
                         
-                        return $$lang['okMsg'];
+                      $this->data['answer']= $$lang['okMsg'];
+                      return json_encode($this->data);
                     }
                 }
 
@@ -67,11 +82,13 @@
             $data['password']=trim($data['password']);
 
             if($data['mail']==""){
-                return $$lang['errorRegEmptyMail'];
+                $this->data['answer']= $$lang['errorRegEmptyMail'];
+                return json_encode($this->data);
             }
 
             else if($data['password']==""){
-                return $$lang['errorRegEmptyPass'];
+                $this->data['answer']= $$lang['errorRegEmptyPass'];
+                return json_encode($this->data);
             }
 
             else{
@@ -80,21 +97,26 @@
                 $result = $sql->fetch();
                 if($result!=NULL){
                     if(password_verify($data['password'], $result->password)==1){
-                        //$_SESSION['user'] = $data['username'];
-                        if($data['keepSigned']==='keep'){
-                            setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
-                        }
-                        else if($data['keepSigned']==='no'){
-                            setcookie('username', $data['mail'],strtotime( '+1 day' ) ,'/');
-                        }
-                        return $$lang['okMsg'];
+                    
+                       // if($data['keepSigned']==='keep'){
+                            //setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
+                            //$_SESSION['user'] = $data['mail'];
+                       // }
+                      //  else if($data['keepSigned']==='no'){
+                            //setcookie('username', $data['mail'],strtotime( '+1 day' ) ,'/');
+                            $_SESSION['user'] = $result->username;
+                       // }
+                       $this->data['answer']= $$lang['okMsg'];
+                       return json_encode($this->data);
                     }
                     else{
-                        return $$lang['errorSignIn'];
+                        $this->data['answer']= $$lang['errorSignIn'];
+                        return json_encode($this->data);
                     }
                 }
                 else{
-                    return $$lang['errorSignIn'];
+                    $this->data['answer']= $$lang['errorSignIn'];
+                    return json_encode($this->data);
                 }
             }
         }
@@ -129,11 +151,51 @@
         }
 
         public function signOut(){
-            if(isset($_COOKIE["username"])){
-                setcookie('username', 'a', 1, '/');
-                //session_destroy();
+            if(isset($_SESSION['user'])){
+                //setcookie('username', 'a', 1, '/');
+                session_start();
+                unset($_SESSION['user']); // или $_SESSION = array() для очистки всех данных сессии
+                session_destroy();
                 header("Location: http://localhost/System_of_electronic_document_circulation/index.php");
             }
+        }
+
+        public function change_password($data){//ADD LANGUAGE MSGS
+
+            $data['oldPass'] = trim($data['oldPass']);
+            $data['newPass'] = trim($data['newPass']);
+
+            if($data['oldPass']=="" || $data['newPass']==""){
+                    
+                $this->data['answer']= "password field can't be empty";
+                return json_encode($this->data);
+
+            }
+
+            $sql = parent::connection()->prepare("SELECT `password` FROM `users` WHERE `username` =?");
+            $sql->execute([$data['user']]);
+
+            $result = $sql->fetch();
+            if($result!=false){
+                if(password_verify($data['oldPass'], $result->password)==1){
+                    $newPass = password_hash($data['newPass'], PASSWORD_DEFAULT);
+
+                    $newPassSql = parent::connection()->prepare("UPDATE `users` SET `password` =? WHERE `mail` =?");
+                    $newPassSql->execute([$newPass, $data['user']]);
+
+                    $this->data['answer']= "password was changed";
+                    return json_encode($this->data);
+                }
+                else{
+                    $this->data['answer']= "incorect old password";
+                    return json_encode($this->data);
+                }
+            }
+            else{
+                $this->data['answer']= "something went wrong";
+                return json_encode($this->data);
+            }
+           
         }
 
 
@@ -162,13 +224,20 @@
 
         public function historyList($user, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
+
             $answer ='';
             if(!empty($user)){
+
+                $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
+                $sqlMail->execute([$user]);
+                $mail= $sqlMail->fetch();
+
                 $sql= parent::connection()->prepare("SELECT * FROM `docs` WHERE `sender`=?");
-                $sql->execute([$user]);
+                $sql->execute([$mail->mail]);
                 $result=$sql->fetchAll(PDO::FETCH_ASSOC);
                 if($result!=NULL){
                     for($i=0; $i<count($result); $i++){
+<<<<<<< HEAD
                             if($result[$i]['status']=="unsigned"){
                                 $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
                             }
@@ -179,6 +248,17 @@
                                 $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a><br/>';
                             }
 
+=======
+                        if($result[$i]['status']=="unsigned" || $result[$i]['status']=="unchecked"){
+                            $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
+                        }
+                        else if($result[$i]['status']=="signed"){
+                             $answer.='<p>'.basename($result[$i]['document_name']).'</p><br/>';
+                        }
+                        else{
+                           $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'(Deleted by admin)</p></a><br/>';
+                        }
+>>>>>>> development
                     }
                     
                     return $answer;
@@ -193,10 +273,16 @@
 
         public function dwnlist($user, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
+
             $answer ='';
             if(!empty($user)){
+
+                $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
+                $sqlMail->execute([$user]);
+                $mail= $sqlMail->fetch();
+                
                 $sql= parent::connection()->prepare("SELECT `document_name` FROM `docs` WHERE `status`='signed' AND `sender`=?");
-                $sql->execute([$user]);
+                $sql->execute([$mail->mail]);
                 $result=$sql->fetchAll(PDO::FETCH_ASSOC);
                 if($result!=NULL){
                     for($i=0; $i<count($result); $i++){
@@ -216,8 +302,13 @@
         public function signList($user, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             $answer='';
+
+            $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
+            $sqlMail->execute([$user]);
+            $mail= $sqlMail->fetch();
+
             $sql= parent::connection()->prepare("SELECT `username` FROM `users` WHERE `mail`=?");
-            $sql->execute([$user]);
+            $sql->execute([$mail->mail]);
 
             $recieverMail=$sql->fetch();
 
@@ -306,20 +397,26 @@
         }
 
 
-        public function deleteDocument($docName, $lang){
+        public function deleteDocument($data, $lang){
+
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
+
+            $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
+            $sqlMail->execute([$data['user']]);
+            $mail= $sqlMail->fetchAll();
+
             $sql= parent::connection()->prepare("SELECT * FROM `docs` WHERE `document_name`=? AND `sender`=?");
-            $sql->execute([$docName, $_COOKIE['username']]);
+            $sql->execute([$data['docName'], $mail]);
             $result = $sql->fetchAll();
             if($result==NULL){
                 return $$lang['deleteDocError1'];
             }
 
             else{
-                if(file_exists($docName)){
-                    unlink($docName); 
+                if(file_exists($data['docName'])){
+                    unlink($data['docName']); 
                     $del=parent::connection()->prepare("DELETE FROM `docs` WHERE `document_name`=? AND `sender`=?");
-                    $del->execute([$docName,$_COOKIE['username']]);
+                    $del->execute([$data['docName'], $data['user']]);
                     return $$lang['deleteDocMsg'];
                 }
                 else{

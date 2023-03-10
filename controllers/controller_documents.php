@@ -18,12 +18,13 @@
         }
 
         public function action_formating(){
-            $this->view->generate('template_view.php');
+            $data = $this->model->showExample($_GET['name']);
+            echo $this->view->generate('template_view.php', $data);
         }
 
-        public function action_showExample(){
-            return "E:/xampp/htdocs/System_of_electronic_document_circulation/ticket.png";
-        }
+       // public function action_showExample(){
+       //     echo $this->model->showExample($_POST['name']);
+       // }
 
         public function action_getList(){
             echo $this->model->recipientList($_POST['recipientName']);

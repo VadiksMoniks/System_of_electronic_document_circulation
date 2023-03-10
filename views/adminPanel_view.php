@@ -1,6 +1,6 @@
 <?php
 
-    if($_COOKIE['root']){
+    if($_SESSION['admin']){
         echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/logOut" id="out">log out</a>';
     }
     else{
@@ -15,12 +15,22 @@
   crossorigin="anonymous"></script>
 
 <p>hello</p>
-<div id="list"></div>
+<div id="filters">
+    <select id="names">
+        <option class="variant">Select document name</option>
+        <option class="variant">Accural of social scholarship</option>
+        <option class="variant">voluntary deduction</option>
+        <option class="variant">returning to study on a repeat course</option>
+        <option class="variant">providing a repeat course</option>
+        <option class="variant">granting academic leave</option>
+    </select>
+</div>
+<div id="list"><?php echo $data;?></div>
 
 <script>
     $(document).ready(function(){
         
-            $.ajax({
+      /*      $.ajax({
                 type:'POST',
                 url:'http://localhost/System_of_electronic_document_circulation/index.php/admin/documentsList',
                 data:{},
@@ -29,11 +39,41 @@
                     $('#list').fadeIn();
                     $('#list').html(data);
                 }
+        });*/
+
+        $(document).on('change', '#names', function(event){
+            event.preventDefault();
+            var docName = $(this).val();
+            console.log(docName);
+          //  if(docName!="Select document name"){
+                $.ajax({
+                    type:'POST',
+                    url:'http://localhost/System_of_electronic_document_circulation/index.php/admin/byDocName',
+                    data:{docName:docName},
+                        //contentType : false,
+                        //processData: false,
+
+                    success:function(data){
+                            //$('#dwnld').attr('href', 'http://localhost/System_of_electronic_document_circulation/index.php/documents/download?name='+data); 
+                        $('#list').fadeIn();
+                        $('#list').html(data);
+                    }
+                });
+           // }
+          /*else{
+                $.ajax({
+                type:'POST',
+                url:'http://localhost/System_of_electronic_document_circulation/index.php/admin/adminPanel',
+                data:{},
+
+                success:function(data){
+                    $('#list').fadeIn();
+                    $('#list').html(data);
+                }
         });
-
-
-
-        
+            }*/
+        });
+    
         // 
     });      
             

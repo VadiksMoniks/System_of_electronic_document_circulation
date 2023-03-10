@@ -1,8 +1,13 @@
 <?php
-    if(isset($_COOKIE['root'])){
-        echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/adminPanel">main</a>';
-    }
 ?>
+<!--<div>
+    <ul>
+        <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/adminPanel">Main</a></li>
+        <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/post">Post an article</a></li>
+        <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/articles_list">articles list</a></li>
+        <li></li>
+    </ul>
+</div>-->
 
 <?php
 

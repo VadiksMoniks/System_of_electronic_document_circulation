@@ -62,7 +62,7 @@
             event.preventDefault();
             
             var wish = $('#wishes_text').val();
-            var user = '<?php echo $_COOKIE['username']; ?>';
+            var user = '<?php echo $_SESSION['user']; ?>';
             console.log(wish);
             $.ajax({
                 type:'POST',
@@ -80,7 +80,7 @@
             event.preventDefault();
             
             var bug = $('#bug_text').val();
-            var user = '<?php echo $_COOKIE['username']; ?>';
+            var user = '<?php echo $_SESSION['user']; ?>';
             console.log(bug);
             $.ajax({
                 type:'POST',

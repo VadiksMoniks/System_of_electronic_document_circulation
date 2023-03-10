@@ -18,7 +18,8 @@
 
       public function action_adminPanel()//use view
       {
-          $this->view->generate('admin_view.php');
+          $data = $this->model->documentList();
+          $this->view->generate('admin_view.php', $data);
       }
 
       public function action_authorization()//DONE
@@ -41,10 +42,10 @@
           $this->view->generate('admin_view.php');//show doc
       }
 
-      public function action_documentsList()//model with the list of docs DONE
+     /* public function action_documentsList()//model with the list of docs DONE
       {
           echo $this->model->documentList();
-      }
+      }*/
 
       public function action_numOfRecords()
       {
@@ -61,6 +62,33 @@
         echo $this->model->manipulateDocument($_POST['docName'], $_POST['message']);
       }
 
-    }
+      public function action_checked()
+      {
+        echo  $this->model->checkDocument($_POST['docName']);
+      }
 
+      public function action_byDocName()
+      {
+        echo $this->model->sortByDocName($_POST['docName']);
+      }
+
+      public function action_post()
+      {
+        $this->view->generate('admin_view.php');
+      }
+
+      public function action_makePost()
+      {
+        echo $this->model->makePost($_POST);
+      }
+
+      public function action_articles_list()
+      {
+        $data = $this->model->articles_list();
+        $this->view->generate('admin_view.php', $data);
+//ТУТ МОЖНА ЗВЕРНУТИСЯ СПОЧАТКУ ДО МОДЕЛІ А ПОТІМ В₴ЮВУ ПЕРЕДАТИ ДАННІ
+      }
+
+    }
+//НУЖНО КАКТО ИЗМЕНИТЬ РАБОТУ ВИДА ЧТОБЫ ОН ПРИНИМАЛ ПАРАМЕТР ДАТА И В КОНТРОЛЛЕРЕ ВЫЗЫВАТЬ СНАЧАЛА МОДЕЛЬ ПОЛУЧАТЬ ДАТУ И ОТПРАВЛЯТЬ В ВИД А НЕ ИССПОЛЬЗОВАТЬ ДВЕ ФУНКЦИИ
 ?>
