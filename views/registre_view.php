@@ -81,10 +81,11 @@
                 //processData: false,
                 
                 success:function(data){
+                        data = JSON.parse(data);
+                        $('#answer').html(data.answer);
                         $('#answer').fadeIn();
-                        $('#answer').html(data);
                         console.log($('#answer').val());
-                        if(data == "OK"){
+                        if(data.answer == "OK"){
                             location.reload();
                         }
                 }

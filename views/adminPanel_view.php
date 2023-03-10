@@ -20,16 +20,17 @@
         <option class="variant">Select document name</option>
         <option class="variant">Accural of social scholarship</option>
         <option class="variant">voluntary deduction</option>
-        <option class="variant">another2</option>
-        <option class="variant">another3</option>
+        <option class="variant">returning to study on a repeat course</option>
+        <option class="variant">providing a repeat course</option>
+        <option class="variant">granting academic leave</option>
     </select>
 </div>
-<div id="list"></div>
+<div id="list"><?php echo $data;?></div>
 
 <script>
     $(document).ready(function(){
         
-            $.ajax({
+      /*      $.ajax({
                 type:'POST',
                 url:'http://localhost/System_of_electronic_document_circulation/index.php/admin/documentsList',
                 data:{},
@@ -38,13 +39,13 @@
                     $('#list').fadeIn();
                     $('#list').html(data);
                 }
-        });
+        });*/
 
         $(document).on('change', '#names', function(event){
             event.preventDefault();
             var docName = $(this).val();
             console.log(docName);
-            if(docName!="Select document name"){
+          //  if(docName!="Select document name"){
                 $.ajax({
                     type:'POST',
                     url:'http://localhost/System_of_electronic_document_circulation/index.php/admin/byDocName',
@@ -58,11 +59,11 @@
                         $('#list').html(data);
                     }
                 });
-            }
-            else{
+           // }
+          /*else{
                 $.ajax({
                 type:'POST',
-                url:'http://localhost/System_of_electronic_document_circulation/index.php/admin/documentsList',
+                url:'http://localhost/System_of_electronic_document_circulation/index.php/admin/adminPanel',
                 data:{},
 
                 success:function(data){
@@ -70,7 +71,7 @@
                     $('#list').html(data);
                 }
         });
-            }
+            }*/
         });
     
         // 

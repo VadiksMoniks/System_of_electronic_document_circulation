@@ -68,6 +68,9 @@
 
                 success:function(data){
                     $('#info').html(data);
+                    if($('#info').text()==="Reasone of deletion must be on ukrainian language"){
+                        $('form').css("display", "block");
+                    }
                 }
             });
 

@@ -25,7 +25,8 @@
                     data:{oldPass:oldPass, newPass:newPass, user:user},
 
                     success:function(data){
-                        $('#answer').html(data);
+                      data = JSON.parse(data);
+                        $('#answer').html(data.answer);
                     }
                 });
         });

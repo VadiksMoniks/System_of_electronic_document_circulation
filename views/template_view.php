@@ -31,7 +31,7 @@
             }
             .list{
                 width: 100%;
-                margin-left: 15%;
+                margin-left: 20%;
                 display: inline-flex;
             }
             .menuP{
@@ -128,7 +128,7 @@
                 <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/main" class="menuP"><?php echo $$lang['main.menu'];?></a></li>
                 <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/document" class="menuP"><?php echo $$lang['documents.menu'];?></a></li>
                 <li ><a href="https://web.kpi.kharkov.ua/infiz/uk/home/" class="menuP"><img src="http://localhost/System_of_electronic_document_circulation/img/logo.png" id="logo"></a></li>
-                <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/newsANDupdates/newsANDupdates" class="menuP"><?php echo $$lang['nANDu.menu'];?></a></li>
+              <!--  <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/newsANDupdates/newsANDupdates" class="menuP"><?php echo $$lang['nANDu.menu'];?></a></li>-->
                     <?php
                         if(isset($_SESSION['user'])){
                             echo '<li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/account" class="menuP">'.$$lang['account.menu'].'</a></li>';

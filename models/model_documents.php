@@ -2,24 +2,28 @@
     include 'languages.php';
     class Model_Documents extends Model{
 
+        private $answer = array();//FOR JSON ANSWER
+
         public function showExample($document_name){
 
             if(isset($document_name)){
                 if(trim($document_name)!=''){
-                    $method_name='document_'.$document_name;
-                    if(method_exists('Model_Documents',$method_name)){
-                        return self::$method_name();
-                    }
-                    else{
+                  //  $method_name='document_'.$document_name;
+                  //  if(method_exists('Model_Documents',$method_name)){
+                  //      return self::$method_name();
+                    return self::documentCreation($document_name);
+                
+                }
+                else{
                         return 'wrong document name';
-                    }
                 }
             }
-
         }
 
 
-        public function generateDoc($data, $lang){
+
+        public function generateDoc($data, $lang)
+        {
             /*
                 значит смотри сюда, урод. ты когда эту хуету кодил, вызывал функцию '( $userSignature = imagecreatefrompng($removeSig);)' строка 105 - так вот она толбко для пнг изображений, какой сюрприз блять. короче
                 нужно либо создать переменную, которая будет хранить формат и потом вызывать функцию для этого формата или так же в переменную записать формат ,
@@ -37,7 +41,8 @@
 
             foreach($slice as $key => $value){
                 if($slice[$key]==""){
-                    return $$lang['docError1'];
+                    $this->answer['answer']= $$lang['docError1'];
+                    return json_encode($this->answer);
                 }
             }
            // var_dump($slice);
@@ -47,12 +52,19 @@
           //  }            
             foreach($slice as $key => $value){
                 if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ\s\-`]+/',$slice[$key] )){
-                    return 'only ukr';
+                    $this->answer['answer']='only ukr';
+                    return json_encode($this->answer);
                 }
             }
 
+            if(preg_match('/[0-9]+/',$slice['initials'] )){
+                $this->answer['answer']= "name can't contain numbers";
+                return json_encode($this->answer);
+            }
+
             if (empty($_FILES['file']['name'])){
-                return $$lang['docError4'];
+                $this->answer['answer']= $$lang['docError4'];
+                return json_encode($this->answer);
             }
 
 
@@ -72,7 +84,8 @@
             $filetype = new SplFileInfo($_FILES['file']['name']);
             
             if($filetype->getExtension() != 'png'){
-                return $$lang['docError5'];
+                $this->answer['answer']= $$lang['docError5'];
+                return json_encode($this->answer);
             }
 
             else{
@@ -90,112 +103,20 @@
             }*/
 
            // else{
-                $method_name='document_'.$data['name'];
-                if(method_exists($this,$method_name)){
-                    return self::$method_name($data, $lang, $removeSig);
-                }
-                else{
-                    return 'wrong document name';
-                }
+              //  $method_name='document_'.$data['name'];
+              //  if(method_exists($this,$method_name)){
+              //      return self::$method_name($data, $lang, $removeSig);
+              //  }                
+           // else{
+            $this->answer['answer']=self::documentCreation($data['name'], $data, $lang, $removeSig);
+            return json_encode($this->answer);
+           // }
    
            // }
 
         }
 
-        private function document_Accural_of_social_scholarship($data=null, $lang=null, $signature=null){
-
-            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
-
-            $recipient = "username@infiz.khpi.edu.ua";
-
-            if($data!=null && $lang!=null && $signature!=null){
-                $senderName=parent::connection()->prepare('SELECT `username` FROM `users` WHERE `mail`=?');
-                    $senderName->execute([$data['mail']]);
-                    $sName= $senderName->fetch();
-
-
-                    $example = imagecreatefrompng('http://localhost/System_of_electronic_document_circulation/document_examples/canvas.png');
-                    $userSignature = imagecreatefrompng($signature);
-                    $file = 'http://localhost/System_of_electronic_document_circulation/document_examples/'.$data['name'].'.txt';
-                    $filetext = mb_convert_encoding(file_get_contents($file), 'UTF-8');
-                    $filetext=preg_replace('/ПІБ/', $data['initials'], $filetext);
-                    $filetext=preg_replace('/ГРУПА/', $data['group'], $filetext);
-                   // $filetext=preg_replace('/КОГО/', $data['recipient'], $filetext);
-                    $filetext=preg_replace('/ я великий молодець і зробив цю курсову/', " ".$data['text'], $filetext);
-                    $textarr = explode(';',$filetext);
-
-
-                    imagettftext($example, 15, 0, 450, 100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[0]);
-                    imagettftext($example, 15, 0, 450, 140, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[1]);
-                    imagettftext($example, 15, 0, 350, 180, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[2]);
-                    imagettftext($example, 15, 0, 450, 240, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[3]);
-                    imagettftext($example, 15, 0, 380, 350, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[4]);
-                    imagettftext($example, 15, 0, 150, 400, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[5]);
-
-                    $text = str_split($textarr[6], 100);
-                    $x=150;
-                    $y=420;
-                    for($i=0; $i<count($text); $i++){
-                        if($i===0){
-                            imagettftext($example, 15, 0, $x, $y, imagecolorallocate($example,0,0,0), 'arial.ttf', $text[$i]);
-                        }
-                        else{
-                            imagettftext($example, 15, 0, $x, $y+($i*20), imagecolorallocate($example,0,0,0), 'arial.ttf', $text[$i]);
-                        }
-                        
-                    }
-                // 
-                    imagettftext($example, 15, 0, 200, 800, imagecolorallocate($example,0,0,0), 'arial.ttf', date('d m Y'));
-                    imagettftext($example, 15, 0, 200, 850, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[7]);
-                    imagettftext($example, 15, 0, 300, 800, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[8]);
-                    imagettftext($example, 15, 0, 650, 850, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[9]);
-                    imagettftext($example, 15, 0, 550, 1100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[10]);
-                    imagecopy($example, $userSignature, 600, 700, 0, 0 ,126, 100);
-                    $picName=$sName->username.'_'.date("Y-m-d_H-i-s");
-                    imagepng($example, $data['name'].'_'.$picName.'.png');
-                    imagedestroy($example);
-                    imagedestroy($userSignature);
-                    $fName='E:/xampp/htdocs/System_of_electronic_document_circulation/'.$data['name'].'_'.$picName.'.png';
-
-                    unlink($signature);
-
-                    $sql = parent::connection()->prepare('INSERT INTO `docs` VALUES(?,?,?,?,?)');
-                    $sql->execute([NULL, $data['mail'], $recipient, $fName, 'unchecked']);
-                    
-                    return $$lang['docMsg'];
-            }
-
-            else{
-
-                $example = imagecreatefrompng('http://localhost/System_of_electronic_document_circulation/document_examples/canvas.png');
-                $file = 'http://localhost/System_of_electronic_document_circulation/document_examples/Accural_of_social_scholarship.txt';
-               // $handle = fopen($filename, "r");
-                $filetext = mb_convert_encoding(file_get_contents($file), 'UTF-8');
-                $textarr = explode(';',$filetext);
-                //fclose($handle);
-                imagettftext($example, 15, 0, 450, 100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[0]);
-                imagettftext($example, 15, 0, 450, 140, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[1]);
-                imagettftext($example, 15, 0, 350, 180, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[2]);
-                imagettftext($example, 15, 0, 450, 240, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[3]);
-                imagettftext($example, 15, 0, 380, 350, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[4]);
-                imagettftext($example, 15, 0, 150, 400, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[5]);
-                imagettftext($example, 15, 0, 150, 450, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[6]);
-                imagettftext($example, 15, 0, 200, 850, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[7]);
-                imagettftext($example, 15, 0, 300, 800, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[8]);
-                imagettftext($example, 15, 0, 650, 850, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[9]);
-                imagettftext($example, 15, 0, 550, 1100, imagecolorallocate($example,0,0,0), 'arial.ttf', $textarr[10]);
-                
-            
-                imagepng($example, 'ticket.png');
-                imagedestroy($example);
-            
-                 return '<img src="http://localhost/System_of_electronic_document_circulation/ticket.png">';
-
-            }
-
-        }
-
-        private function document_voluntary_deduction($data=null, $lang=null, $signature=null)
+        private function documentCreation($documentName, $data=null, $lang=null, $signature=null)//LOOKS LIKE USER DOESN'T NEED TO ADD HIS SIGNATURE SIGNATURE WILL BE ADDED BY LARIN 
         {
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
@@ -216,7 +137,7 @@
                     $senderName->execute([$data['mail']]);
                     $sName= $senderName->fetch();
 
-                $example = imagecreatefrompng('http://localhost/System_of_electronic_document_circulation/document_examples/voluntary_deduction.png');
+                $example = imagecreatefrompng('http://localhost/System_of_electronic_document_circulation/document_examples/canvas.png');
                 $userSignature = imagecreatefrompng($signature);
 
                 imagettftext($example, 30, 0, 1035, 209, imagecolorallocate($example,0,0,0), 'arial.ttf', $data['course']);
@@ -226,14 +147,14 @@
                 imagettftext($example, 20, 0, 805, 476, imagecolorallocate($example,0,0,0), 'arial.ttf', $data['initials']);
                 //imagettftext($example, 15, 0, 1045, 209, imagecolorallocate($example,0,0,0), 'arial.ttf', $data['course']);
                 $text = str_split($data['text'], 115);
-                $x=305;
+                $x=300;
                 $y=683;
                 for($i=0; $i<count($text); $i++){
                     if($i===0){
-                        imagettftext($example, 30, 0, $x, $y, imagecolorallocate($example,0,0,0), 'arial.ttf', $text[$i]);
+                        imagettftext($example, 25, 0, $x, $y, imagecolorallocate($example,0,0,0), 'arial.ttf', $text[$i]);
                     }
                     else{
-                        imagettftext($example, 30, 0, $x, $y+($i*80), imagecolorallocate($example,0,0,0), 'arial.ttf', $text[$i]);
+                        imagettftext($example, 25, 0, $x, $y+($i*80), imagecolorallocate($example,0,0,0), 'arial.ttf', $text[$i]);
                     }
                     
                 }
@@ -257,11 +178,18 @@
             }
 
             else{
-                return '<img src="http://localhost/System_of_electronic_document_circulation/document_examples/voluntary_deduction.png">';
+                if(file_exists("E:/xampp/htdocs/System_of_electronic_document_circulation/document_examples/".$documentName."_example.png")){
+                    return '<img src="http://localhost/System_of_electronic_document_circulation/document_examples/'.$documentName.'_example.png">';
+                }
+                else{
+                    return "wrong name";
+                }
             }
         }
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////!!! I CAN  MAKE ONLY ONE FUNCTION WHERE THERE WILL BE CHANGING ONLY NAMES OF DOCUMENTS 
+//////////////////////////////////////////////////////////////////////////////////////////////////!!! CAUSE ALL THE REST IS THE SAME
         public function recipientList($searchingName){
             $searchingName = trim($searchingName);
             if($searchingName!=''){
@@ -284,5 +212,6 @@
         }
 
     }
+
 
 ?>

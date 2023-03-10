@@ -1,5 +1,5 @@
 <div id="answer">
-
+  <?php echo $data;?>
 </div>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -7,7 +7,7 @@
   crossorigin="anonymous"></script>
 
   <script>
-    $(document).ready(function(){
+   /* $(document).ready(function(){
         var user = '<?php echo $_SESSION['user'];?>';
 
         $.ajax({
@@ -21,5 +21,5 @@
     });
     
     //console.log(user);
-
+*/
   </script>

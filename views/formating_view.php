@@ -47,35 +47,26 @@
    <!-- <div id="list"></div> -->
     <textarea  maxlength="250" id="text"style="height: 100px; width:150px"></textarea></br>
     <input type="file" id="signature"><br/>
-    <button id="generate">generate</button>
+    <?php
+        if(!isset($_SESSION['user'])){
+            echo "You can't make documents before you log in or sign in";
+        }
+        else{
+            echo '<button id="generate">generate</button>';
+        }
+    ?>
 </form>
 
 <p id="answer"></p>
-<!--<div id="document"></div>-->
+<div id="document"><?php echo $data; ?></div>
 </body>
 </html>
 <!--<button id="exampleDwn">Download example</button> -->
 <script>
     $(document).ready(function(){
 
-        $.ajax({
-            type:'POST',
-            url:'http://localhost/System_of_electronic_document_circulation/index.php/documents/showExample',
-            data:{name:'<?php   echo $_GET['name'];?>'},
-            success:function(data){ 
-                $('#document').html(data);
-                if(data=='wrong document name'){
-                    $("#generate").css("display", "none");
-                }
-            }
-        });
-
         $(document).on('click', '#generate', function(event){
             event.preventDefault();
-            if('<?php if(isset($_SESSION['user'])){echo 'regisered';} else{echo 'unregistered';}?>' ==='unregistered'){
-                $('#answer').html("You can't seend documents while You unregistered on this site");
-            }
-            else{
                 var name = "<?php echo  $_GET['name'];?>";
                 var course = $('#course').val();
                 var studyingForm = $('#studyingForm').val();
@@ -110,10 +101,10 @@
 
                     success:function(data){
                         //$('#dwnld').attr('href', 'http://localhost/System_of_electronic_document_circulation/index.php/documents/download?name='+data); 
-                        $('#answer').html(data);
+                        data = JSON.parse(data);
+                        $('#answer').html(data.answer);
                     }
                 });
-            }
 
         });
 
@@ -137,11 +128,11 @@
 
         });*/
 
-        $(document).on('click', '.variants', function(){
+      /*  $(document).on('click', '.variants', function(){
             $('#recipient').val($(this).attr('name'));
             //$('#list').attr('display', 'none');
             $('#list').css("display", "none");
-        });
+        });*/
 
     });
 </script>

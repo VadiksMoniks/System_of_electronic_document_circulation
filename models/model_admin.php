@@ -101,6 +101,10 @@ session_start();
                 return 'Please specify the reasone of deletion of document';
             }
 
+            if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ\s\-`]+/',$message)){
+                return "Reasone of deletion must be on ukrainian language";
+            }
+
             $checkValid = parent::connection()->prepare("SELECT * FROM `docs` WHERE `document_name` = ?");
             $checkValid->execute(["E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
 
@@ -127,21 +131,102 @@ session_start();
 
         //SORTIROVKI
         public function sortByDocName($docName)
-        {
-            $docName= str_replace(" ", "_", $docName);
+        { 
             $list = '';
+            $data = array();
+            if($docName!="Select document name"){
+                $docName= str_replace(" ", "_", $docName);
+               
 
-            $sqlData = parent::connection()->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked' AND `document_name` LIKE ? ORDER BY `id` DESC");
-            $sqlData->execute(["%$docName%"]);
+                $sqlData = parent::connection()->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked' AND `document_name` LIKE ? ORDER BY `id` DESC");
+                $sqlData->execute(["%$docName%"]);
 
-            $resultList = $sqlData->fetchAll();
-            foreach($resultList as $docInfo){
-                $list.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.basename($docInfo->document_name).'">'.basename($docInfo->document_name).'</a></br>';
+                $resultList = $sqlData->fetchAll();
+                foreach($resultList as $docInfo){
+                   // array_push($data,[])
+                    $list.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.basename($docInfo->document_name).'">'.basename($docInfo->document_name).'</a></br>';
+                }
+
+            //  $list.=' </table>';
+                return $list;
+            }
+            else{
+
+                $sqlData = parent::connection()->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked 'ORDER BY `id` DESC");
+                $sqlData->execute();
+    
+                $resultList = $sqlData->fetchAll();
+                foreach($resultList as $docInfo){
+                    $list.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.basename($docInfo->document_name).'">'.basename($docInfo->document_name).'</a></br>';
+                }
+    
+              //  $list.=' </table>';
+                return $list;
+
+            }
+        }
+
+     /*   public function makePost($data)
+        {   
+           // var_dump($_FILES);
+            $path='E:/xampp/htdocs/System_of_electronic_document_circulation/articles/';
+            if(trim($data['name'])===""){
+                return "please add article name";
+            }
+            if(empty($_FILES['text']['name'])){
+                return "please add article text";
             }
 
-          //  $list.=' </table>';
+            $filetype = new SplFileInfo($_FILES['text']['name']);
+            if($filetype->getExtension() != 'txt'){
+                return "article must be a txt file";
+            }
+
+            $filePath1=$path.basename($_FILES['text']['name']);
+            move_uploaded_file($_FILES['text']['tmp_name'], $filePath1);
+
+            if(count($_FILES)<2){
+                $sql = parent::connection()->prepare("INSERT INTO `articles` VALUES(NULL, ?, ?, NULL, ?)");
+                $sql->execute([$data['name'], $filePath1,date('d-m-Y')]);
+                return "post was created";
+            }
+            else{
+                $filetype = new SplFileInfo($_FILES['image']['name']);
+            
+                if($filetype->getExtension() != 'png'){
+                    return "image must be offtype png";
+                }
+                
+                $filePath2=$path.basename($_FILES['image']['name']);
+                move_uploaded_file($_FILES['image']['tmp_name'], $filePath2);
+
+                $sql = parent::connection()->prepare("INSERT INTO `articles` VALUES(NULL, ?, ?, ?, ?)");
+                $sql->execute([$data['name'], $filePath1,$filePath2,date('d-m-Y')]);
+                return "post was created";
+            }
+        }
+
+        public function articles_list()
+        {
+            $list='';
+            $sqlData = parent::connection()->prepare("SELECT * FROM `articles` ORDER BY `id` DESC");
+            $sqlData->execute();
+
+            $resultList = $sqlData->fetchAll();
+            if(!$resultList){
+                return '0 articles exists';
+            }
+            foreach($resultList as $postInfo){
+               //ТУТ МОЖНА ССИЛКУ НА ПОСТ И НАЗВАНИЕ ПОСТА 
+               $list.="<ahref='http://localhost/System_of_electronic_document_circulation/index.php/admin/viewPost?n='".basename($postInfo->articles_name)."'>".basename($postInfo->articles_name)."</a></br>";
+            }
             return $list;
         }
+
+        public function searchByArticlesList($name)
+        {
+            
+        }*/
 
     }
 

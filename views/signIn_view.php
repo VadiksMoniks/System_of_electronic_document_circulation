@@ -43,9 +43,10 @@
                 data:{mail:mail, password:password},
                 success:function(data){
                         $('#answer').fadeIn();
-                        $('#answer').html(data);
+                        data = JSON.parse(data);
+                        $('#answer').html(data.answer);
                         console.log(data);
-                        if(data == "OK"){
+                        if(data.answer == "OK"){
                             location.reload();
                         }
                         
