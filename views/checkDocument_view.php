@@ -25,7 +25,7 @@
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
 <p id="info"></p>
-<div id="doc"></div>
+<div id="doc"><img src="http://localhost/System_of_electronic_document_circulation/<?php echo $data;?>"></div>
 <button id="delete">Delete the document</button>
 <form>
     <textarea id="message"></textarea>
@@ -34,17 +34,6 @@
     <button id="checkDoc">Checked</button>
 <script>
     $(document).ready(function(){
-        docName = '<?php echo $_GET['n'];?>';
-            $.ajax({
-                type:'POST',
-                url:'http://localhost/System_of_electronic_document_circulation/index.php/admin/showDocument',
-                data:{docName:docName},
-
-                success:function(data){
-                    $('#doc').fadeIn();
-                    $('#doc').html(data);
-                }
-        });
 
         $(document).on('click', '#delete', function(event){
             event.preventDefault();
@@ -67,7 +56,8 @@
                 data:{docName:docName, message:message},
 
                 success:function(data){
-                    $('#info').html(data);
+                    data = JSON.parse(data);
+                    $('#info').html(data.answer);
                     if($('#info').text()==="Reasone of deletion must be on ukrainian language"){
                         $('form').css("display", "block");
                     }
@@ -87,7 +77,8 @@
                 data:{docName:docName},
 
                 success:function(data){
-                    $('#info').html(data);
+                    data = JSON.parse(data);
+                    $('#info').html(data.answer);
                 }
             });
 

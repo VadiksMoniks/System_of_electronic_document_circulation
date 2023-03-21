@@ -55,7 +55,7 @@ session_start();
                             $sql->execute([NULL, $data['mail'], $data['username'], $password]);
                        // if($data['keepSigned']==='keep'){
                             //setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
-                            $_SESSION['user'] = $data['mail'];
+                            //$_SESSION['user'] = $data['mail'];
                        // }
                       //  else if($data['keepSigned']==='no'){
                             //setcookie('username', $data['mail'],strtotime( '+1 day' ) ,'/');
@@ -189,33 +189,44 @@ session_start();
             }
         }
 
-        public function historyList($user, $lang){
+        public function historyList($user, $lang){//тут короче переделать в массив вместо строки возврат и в джейсон его и еще возвращать инфу кто сейчас должен подписать
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
-            $answer ='';
+            //$answer = array();
             if(!empty($user)){
 
-                $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
-                $sqlMail->execute([$user]);
-                $mail= $sqlMail->fetch();
+                //$sqlMail = parent::connection()->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
+                //$sqlMail->execute([$user]);
+                //$mail= $sqlMail->fetch();
 
                 $sql= parent::connection()->prepare("SELECT * FROM `docs` WHERE `sender`=?");
-                $sql->execute([$mail->mail]);
+                $sql->execute([$user]);
                 $result=$sql->fetchAll(PDO::FETCH_ASSOC);
                 if($result!=NULL){
                     for($i=0; $i<count($result); $i++){
-                        if($result[$i]['status']=="unsigned" || $result[$i]['status']=="unchecked"){
-                            $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'</p></a> <button value="'.$result[$i]["document_name"].'" class="btn">Delete record</button><br/>';
+                        if($result[$i]['status']=="unchecked"){
+                            array_push($this->answer, ["value"=>basename($result[$i]['document_name']), "status"=>"unchecked"]);//CAN DELETE DOC
                         }
-                        else if($result[$i]['status']=="signed"){
-                             $answer.='<p>'.basename($result[$i]['document_name']).'</p><br/>';
+                        else if($result[$i]['status']=="unsigned"){
+
+                            if($result[$i]["allready_signed"]!=NULL){
+                                $arr = str_replace($result[$i]["allready_signed"],"",$result[$i]["reciever"]);
+                                $arr = explode(',',$arr);
+                                array_push($this->answer, ["value"=>basename($result[$i]['document_name']), "status"=>"unsigned", "current"=>$arr[0]]);
+                            }
+                            else{
+                                $arr = explode(',',$result[$i]['reciever']);
+                                array_push($this->answer, ["value"=>basename($result[$i]['document_name']), "status"=>"unsigned", "current"=>$arr[0]]);
+                            }
+
                         }
-                        else{
-                           $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.basename($result[$i]["document_name"]).'"><p>'.basename($result[$i]['document_name']).'(Deleted by admin)</p></a><br/>';
+                        else if($result[$i]['status']!="unchecked" && $result[$i]['status']!="checked" && $result[$i]['status']!="signed"){
+                            array_push($this->answer, ["value"=>basename($result[$i]['document_name']), "status"=>"Deleted by admins"]);
                         }
                     }
                     
-                    return $answer;
+                    //return json_encode($this->answer);
+                    return $this->answer;
                 }
                 else{
                     return $$lang['Msghistory'];
@@ -253,7 +264,7 @@ session_start();
             
         }
 
-        public function signList($user, $lang){
+        /*public function signList($user, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             $answer='';
 
@@ -282,7 +293,7 @@ session_start();
             }
 
             return "Wrong user data";
-        }
+        }*/
 
         public function show_doc($docName, $lang){//now it can return also a msg from admin if doc was deleted by admins
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
@@ -313,7 +324,7 @@ session_start();
         }
 
 
-        public function sign_document($docName, $lang){
+       /* public function sign_document($docName, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             $filetype = new SplFileInfo($_FILES['file']['name']);
             
@@ -348,29 +359,29 @@ session_start();
             $sql = parent::connection()->prepare('UPDATE `docs` SET `status`=?, `document_name`=? WHERE `document_name`=?');
             $sql->execute(['signed',$fName, 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName]);
             return $$lang['sign_documentMsg'];
-        }
+        }*/
 
 
         public function deleteDocument($data, $lang){
 
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
-            $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
-            $sqlMail->execute([$data['user']]);
-            $mail= $sqlMail->fetchAll();
-
+           // $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
+           // $sqlMail->execute([$data['user']]);
+           // $mail= $sqlMail->fetchAll();
+            $path='E:/xampp/htdocs/System_of_electronic_document_circulation/';
             $sql= parent::connection()->prepare("SELECT * FROM `docs` WHERE `document_name`=? AND `sender`=?");
-            $sql->execute([$data['docName'], $mail]);
-            $result = $sql->fetchAll();
+            $sql->execute([$path.$data['docName'], $data['user']]);
+            $result = $sql->fetch();
             if($result==NULL){
                 return $$lang['deleteDocError1'];
             }
 
             else{
-                if(file_exists($data['docName'])){
-                    unlink($data['docName']); 
+                if(file_exists($path.$data['docName'])){
+                    unlink($path.$data['docName']); 
                     $del=parent::connection()->prepare("DELETE FROM `docs` WHERE `document_name`=? AND `sender`=?");
-                    $del->execute([$data['docName'], $data['user']]);
+                    $del->execute([$path.$data['docName'], $data['user']]);
                     return $$lang['deleteDocMsg'];
                 }
                 else{

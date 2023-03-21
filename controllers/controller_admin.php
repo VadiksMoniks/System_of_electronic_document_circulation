@@ -39,23 +39,24 @@
 
       public function action_checkDocument()//view for checking documents
       {
-          $this->view->generate('admin_view.php');//show doc
+          $data=$this->model->showDocument($_GET['n']);
+          $this->view->generate('admin_view.php', $data);//show doc
       }
 
-     /* public function action_documentsList()//model with the list of docs DONE
+      public function action_documentsList()//model with the list of docs DONE
       {
           echo $this->model->documentList();
-      }*/
+      }
 
-      public function action_numOfRecords()
+      /*public function action_numOfRecords()
       {
         echo $this->model->numOfRecords();
-      }
+      }*/
 
-      public function action_showDocument()//model that returns a pick of document to the view DONE
+    /*  public function action_showDocument()//model that returns a pick of document to the view DONE
       {
           return $this->model->showDocument($_POST['docName']);
-      }
+      }*/
 
       public function action_manipulate()
       {
@@ -72,7 +73,7 @@
         echo $this->model->sortByDocName($_POST['docName']);
       }
 
-      public function action_post()
+     /* public function action_post()
       {
         $this->view->generate('admin_view.php');
       }
@@ -87,7 +88,7 @@
         $data = $this->model->articles_list();
         $this->view->generate('admin_view.php', $data);
 //ТУТ МОЖНА ЗВЕРНУТИСЯ СПОЧАТКУ ДО МОДЕЛІ А ПОТІМ В₴ЮВУ ПЕРЕДАТИ ДАННІ
-      }
+      }*/
 
     }
 //НУЖНО КАКТО ИЗМЕНИТЬ РАБОТУ ВИДА ЧТОБЫ ОН ПРИНИМАЛ ПАРАМЕТР ДАТА И В КОНТРОЛЛЕРЕ ВЫЗЫВАТЬ СНАЧАЛА МОДЕЛЬ ПОЛУЧАТЬ ДАТУ И ОТПРАВЛЯТЬ В ВИД А НЕ ИССПОЛЬЗОВАТЬ ДВЕ ФУНКЦИИ

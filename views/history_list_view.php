@@ -1,5 +1,30 @@
 <div id="answer">
-    <?php echo $data;?>
+    <?php 
+        //echo $data;
+        if(gettype($data)==="array"){
+            for($i=0; $i<count($data); $i++){
+                if(isset($data[$i]["current"])){
+                    echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.$data[$i]['value'].'">'.$data[$i]['value'].'(Waiting to be signed by '.$data[$i]['current'].')</a></br>';
+                }
+                else{
+                    echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.$data[$i]['value'].'">'.$data[$i]['value'].'('.$data[$i]['status'].')</a></br>';
+                    if($data[$i]["status"]==="unchecked"){
+                        echo  '<button value="'.$data[$i]["value"].'" class="btn">Delete record</button><br/>'; 
+                    }
+                }
+
+               // else if($data[$i]["status"]==="checked"){
+    
+                //}
+               // else if($data[$i]["status"]==="Deleted by admins"){
+    
+               // }
+            }
+        }
+        else{
+            echo $data;
+        }
+    ?>
 </div>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -8,6 +33,8 @@
 
   <script>
     $(document).ready(function(){
+
+
 
    /*     var user = '<?php echo $_SESSION['user'];?>';
 
@@ -27,7 +54,7 @@
             var user = '<?php echo $_SESSION['user'];?>'
             data.append('docName', docName);
             data.append('user', user);
-            //console.log(docName);
+            console.log(user);
             
             $.ajax({
                 type:'POST',

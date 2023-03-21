@@ -14,7 +14,7 @@ else{
 <ul id="docsList">
     <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/history_list?u=<?php echo $_SESSION['user']?>"><?php echo $$lang['history.acc'];?></a></li>
     <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/documents_to_download?u=<?php echo $_SESSION['user']?>"><?php echo $$lang['download.acc'];?></a></li>
-    <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/for_signature?u=<?php echo $_SESSION['user']?>"><?php echo $$lang['sign.acc'];?></a></li>
+    <!--<li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/for_signature?u=<?php //echo $_SESSION['user']?>"><?php //echo $$lang['sign.acc'];?></a></li>-->
 </ul>
 
 

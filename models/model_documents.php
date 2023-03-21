@@ -1,8 +1,10 @@
 <?php
     include 'languages.php';
     class Model_Documents extends Model{
-
-        private $answer = array();//FOR JSON ANSWER
+//для рукописних заяв можна зробити можливіть завантажити скан
+//адмін пропустить тільки скан а далі підпишуть документ отримувачі
+//для цього треба окремі функції мб хз поки
+       // private $answer = array();//FOR JSON ANSWER
 
         public function showExample($document_name){
 
@@ -121,7 +123,7 @@
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
 
-            $recipient = "username@infiz.khpi.edu.ua";
+            $recipients = "ZavKafedry@infiz.khpi.edu.ua,Larin@infiz.khpi.edu.ua,SecretaryCPC@khpi.edu.ua,ViddilKadriv@khpi.edu.ua,PROrector@khpi.edu.ua,Myguschenko@khpi.edu.ua";//array with mails
             if($data!=null && $lang!=null && $signature!=null){
 
                 if($data['studyingForm']=='daytime'){
@@ -133,9 +135,9 @@
                 
 
 
-                $senderName=parent::connection()->prepare('SELECT `username` FROM `users` WHERE `mail`=?');
-                    $senderName->execute([$data['mail']]);
-                    $sName= $senderName->fetch();
+                //$senderName=parent::connection()->prepare('SELECT `username` FROM `users` WHERE `mail`=?');
+                //    $senderName->execute([$data['mail']]);
+                //    $sName= $senderName->fetch();
 
                 $example = imagecreatefrompng('http://localhost/System_of_electronic_document_circulation/document_examples/canvas.png');
                 $userSignature = imagecreatefrompng($signature);
@@ -163,7 +165,7 @@
                 imagettftext($example, 30, 0, 500, 1045, imagecolorallocate($example,0,0,0), 'arial.ttf', date('m'));
                 imagecopy($example, $userSignature, 1329, 965, 0, 0 ,126, 100);
 
-                $picName=$sName->username.'_'.date("Y-m-d_H-i-s");
+                $picName=$data['mail'].'_'.date("Y-m-d_H-i-s");
                 imagepng($example, $data['name'].'_'.$picName.'.png');
                 imagedestroy($example);
                 imagedestroy($userSignature);
@@ -171,8 +173,8 @@
 
                 unlink($signature);
                 
-                $sql = parent::connection()->prepare('INSERT INTO `docs` VALUES(?,?,?,?,?)');
-                $sql->execute([NULL, $data['mail'], $recipient, $fName, 'unchecked']);
+                $sql = parent::connection()->prepare('INSERT INTO `docs` VALUES(?,?,?,?,?,?)');
+                $sql->execute([NULL, $data['mail'], $recipients, $fName, 'unchecked', NULL]);
 
                 return $$lang['docMsg'];
             }
@@ -190,7 +192,7 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////!!! I CAN  MAKE ONLY ONE FUNCTION WHERE THERE WILL BE CHANGING ONLY NAMES OF DOCUMENTS 
 //////////////////////////////////////////////////////////////////////////////////////////////////!!! CAUSE ALL THE REST IS THE SAME
-        public function recipientList($searchingName){
+/*       public function recipientList($searchingName){
             $searchingName = trim($searchingName);
             if($searchingName!=''){
                 $sql = parent::connection()->prepare('SELECT `mail` FROM `users` WHERE `mail` LIKE ?');
@@ -209,7 +211,7 @@
                  $output.='</ul>';
                  return $output;
             }
-        }
+        }*/
 
     }
 

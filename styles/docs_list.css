@@ -2,7 +2,11 @@ p, li{
     font-size: 20px;
 }
 
-#h{
+#h1{
+    align: center;
+    font-size: 30px;
+}
+#h2{
     align: center;
     font-size: 30px;
 }
@@ -12,6 +16,17 @@ p, li{
 
 #doclist{
     list-style: disc;
+    
+}
+
+#notHandwritten, #Handwritten{
+    width: 500px;
+    
+   
+}
+
+#Handwritten{
+   
 }
 
 #docs{

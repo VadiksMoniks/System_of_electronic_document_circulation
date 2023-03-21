@@ -25,7 +25,14 @@
         <option class="variant">granting academic leave</option>
     </select>
 </div>
-<div id="list"><?php echo $data;?></div>
+<div id="list">
+    <?php
+    //var_dump($data);
+        for($i=0; $i<count($data); $i++){
+            echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.$data[$i].'">'.$data[$i].'</a></br>'; 
+        }
+    ?>
+ </div>
 
 <script>
     $(document).ready(function(){
@@ -54,9 +61,15 @@
                         //processData: false,
 
                     success:function(data){
-                            //$('#dwnld').attr('href', 'http://localhost/System_of_electronic_document_circulation/index.php/documents/download?name='+data); 
+                            //$('#dwnld').attr('href', 'http://localhost/System_of_electronic_document_circulation/index.php/documents/download?name='+data);
+                        $('#list').empty(); 
+                        data = JSON.parse(data);
                         $('#list').fadeIn();
-                        $('#list').html(data);
+                        for(let i=0; i<data.length; i++)
+                        {
+                             $('#list').append('<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='+data[i]+'">'+data[i]+'</a></br>');
+                        }
+                       
                     }
                 });
            // }

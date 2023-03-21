@@ -3,6 +3,7 @@
     class Model{
 
         protected $pdo;
+        protected $answer = array();
 
         protected function connection(){
             $host = "localhost";

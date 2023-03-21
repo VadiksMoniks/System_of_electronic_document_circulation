@@ -74,10 +74,10 @@
             $this->view->generate('template_view.php', $data);
         }
 
-        public function action_for_signature(){
+        /*public function action_for_signature(){
             $data =$this->model->signList($_GET['u'],$_COOKIE['lang']);
             $this->view->generate('template_view.php', $data);
-        }
+        }*/
 
         public function action_sign(){
             $this->view->generate('template_view.php');
@@ -95,9 +95,9 @@
             $this->model->signDoc($_POST['docName']);
         }*/
 
-        public function action_signDoc(){
+       /* public function action_signDoc(){
             echo $this->model->sign_document($_POST['docName'],$_COOKIE['lang']);
-        }
+        }*/
 
         public function action_logOut(){
             $this->model->signOut();
