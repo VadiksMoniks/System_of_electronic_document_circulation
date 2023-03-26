@@ -5,7 +5,7 @@
         function generate($template_view, $data=null)
         {
            
-            include 'views/'.$template_view;
+            include 'views/templates/'.$template_view;
 
            // if(isset($data)){
            //     return $data;

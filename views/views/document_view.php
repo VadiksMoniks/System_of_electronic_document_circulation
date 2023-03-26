@@ -49,8 +49,8 @@
                 <li><?php echo $$lang['doc6.docs'];?> <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=extension_of_academic_leave"><?php echo $$lang['create.docs'];?></a></li>
                 </ul></li>
                 <li>Переведення здобувачів вищої освіти</li>
-                <li>Поновлення до складу студентів (після відрахування)  <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/handwritten?name=renewal_to_higher_education_institution"><?php echo $$lang['create.docs'];?></a></li>
-                <li>Зміна джерела фінансування  <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/handwritten?name=transfer_from_the_budget_to_the_contract"><?php echo $$lang['create.docs'];?></a></li>
+                <li>Поновлення до складу студентів (після відрахування)  <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=renewal_to_higher_education_institution"><?php echo $$lang['create.docs'];?></a></li>
+                <li>Зміна джерела фінансування  <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=transfer_from_the_budget_to_the_contract"><?php echo $$lang['create.docs'];?></a></li>
             </ul>
        </div>
        <div id="Handwritten">

@@ -173,8 +173,8 @@
 
                 unlink($signature);
                 
-                $sql = parent::connection()->prepare('INSERT INTO `docs` VALUES(?,?,?,?,?,?)');
-                $sql->execute([NULL, $data['mail'], $recipients, $fName, 'unchecked', NULL]);
+                $sql = parent::connection()->prepare('INSERT INTO `docs` VALUES(?,?,?,?,?,?,?)');
+                $sql->execute([NULL, $data['mail'], $recipients, $fName, 'unchecked', NULL, "templated"]);
 
                 return $$lang['docMsg'];
             }

@@ -26,5 +26,6 @@
         </style>
     </head>
 <body>
+<h1>Узнать, кто должен подписывать</h1>
 <div id="document"><?php echo $data; ?></div>
 </body>

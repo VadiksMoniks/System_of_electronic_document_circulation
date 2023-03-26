@@ -29,10 +29,11 @@ if(isset($_SESSION['admin'])){
                 url: 'http://localhost/System_of_electronic_document_circulation/index.php/admin/authorizeAdmin',
                 data:{username:username, password:password},
                 success:function(data){
+                    data = JSON.parse(data);
                         $('#answer').fadeIn();
-                        $('#answer').html(data);
-                        console.log(data);
-                        if(data == "ok"){
+                        $('#answer').html(data.answer);
+                        console.log(data.answer);
+                        if(data.answer == "ok"){
                             location.reload();
                         }
                         

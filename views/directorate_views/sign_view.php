@@ -21,7 +21,7 @@
 
   <script>
     $(document).ready(function(){
-        var docName = '<?php echo $_GET['name'];?>';
+       /* var docName = 
 
         $.ajax({
             type:'POST',
@@ -30,18 +30,18 @@
             success:function(data){
                 $('#answer').html(data);
             }
-        });
+        });*/
 
         $(document).on('click', '#sign', function(event){
             event.preventDefault();
             var img = $('#signature').prop('files')[0];
-            var docName = '<?php echo $_GET['name'];?>';
+            var docName = '<?php echo $_GET['u'];?>';
             var data = new FormData;
             data.append('file', img);
-            data.append('docName', docName);
+            data.append('document_name', docName);
             $.ajax({
                 type:'POST',
-                url:'http://localhost/System_of_electronic_document_circulation/index.php/account/signDoc',
+                url:'http://localhost/System_of_electronic_document_circulation/index.php/directorate/signDoc',
                 data:data,
                 contentType : false,
                 processData: false,

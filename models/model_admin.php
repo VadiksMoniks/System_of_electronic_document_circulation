@@ -46,7 +46,7 @@ session_start();
                 session_start();
                 unset($_SESSION['admin']); // или $_SESSION = array() для очистки всех данных сессии
                 session_destroy();
-                header("Location: http://localhost/System_of_electronic_document_circulation/index.php");
+                header("Location: http://localhost/System_of_electronic_document_circulation/index.php/admin/authorization");
             }
         }
 

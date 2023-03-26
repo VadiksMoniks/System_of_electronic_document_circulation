@@ -1,10 +1,11 @@
+<h1>Якщо документ вже чекає на підписання - заборонити його перегляд</h1>
 <div id="answer">
     <?php 
         //echo $data;
         if(gettype($data)==="array"){
             for($i=0; $i<count($data); $i++){
                 if(isset($data[$i]["current"])){
-                    echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.$data[$i]['value'].'">'.$data[$i]['value'].'(Waiting to be signed by '.$data[$i]['current'].')</a></br>';
+                    echo '<p >'.$data[$i]['value'].'(Waiting to be signed by '.$data[$i]['current'].')</p></br>';
                 }
                 else{
                     echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/showDoc?name='.$data[$i]['value'].'">'.$data[$i]['value'].'('.$data[$i]['status'].')</a></br>';
