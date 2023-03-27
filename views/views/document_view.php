@@ -51,6 +51,7 @@
                 <li>Переведення здобувачів вищої освіти</li>
                 <li>Поновлення до складу студентів (після відрахування)  <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=renewal_to_higher_education_institution"><?php echo $$lang['create.docs'];?></a></li>
                 <li>Зміна джерела фінансування  <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=transfer_from_the_budget_to_the_contract"><?php echo $$lang['create.docs'];?></a></li>
+                <li>Зміна особистих данних(прізвища) <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=change_of_personal_data_(surname)"><?php echo $$lang['create.docs'];?></a></li>
             </ul>
        </div>
        <div id="Handwritten">
@@ -60,7 +61,11 @@
                     <li>Надання соціальної стипендії <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/handwritten?name=accural_of_social_scholarship"><?php echo $$lang['example.docs'];?></a></li>
                     <li>Продовження виплати соціальної стипендії <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/handwritten?name=continuation_of_the_payment_of_the_social_scholarship"><?php echo $$lang['example.docs'];?></a></li>
                 </ul></li>             
-                <li>Нарахування додаткових балів до стипендіального рейтингу <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=voluntary_deduction"><?php echo $$lang['example.docs'];?></a></li>
+                <li>Нарахування додаткових балів до стипендіального рейтингу <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/handwritten?name=voluntary_deduction"><?php echo $$lang['example.docs'];?></a></li>
+                <li>Зняття копії документів, що знаходяться у відділі кадрів <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/handwritten?name=removal_of_copies_of_documents_located_in_the_personnel_department"><?php echo $$lang['example.docs'];?></a></li>
+                <li>Видача оригінала ЗНО <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/handwritten?name=issuance_of_the_original_ZNO"><?php echo $$lang['example.docs'];?></a></li>
+                <li>Поліпшення оцінки <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/handwritten?name=improvement_of_assessment"><?php echo $$lang['example.docs'];?></a></li>
+                <li>Перезарахування оцінок <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/handwritten?name=re_enrollment_of_grades"><?php echo $$lang['example.docs'];?></a></li>
             </ul>
        </div>
     </div>

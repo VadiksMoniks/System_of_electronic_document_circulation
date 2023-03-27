@@ -118,6 +118,38 @@
 
         }
 
+        public function handwrittenDoc($data)
+        {
+
+            $data['name'] = trim($data['name']);
+            $data['sender'] = trim($data['sender']);
+            if($data['name']===""){
+                return "empty username";
+            }
+            else if($data['sender']===""){
+                return "empty document name";
+            }
+
+            $filetype = new SplFileInfo($_FILES['file']['name']);
+
+            if($filetype->getExtension() != 'png'){
+                //$this->answer['answer']= "File must be offtype PNG";
+                return "File must be offtype PNG";
+            }
+
+            else{
+                $dir = 'E:/xampp/htdocs/System_of_electronic_document_circulation/';
+                $removeDoc = $dir.basename($_FILES['file']['name']);
+                move_uploaded_file($_FILES['file']['tmp_name'], $removeDoc);
+               
+            }
+
+            //$this->answer['answer']=self::storeHandwrittenDoc($data, $removeDoc);
+            //return json_encode($this->answer);
+            return self::storeHandwrittenDoc($data, $removeDoc);
+
+        }
+
         private function documentCreation($documentName, $data=null, $lang=null, $signature=null)//LOOKS LIKE USER DOESN'T NEED TO ADD HIS SIGNATURE SIGNATURE WILL BE ADDED BY LARIN 
         {
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
@@ -139,7 +171,7 @@
                 //    $senderName->execute([$data['mail']]);
                 //    $sName= $senderName->fetch();
 
-                $example = imagecreatefrompng('http://localhost/System_of_electronic_document_circulation/document_examples/canvas.png');
+                $example = imagecreatefrompng('E:/xampp/htdocs/System_of_electronic_document_circulation/document_examples/canvas.png');
                 $userSignature = imagecreatefrompng($signature);
 
                 imagettftext($example, 30, 0, 1035, 209, imagecolorallocate($example,0,0,0), 'arial.ttf', $data['course']);
@@ -189,6 +221,29 @@
             }
         }
 
+        private function storeHandwrittenDoc($data, $document)
+        {
+            /*$accural_of_social_scholarship = "Myguschenko@khpi.edu.ua";
+            $continuation_of_the_payment_of_the_social_scholarship = "Myguschenko@khpi.edu.ua";
+            $removal_of_copies_of_documents_located_in_the_personnel_department = "Myguschenko@khpi.edu.ua";
+            $issuance_of_the_original_ZNO = "Myguschenko@khpi.edu.ua";
+            $improvement_of_assessment = "Myguschenko@khpi.edu.ua";
+            $re_enrollment_of_grades = "Larin@infiz.khpi.edu.ua";
+*/
+            $picName=$data['sender'].'_'.date("Y-m-d_H-i-s");
+            $newDocName = 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.$data['name'].'_'.$picName.'.png';
+            rename($document, $newDocName);
+
+            $recievers = $data['name'];
+            $sql = parent::connection()->prepare("INSERT INTO `docs` VALUES(?,?,?,?,?,?,?)");
+            if($data['name']==="re_enrollment_of_grades"){
+                $sql->execute([NULL, $data['sender'],"Larin@infiz.khpi.edu.ua", $newDocName, "unchecked", NULL, "handwritten"]);
+            }
+            else{
+                $sql->execute([NULL, $data['sender'],"Myguschenko@khpi.edu.ua", $newDocName, "unchecked", NULL, "handwritten"]);
+            }
+            return "Your document was generated and sended to recipient to sign it";
+        }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////!!! I CAN  MAKE ONLY ONE FUNCTION WHERE THERE WILL BE CHANGING ONLY NAMES OF DOCUMENTS 
 //////////////////////////////////////////////////////////////////////////////////////////////////!!! CAUSE ALL THE REST IS THE SAME

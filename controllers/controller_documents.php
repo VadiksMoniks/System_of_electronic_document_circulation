@@ -26,7 +26,10 @@
             $data = $this->model->showExample($_GET['name']);
             echo $this->view->generate('template_view.php', $data);
         }
-
+        public function action_makeHandwritten()
+        {
+            echo $this->model->handwrittenDoc($_POST);
+        }
        // public function action_showExample(){
        //     echo $this->model->showExample($_POST['name']);
        // }

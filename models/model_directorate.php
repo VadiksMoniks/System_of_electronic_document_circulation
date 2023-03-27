@@ -65,7 +65,7 @@
             $sql->execute(["unsigned"]);
 
             $result = $sql->fetchAll(PDO::FETCH_ASSOC);
-            if($result===NULL){
+            if($result===false){
                 return "Something went wrong";
             }
             for($i=0; $i<count($result); $i++){
@@ -143,7 +143,7 @@
                 return self::signTemplated($data['document_name'],$directorate, $path, $removeSig, $result);
             }
             else{
-              //  return self::signHandwritten($data['document_name'],$directorate, $path, $removeSig, $result);
+                return self::signHandwritten($data['document_name'],$directorate, $path, $removeSig, $result);
             }
 
         }
@@ -243,7 +243,31 @@
 
         private function signHandwritten($documentName, $directorate, $docPath, $signaturePath, $docInfo)
         {
+            $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `directorate_accounts` WHERE `username` =?");
+            $sqlMail->execute([$directorate]);
+            $directorateMail = $sqlMail->fetch();
 
+            $document = imagecreatefrompng($docPath);
+            $directorateSignature = imagecreatefrompng($signaturePath);
+            
+            imagecopy($document, $directorateSignature, 211, 135, 0, 0 ,126, 100);
+            imagepng($document, $docPath);
+            $newFile = new Imagick();
+            $newFile->readImage($docPath);
+                        //$newFile->readImage();
+            $newFile->setFormat('pdf');
+            $fName = 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.basename($docPath, '.png').".".$newFile->getFormat();
+            $newFile->writeImage($fName);
+
+            $sql = parent::connection()->prepare("UPDATE `docs` SET `document_name` = ?, `already_signed` = ?, `status` = ? WHERE `document_name` = ?");
+            $sql->execute([$fName,$directorateMail->mail,"signed",$docInfo->document_name]);
+            imagedestroy($document);
+            imagedestroy($directorateSignature);
+                       // imagedestroy($directorateSignature);
+                       // unlink($removeSig);
+            unlink($docPath);
+            unlink($signaturePath);
+            return "Thank You";
         }
 
     }
