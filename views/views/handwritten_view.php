@@ -40,7 +40,7 @@
 </form>
 <p id="answer"></p>
 <div id="document">
-    <?php echo $data; ?>
+    <?php echo '<img src="http://localhost/System_of_electronic_document_circulation/document_examples/'.$data[0]['answer'].'_example.png">'; ?>
 </div>
 </body>
 </html>
@@ -66,8 +66,8 @@
 
                     success:function(data){
                         //$('#dwnld').attr('href', 'http://localhost/System_of_electronic_document_circulation/index.php/documents/download?name='+data); 
-                       // data = JSON.parse(data);
-                        $('#answer').html(data);
+                        data = JSON.parse(data);
+                        $('#answer').html(data.answer);
                     }
                 });
             });

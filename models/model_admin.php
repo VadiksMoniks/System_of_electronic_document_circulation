@@ -18,7 +18,7 @@ session_start();
                 return json_encode($this->answer);
             }
 
-            $usernameValid = parent::connection()->prepare("SELECT * FROM `admins` WHERE `admin` = ?");
+            $usernameValid = $this->pdo->prepare("SELECT * FROM `admins` WHERE `admin` = ?");
             $usernameValid->execute([$data['username']]);
 
             $result = $usernameValid->fetch();
@@ -52,18 +52,18 @@ session_start();
 
         public function documentList()//return list of all records
         {
-            $list = array();
+            //$list = array();
 
-            $sqlData = parent::connection()->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked 'ORDER BY `id` DESC");
+            $sqlData = $this->pdo->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked 'ORDER BY `id` DESC");
             $sqlData->execute();
 
             $resultList = $sqlData->fetchAll();
             foreach($resultList as $docInfo){
-                array_push($list,basename($docInfo->document_name));
+                array_push($this->answer,basename($docInfo->document_name));
             }
 
           //  $list.=' </table>';
-            return $list;
+            return $this->answer;
 
         }
 
@@ -84,7 +84,7 @@ session_start();
                 return 'document name is empty!';
             }
 
-            $docPathSql = parent::connection()->prepare("SELECT * FROM `docs` WHERE `document_name` = ?");
+            $docPathSql = $this->pdo->prepare("SELECT * FROM `docs` WHERE `document_name` = ?");
             $docPathSql->execute(['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$name]);
 
             $docPath = $docPathSql->fetch();
@@ -110,7 +110,7 @@ session_start();
                 $this->answer['answer'] = "Reasone of deletion must be on ukrainian language";
             }
 
-            $checkValid = parent::connection()->prepare("SELECT * FROM `docs` WHERE `document_name` = ?");
+            $checkValid = $this->pdo->prepare("SELECT * FROM `docs` WHERE `document_name` = ?");
             $checkValid->execute(["E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
 
             $result = $checkValid->fetch();
@@ -120,7 +120,7 @@ session_start();
             }
 
             unlink($result->document_name);
-            $deleteStatement = parent::connection()->prepare("UPDATE `docs` SET `status` = ?  WHERE `document_name` = ?");
+            $deleteStatement = $this->pdo->prepare("UPDATE `docs` SET `status` = ?  WHERE `document_name` = ?");
             $deleteStatement->execute([$message, "E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
 
             $this->answer['answer'] = "Document Was DELETED";
@@ -130,7 +130,7 @@ session_start();
 
         public function checkDocument($docName)
         {
-            $checkedStatus = parent::connection()->prepare("UPDATE `docs` SET `status` = ? WHERE `document_name` = ?");
+            $checkedStatus = $this->pdo->prepare("UPDATE `docs` SET `status` = ? WHERE `document_name` = ?");
             $checkedStatus->execute(["unsigned","E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
 
             $this->answer['answer'] = 'Thank You!';
@@ -146,7 +146,7 @@ session_start();
                 $docName= str_replace(" ", "_", $docName);
                
 
-                $sqlData = parent::connection()->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked' AND `document_name` LIKE ? ORDER BY `id` DESC");
+                $sqlData = $this->pdo->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked' AND `document_name` LIKE ? ORDER BY `id` DESC");
                 $sqlData->execute(["%$docName%"]);
 
                 $resultList = $sqlData->fetchAll();
@@ -159,7 +159,7 @@ session_start();
             }
             else{
 
-                $sqlData = parent::connection()->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked 'ORDER BY `id` DESC");
+                $sqlData = $this->pdo->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked 'ORDER BY `id` DESC");
                 $sqlData->execute();
     
                 $resultList = $sqlData->fetchAll();

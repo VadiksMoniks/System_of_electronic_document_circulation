@@ -58,7 +58,16 @@
 </form>
 
 <p id="answer"></p>
-<div id="document"><?php echo $data; ?></div>
+<div id="document">
+    <?php 
+        if($data[0]['type']==='msg'){
+            echo $data[0]['answer'];
+        }
+        else{
+            echo '<img src="http://localhost/System_of_electronic_document_circulation/document_examples/'.$data[0]['answer'].'_example.png">';
+        }
+    ?>
+</div>
 </body>
 </html>
 <!--<button id="exampleDwn">Download example</button> -->

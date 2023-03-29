@@ -1,5 +1,11 @@
 <div id="answer">
-  <?php echo $data;?>
+  <h1>можно добавить кнопки на которые нажимаешь и отправляется аякс запрос на скачивание документа</h1>
+  <?php 
+      for($i=0; $i<count($data); $i++){
+        echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/download?name='.basename($data[$i], '.pdf').'">'.basename($data[$i]).'</a><br/>';
+      }
+      
+  ?>
 </div>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"

@@ -35,23 +35,25 @@ session_start();
                 }
                 $password = password_hash($data['password'], PASSWORD_DEFAULT);
 
-                $sql = parent::connection()->prepare("SELECT * FROM `users` WHERE `username` =?");
+                $sql = $this->pdo->prepare("SELECT * FROM `users` WHERE `username` =?");
                 $sql->execute([$data['username']]);
-                $result = $sql->fetchAll();
-                if($result!=null){
+                $result = $sql->fetch();
+                //return var_dump($data);
+                if($result!=false){
                     $this->answer['answer']= $$lang['errorRegununiqName'];//checking username's unicity
                     return json_encode($this->answer);
                 }
                 else{
-                    $sql = parent::connection()->prepare("SELECT * FROM `users` WHERE `mail` =?");
+                    $sql = $this->pdo->prepare("SELECT * FROM `users` WHERE `mail` =?");
                     $sql->execute([$data['mail']]);
-                    $result = $sql->fetchAll();
-                    if($result!=null){
+                    $result = $sql->fetch();
+                   // return var_dump($data);
+                    if($result!=false){
                         $this->answer['answer']= $$lang['errorRegununiqMail'];//checking mail unicity
                         return json_encode($this->answer);
                     }
                     else{
-                            $sql = parent::connection()->prepare("INSERT INTO `users` VALUES(?,?,?,?)");
+                            $sql = $this->pdo->prepare("INSERT INTO `users` VALUES(?,?,?,?)");
                             $sql->execute([NULL, $data['mail'], $data['username'], $password]);
                        // if($data['keepSigned']==='keep'){
                             //setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
@@ -88,10 +90,10 @@ session_start();
             }
 
             else{
-                $sql = parent::connection()->prepare("SELECT * FROM `users` WHERE `mail` =?");
+                $sql = $this->pdo->prepare("SELECT * FROM `users` WHERE `mail` =?");
                 $sql->execute([$data['mail']]);
                 $result = $sql->fetch();
-                if($result!=NULL){
+                if($result!=false){
                     if(password_verify($data['password'], $result->password)==1){
                     
                        // if($data['keepSigned']==='keep'){
@@ -139,7 +141,7 @@ session_start();
 
             }
 
-            $sql = parent::connection()->prepare("SELECT `password` FROM `users` WHERE `username` =?");
+            $sql = $this->pdo->prepare("SELECT `password` FROM `users` WHERE `username` =?");
             $sql->execute([$data['user']]);
 
             $result = $sql->fetch();
@@ -147,7 +149,7 @@ session_start();
                 if(password_verify($data['oldPass'], $result->password)==1){
                     $newPass = password_hash($data['newPass'], PASSWORD_DEFAULT);
 
-                    $newPassSql = parent::connection()->prepare("UPDATE `users` SET `password` =? WHERE `mail` =?");
+                    $newPassSql = $this->pdo->prepare("UPDATE `users` SET `password` =? WHERE `mail` =?");
                     $newPassSql->execute([$newPass, $data['user']]);
 
                     $this->answer['answer']= "password was changed";
@@ -199,10 +201,10 @@ session_start();
                 //$sqlMail->execute([$user]);
                 //$mail= $sqlMail->fetch();
 
-                $sql= parent::connection()->prepare("SELECT * FROM `docs` WHERE `sender`=?");
+                $sql= $this->pdo->prepare("SELECT * FROM `docs` WHERE `sender`=?");
                 $sql->execute([$user]);
                 $result=$sql->fetchAll(PDO::FETCH_ASSOC);
-                if($result!=NULL){
+                if($result!=false){
                     for($i=0; $i<count($result); $i++){
                         if($result[$i]['status']=="unchecked"){
                             array_push($this->answer, ["value"=>basename($result[$i]['document_name']), "status"=>"unchecked"]);//CAN DELETE DOC
@@ -239,21 +241,20 @@ session_start();
         public function dwnlist($user, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
-            $answer ='';
             if(!empty($user)){
 
-                $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
+                $sqlMail = $this->pdo->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
                 $sqlMail->execute([$user]);
                 $mail= $sqlMail->fetch();
                 
-                $sql= parent::connection()->prepare("SELECT `document_name` FROM `docs` WHERE `status`=? AND `sender`=?");
+                $sql= $this->pdo->prepare("SELECT `document_name` FROM `docs` WHERE `status`=? AND `sender`=?");
                 $sql->execute(['signed',$user]);
                 $result=$sql->fetchAll(PDO::FETCH_ASSOC);
-                if($result!=NULL){
+                if($result!=false){
                     for($i=0; $i<count($result); $i++){
-                        $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/download?name='.basename($result[$i]['document_name'], '.pdf').'">'.basename($result[$i]['document_name']).'</a><br/>';
+                        array_push($this->answer, basename($result[$i]['document_name']));
                     }
-                    return $answer;
+                    return $this->answer;
                 }
                 else{
                     return $$lang['Msgdwn'];
@@ -302,7 +303,7 @@ session_start();
             }
             else{
                // return $$lang['show_docError'];
-                $msgSQL = parent::connection()->prepare("SELECT `status` FROM `docs` WHERE `document_name` = ?");
+                $msgSQL = $this->pdo->prepare("SELECT `status` FROM `docs` WHERE `document_name` = ?");
                 $msgSQL->execute(['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName]);
                 $msg = $msgSQL->fetch();
                 if(!$msg){
@@ -312,10 +313,10 @@ session_start();
                 else{
                     if($msg->status!='unsigned' && $msg->status!='signed'){
 
-                        $deleteRecord = parent::connection()->prepare("DELETE FROM `docs` WHERE `document_name` = ?");
+                        $deleteRecord = $this->pdo->prepare("DELETE FROM `docs` WHERE `document_name` = ?");
                         $deleteRecord->execute(['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName]);
 
-                        return '<p>'.$msg->status.'</p>';
+                        return $this->answer[$msg->status];
                     }
                    
                 }
@@ -370,17 +371,17 @@ session_start();
            // $sqlMail->execute([$data['user']]);
            // $mail= $sqlMail->fetchAll();
             $path='E:/xampp/htdocs/System_of_electronic_document_circulation/';
-            $sql= parent::connection()->prepare("SELECT * FROM `docs` WHERE `document_name`=? AND `sender`=?");
+            $sql= $this->pdo->prepare("SELECT * FROM `docs` WHERE `document_name`=? AND `sender`=?");
             $sql->execute([$path.$data['docName'], $data['user']]);
             $result = $sql->fetch();
-            if($result==NULL){
+            if($result===false){
                 return $$lang['deleteDocError1'];
             }
 
             else{
                 if(file_exists($path.$data['docName'])){
                     unlink($path.$data['docName']); 
-                    $del=parent::connection()->prepare("DELETE FROM `docs` WHERE `document_name`=? AND `sender`=?");
+                    $del=$this->pdo->prepare("DELETE FROM `docs` WHERE `document_name`=? AND `sender`=?");
                     $del->execute([$path.$data['docName'], $data['user']]);
                     return $$lang['deleteDocMsg'];
                 }

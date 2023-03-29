@@ -118,23 +118,30 @@
 
         }
 
-        public function handwrittenDoc($data)
+        public function handwrittenDoc($data, $lang)
         {
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
             $data['name'] = trim($data['name']);
             $data['sender'] = trim($data['sender']);
-            if($data['name']===""){
+          /*  if($data['name']===""){
                 return "empty username";
             }
             else if($data['sender']===""){
                 return "empty document name";
+            }*/
+
+            if(empty($_FILES['file']['name'])){
+                $this->answer['answer']= $$lang['hdocError2'];
+                return json_encode($this->answer);
             }
 
             $filetype = new SplFileInfo($_FILES['file']['name']);
 
             if($filetype->getExtension() != 'png'){
                 //$this->answer['answer']= "File must be offtype PNG";
-                return "File must be offtype PNG";
+                $this->answer['answer']= $$lang['docError5'];
+                return json_encode($this->answer);
             }
 
             else{
@@ -146,15 +153,15 @@
 
             //$this->answer['answer']=self::storeHandwrittenDoc($data, $removeDoc);
             //return json_encode($this->answer);
-            return self::storeHandwrittenDoc($data, $removeDoc);
+            $this->answer['answer'] = self::storeHandwrittenDoc($data, $removeDoc, $lang);
+            return json_encode($this->answer);
 
         }
 
         private function documentCreation($documentName, $data=null, $lang=null, $signature=null)//LOOKS LIKE USER DOESN'T NEED TO ADD HIS SIGNATURE SIGNATURE WILL BE ADDED BY LARIN 
         {
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
-
-
+    
             $recipients = "ZavKafedry@infiz.khpi.edu.ua,Larin@infiz.khpi.edu.ua,SecretaryCPC@khpi.edu.ua,ViddilKadriv@khpi.edu.ua,PROrector@khpi.edu.ua,Myguschenko@khpi.edu.ua";//array with mails
             if($data!=null && $lang!=null && $signature!=null){
 
@@ -205,7 +212,7 @@
 
                 unlink($signature);
                 
-                $sql = parent::connection()->prepare('INSERT INTO `docs` VALUES(?,?,?,?,?,?,?)');
+                $sql = $this->pdo->prepare('INSERT INTO `docs` VALUES(?,?,?,?,?,?,?)');
                 $sql->execute([NULL, $data['mail'], $recipients, $fName, 'unchecked', NULL, "templated"]);
 
                 return $$lang['docMsg'];
@@ -213,16 +220,20 @@
 
             else{
                 if(file_exists("E:/xampp/htdocs/System_of_electronic_document_circulation/document_examples/".$documentName."_example.png")){
-                    return '<img src="http://localhost/System_of_electronic_document_circulation/document_examples/'.$documentName.'_example.png">';
+                    //return '<img src="http://localhost/System_of_electronic_document_circulation/document_examples/'.$documentName.'_example.png">';
+                    array_push($this->answer,['answer'=>$documentName, 'type'=>"image"]);
+                    return $this->answer;
                 }
                 else{
-                    return "wrong name";
+                    array_push($this->answer,['answer'=>"Wrong name", 'type'=>"msg"]);
+                    return $this->answer; 
                 }
             }
         }
 
-        private function storeHandwrittenDoc($data, $document)
+        private function storeHandwrittenDoc($data, $document, $lang)
         {
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             /*$accural_of_social_scholarship = "Myguschenko@khpi.edu.ua";
             $continuation_of_the_payment_of_the_social_scholarship = "Myguschenko@khpi.edu.ua";
             $removal_of_copies_of_documents_located_in_the_personnel_department = "Myguschenko@khpi.edu.ua";
@@ -235,14 +246,14 @@
             rename($document, $newDocName);
 
             $recievers = $data['name'];
-            $sql = parent::connection()->prepare("INSERT INTO `docs` VALUES(?,?,?,?,?,?,?)");
+            $sql = $this->pdo->prepare("INSERT INTO `docs` VALUES(?,?,?,?,?,?,?)");
             if($data['name']==="re_enrollment_of_grades"){
                 $sql->execute([NULL, $data['sender'],"Larin@infiz.khpi.edu.ua", $newDocName, "unchecked", NULL, "handwritten"]);
             }
             else{
                 $sql->execute([NULL, $data['sender'],"Myguschenko@khpi.edu.ua", $newDocName, "unchecked", NULL, "handwritten"]);
             }
-            return "Your document was generated and sended to recipient to sign it";
+            return $$lang['docMsg'];
         }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////!!! I CAN  MAKE ONLY ONE FUNCTION WHERE THERE WILL BE CHANGING ONLY NAMES OF DOCUMENTS 

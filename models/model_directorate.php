@@ -7,17 +7,17 @@
         {
             $data['mail'] = trim($data['mail']);
             $data['password'] = trim($data['password']);
-
+            
             if($data['mail']==="" || $data['password']===""){
                 $this->answer['answer'] = "Input fields can't be empty";
                 return json_encode($this->answer); 
             }
 
-            $sql = parent::connection()->prepare("SELECT * FROM `directorate_accounts` WHERE `mail` =?");
+            $sql = $this->pdo->prepare("SELECT * FROM `directorate_accounts` WHERE `mail` =?");
             $sql->execute([$data['mail']]);
             $result = $sql->fetch();
 
-            if(!$result){
+            if($result===false){
                 $this->answer['answer'] = "Wrong mail or password";
                 return json_encode($this->answer); 
             }
@@ -29,9 +29,16 @@
                     return json_encode($this->answer); 
                 }
                 else{
-                    $_SESSION['directorate'] = $result->username;
-                    $this->answer['answer'] = "OK";
-                    return json_encode($this->answer);
+                    if(password_verify($data['ip'], $result->ip)==1){
+                       // return "yes";
+                        $_SESSION['directorate'] = $result->username;
+                        $this->answer['answer'] = "OK";
+                        return json_encode($this->answer);
+                    }
+                    else{
+                        $this->answer['answer'] = "access denied";
+                        return json_encode($this->answer);
+                    }
                 }
             }
         }
@@ -56,12 +63,12 @@
                 header("Location: http://localhost/System_of_electronic_document_circulation/index.php");
             }
 
-            $sqlUser = parent::connection()->prepare("SELECT * FROM `directorate_accounts` WHERE `username`=?");
+            $sqlUser = $this->pdo->prepare("SELECT * FROM `directorate_accounts` WHERE `username`=?");
             $sqlUser->execute([$user]);
             $resultUser = $sqlUser->fetch();
 
 
-            $sql = parent::connection()->prepare("SELECT `reciever`, `already_signed`, `document_name` FROM `docs` WHERE `status`=?");
+            $sql = $this->pdo->prepare("SELECT `reciever`, `already_signed`, `document_name` FROM `docs` WHERE `status`=?");
             $sql->execute(["unsigned"]);
 
             $result = $sql->fetchAll(PDO::FETCH_ASSOC);
@@ -132,10 +139,10 @@
                
             }
 
-            $sql = parent::connection()->prepare("SELECT * FROM `docs` WHERE `document_name`=?");
+            $sql = $this->pdo->prepare("SELECT * FROM `docs` WHERE `document_name`=?");
             $sql->execute([$path]);
             $result = $sql->fetch();
-            if(!$result){
+            if($result===false){
                 return "something went wrong";
             }
 
@@ -154,7 +161,7 @@
             $document = imagecreatefrompng($docPath);
             $directorateSignature = imagecreatefrompng($signaturePath);
 
-            $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `directorate_accounts` WHERE `username` =?");
+            $sqlMail = $this->pdo->prepare("SELECT `mail` FROM `directorate_accounts` WHERE `username` =?");
             $sqlMail->execute([$directorate]);
             $directorateMail = $sqlMail->fetch();
 
@@ -163,7 +170,7 @@
                 imagettftext($document, 30, 0, 273, 1750, imagecolorallocate($document,0,0,0), 'arial.ttf', date('d'));
                 imagettftext($document, 30, 0, 417, 1750, imagecolorallocate($document,0,0,0), 'arial.ttf', date('m'));
 
-                $sql = parent::connection()->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
+                $sql = $this->pdo->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
                 $sql->execute([$directorateMail->mail,$docInfo->document_name]);
             }
             else{
@@ -177,15 +184,15 @@
                         imagettftext($document, 30, 0, 281, 1284, imagecolorallocate($document,0,0,0), 'arial.ttf', date('d'));
                         imagettftext($document, 30, 0, 469, 1278, imagecolorallocate($document,0,0,0), 'arial.ttf', date('m'));
 
-                        $sql = parent::connection()->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
+                        $sql = $this->pdo->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
                         $sql->execute([$docInfo->already_signed.','.$directorateMail->mail,$docInfo->document_name]);
                         break;
                     case 2://Secretary
-                        imagecopy($document, $directorateSignature, 525, 1816, 0, 0 ,126, 100);
+                        imagecopy($document, $directorateSignature, 1115, 1530, 0, 0 ,126, 100);
                         imagettftext($document, 30, 0, 273, 1910, imagecolorallocate($document,0,0,0), 'arial.ttf', date('d'));
                         imagettftext($document, 30, 0, 469, 1910, imagecolorallocate($document,0,0,0), 'arial.ttf', date('m'));
 
-                        $sql = parent::connection()->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
+                        $sql = $this->pdo->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
                         $sql->execute([$docInfo->already_signed.','.$directorateMail->mail,$docInfo->document_name]);
                         break;
                     case 3://Viddil cadriv
@@ -193,7 +200,7 @@
                         imagettftext($document, 30, 0, 959, 1750, imagecolorallocate($document,0,0,0), 'arial.ttf', date('d'));
                         imagettftext($document, 30, 0, 1135, 1750, imagecolorallocate($document,0,0,0), 'arial.ttf', date('m'));
 
-                        $sql = parent::connection()->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
+                        $sql = $this->pdo->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
                         $sql->execute([$docInfo->already_signed.','.$directorateMail->mail,$docInfo->document_name]);
                         break;
                     case 4://prorector
@@ -201,7 +208,7 @@
                         imagettftext($document, 30, 0, 959, 1910, imagecolorallocate($document,0,0,0), 'arial.ttf', date('d'));
                         imagettftext($document, 30, 0, 1111, 1910, imagecolorallocate($document,0,0,0), 'arial.ttf', date('m'));
 
-                        $sql = parent::connection()->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
+                        $sql = $this->pdo->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
                         $sql->execute([$docInfo->already_signed.','.$directorateMail->mail,$docInfo->document_name]);
                         break;
                     case 5://Myguschenko
@@ -214,7 +221,7 @@
                         $fName = 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.basename($docPath, '.png').".".$newFile->getFormat();
                         $newFile->writeImage($fName);
 
-                        $sql = parent::connection()->prepare("UPDATE `docs` SET `document_name` = ?, `already_signed` = ?, `status` = ? WHERE `document_name` = ?");
+                        $sql = $this->pdo->prepare("UPDATE `docs` SET `document_name` = ?, `already_signed` = ?, `status` = ? WHERE `document_name` = ?");
                         $sql->execute([$fName,$docInfo->already_signed.','.$directorateMail->mail,"signed",$docInfo->document_name]);
                        // imagedestroy($directorateSignature);
                        // unlink($removeSig);
@@ -229,7 +236,7 @@
             imagedestroy($directorateSignature);
             unlink($signaturePath);
             $deleteImg = "E:/xampp/htdocs/System_of_electronic_document_circulation/".$documentName.".pdf";
-            $sqlStatus = parent::connection()->prepare("SELECT `status` FROM `docs` WHERE `document_name` = ?");
+            $sqlStatus = $this->pdo->prepare("SELECT `status` FROM `docs` WHERE `document_name` = ?");
             $sqlStatus->execute([$deleteImg]);
             $status = $sqlStatus->fetch();
             if($status!=false && $status->status==="signed"){
@@ -243,7 +250,7 @@
 
         private function signHandwritten($documentName, $directorate, $docPath, $signaturePath, $docInfo)
         {
-            $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `directorate_accounts` WHERE `username` =?");
+            $sqlMail = $this->pdo->prepare("SELECT `mail` FROM `directorate_accounts` WHERE `username` =?");
             $sqlMail->execute([$directorate]);
             $directorateMail = $sqlMail->fetch();
 
@@ -259,7 +266,7 @@
             $fName = 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.basename($docPath, '.png').".".$newFile->getFormat();
             $newFile->writeImage($fName);
 
-            $sql = parent::connection()->prepare("UPDATE `docs` SET `document_name` = ?, `already_signed` = ?, `status` = ? WHERE `document_name` = ?");
+            $sql = $this->pdo->prepare("UPDATE `docs` SET `document_name` = ?, `already_signed` = ?, `status` = ? WHERE `document_name` = ?");
             $sql->execute([$fName,$directorateMail->mail,"signed",$docInfo->document_name]);
             imagedestroy($document);
             imagedestroy($directorateSignature);

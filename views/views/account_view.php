@@ -18,9 +18,9 @@ else{
 </ul>
 
 
-<p>Settings</p>
+<p><?php echo $$lang['account.settings'];?></p>
 <ul>
-    <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/changePasswordForm">change password</a></li>
+    <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/changePasswordForm"><?php echo $$lang['account.changePass'];?></a></li>
 </ul>
 <?php
    // session_start();

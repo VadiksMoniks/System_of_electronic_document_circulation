@@ -25,11 +25,11 @@ if(isset($_SESSION['directorate'])){
             event.preventDefault()
             var mail = $('#mail').val();
             var password = $('#password').val();
-            var keepSigned = '';
+            var ip = '<?php echo $_SERVER['REMOTE_ADDR'];?>';
             $.ajax({
                 type: "POST",
                 url: 'http://localhost/System_of_electronic_document_circulation/index.php/directorate/logIn',
-                data:{mail:mail, password:password},
+                data:{mail:mail, password:password, ip:ip},
                 success:function(data){
                         $('#answer').fadeIn();
 
