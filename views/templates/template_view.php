@@ -150,8 +150,8 @@
         </div>
         <div id="content">
         <?php
-
-            if(!isset($_SERVER['PATH_INFO'])){
+        
+            if(!isset($_SERVER['PATH_INFO']) || basename($_SERVER['PATH_INFO'])==''){
                 include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/views/main_view.php';
             }
             else{

@@ -2,65 +2,46 @@
 
     class Router{
 
+                    
+        private static $controller_name = 'Main';
+        private static $action_name = 'index';
+        private static $model_name = '';
+
         public static function start(){
-            
-            $controller_name = 'Main';
-            $action_name = 'index';
-            $model_name = '';
-            $getParam = null;
 
-            $routes = explode('/', $_SERVER['REQUEST_URI']);
+            $routes = explode('/', trim($_SERVER['REQUEST_URI'],'/'));
 
-
-            if(!empty($routes[3])){
-                $controller_name = $routes[3];
-            }
-            else{
-                $controller_name = 'Main';
+            if(!empty($routes[2]) && isset($routes[2])){
+                self::$controller_name = $routes[2];
             }
 
-            if(!empty($routes[4])){
+            if(!empty($routes[3]) && isset($routes[3])){
 
-                if(preg_match('/\?\w/', $routes[4])==1){
-
-                    $check_get = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_QUERY);
-                    $getParam = explode('=',$check_get);
-                   /* if(preg_match('/[&]/', $check_get)==true){ FOR FEW PARAMS!!!!!!!!!!!!!!!!!!!!!!
-                    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        $query_temp = explode('&', $check_get); // Разбиваем _GET запрос в массив
-                        $query = array(); // Задаем пустой массив для будущего вывода
-
-                        // Перебираем массив с GET запросом
-                        foreach($query_temp as $key=>$value) {
-                            $temp = explode('=', $value); // Разбиваем каждый запрос через знак =
-                            $query[$temp['0']] = $temp['1'];
-                        } 
-                    }*/
-
-                    //else{
-                      //  $getParam = $check_get['query'];
-                   // }
-
-                    $r=explode('?',$routes[4]);
-                    $action_name = $r[0];
+                if(preg_match('/\?\w/', $routes[3])==1){
+                    $r=explode('?',$routes[3]);
+                    self::$action_name = $r[0];
                 }
                 else{
-                    $action_name = $routes[4];
+                    self::$action_name = $routes[3];
                 }
+            }  
+
+            if(!isset($routes[3]) && strtolower(self::$controller_name)!='main'){
+                Router::ErrorPage404();
             }
 
-            $model_name = 'Model_'.$controller_name;
-            $controller_name = 'Controller_'.$controller_name;
-            $action_name = 'action_'.$action_name;
+            self::$model_name = 'Model_'.self::$controller_name;
+            self::$controller_name = 'Controller_'.self::$controller_name;
+            self::$action_name = 'action_'.self::$action_name;
 
-            $model_file = strtolower($model_name).'.php';
+            $model_file = strtolower(self::$model_name).'.php';
             $model_path = 'models/'.$model_file;
 
             if(file_exists($model_path)){
                 include $model_path;
             }
 
-            $controller_file = strtolower($controller_name).'.php';
+            $controller_file = strtolower(self::$controller_name).'.php';
             $controller_path = 'controllers/'.$controller_file;
 
             if(file_exists($controller_path)){
@@ -72,8 +53,8 @@
                 exit;
             }
 
-            $controller = new $controller_name;
-            $action = $action_name;
+            $controller = new self::$controller_name;
+            $action = self::$action_name;
 
             if(method_exists($controller, $action)){
 

@@ -2,6 +2,10 @@ p, li{
     font-size: 20px;
 }
 
+.doc{
+  margin-top: 20px;
+}
+
 #h1{
     align: center;
     font-size: 30px;
@@ -16,21 +20,21 @@ p, li{
 
 #doclist{
     list-style: disc;
-    
+    margin-left: 20px;
 }
 
 #notHandwritten, #Handwritten{
-    width: 500px;
-    
+    width: 45%;
+    flex:1;
    
 }
 
 #Handwritten{
-   
+   margin-left: 15%;
 }
 
 #docs{
-    width: 30%;
-    float: left;
+    
+    display: flex;
 
 }

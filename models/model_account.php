@@ -13,8 +13,8 @@ session_start();
             $pattern='/[a-zA-Z_\s.]+@infiz.khpi.edu.ua/';
 
             if($data['mail']==""){
-                $this->data['answer']= $$lang['errorRegEmptyMail'];
-                return json_encode($this->data);
+                $this->answer['answer']= $$lang['errorRegEmptyMail'];
+                return json_encode($this->answer);
             }
 
             else if($data['username']==""){
@@ -53,24 +53,55 @@ session_start();
                         return json_encode($this->answer);
                     }
                     else{
-                            $sql = $this->pdo->prepare("INSERT INTO `users` VALUES(?,?,?,?)");
-                            $sql->execute([NULL, $data['mail'], $data['username'], $password]);
+                            $token = md5(time());
+                            $sql = $this->pdo->prepare("INSERT INTO `waiting_for_auth` VALUES(?,?,?,?,?)");
+                            $sql->execute([NULL, $data['mail'], $data['username'], $password, $token]);
+
+                            $header = 'Verification Mail';
+                            $message = 'This is No-reply letter. Please follow this link to end your registration on our web-site. <a href=http://localhost/System_of_electronic_document_circulation/index.php/account/registre?token='.$token.'>http://localhost/System_of_electronic_document_circulation/index.php/account/registre?token='.$token.'</a></br>';
+                            self::sendMail($data['mail'], $header, $message);
                        // if($data['keepSigned']==='keep'){
                             //setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
                             //$_SESSION['user'] = $data['mail'];
                        // }
                       //  else if($data['keepSigned']==='no'){
                             //setcookie('username', $data['mail'],strtotime( '+1 day' ) ,'/');
-                            $_SESSION['user'] = $data['username'];
+                           // $_SESSION['user'] = $data['username'];
                       //  }
                         
-                      $this->answer['answer']= $$lang['okMsg'];
-                      return json_encode($this->answer);
+                            $this->answer['answer']= $$lang['checkMail'];//$$lang['okMsg'];
+                            return json_encode($this->answer);
                     }
                 }
 
             }
 
+        }
+
+        public function verificate($token, $lang){
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
+
+            if(isset($token) && !empty($token)){
+                $sql = $this->pdo->prepare("SELECT * FROM `waiting_for_auth` WHERE `token` = ?");
+                $sql->execute([$token]);
+
+                $userData = $sql->fetch();
+
+                if($userData == false){
+                    $this->answer['answer'] = 'wrong URL';
+                    return json_encode($this->answer);
+                }
+                else{
+                    $addUser = $this->pdo->prepare("INSERT INTO `users` VALUES(?,?,?,?,?)");
+                    $addUser->execute([NULL, $userData->mail, $userData->username, $userData->password, 1]);
+                    $dropData = $this->pdo->prepare("DELETE FROM `waiting_for_auth` WHERE `token` =?");
+                    $dropData->execute([$token]);
+                    $_SESSION['user'] = $userData->username;
+
+                    $this->answer['answer'] = $$lang['okMsg'];
+                    return json_encode($this->answer);
+                }
+            }
         }
 
         public function signIn($data, $lang){
@@ -316,7 +347,7 @@ session_start();
                         $deleteRecord = $this->pdo->prepare("DELETE FROM `docs` WHERE `document_name` = ?");
                         $deleteRecord->execute(['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName]);
 
-                        return $this->answer[$msg->status];
+                        return $this->answer['answet']=$msg->status;
                     }
                    
                 }
@@ -394,6 +425,35 @@ session_start();
 
         
         } 
+
+        public function notificationStatus($user){
+            $sql = $this->pdo->prepare("SELECT `notification` FROM `users` WHERE `username` = ?");
+            $sql->execute([$user['user']]);
+            $result = $sql->fetch();
+            if($result != false){
+                return $result->notification;
+            }
+        }
+
+        public function turnNotification($user){
+            $value=0;
+            $sql = $this->pdo->prepare("SELECT `notification` FROM `users` WHERE `username` = ?");
+            $sql->execute([$user['user']]);
+            $result = $sql->fetch();
+            if($result != false){
+                if($result->notification == 1){
+                    $this->answer['answer']= 'Now you`ll not get notifications on You`r e-mail address. You can change this setting at any time';
+                }
+                else{
+                    $value = 1;
+                    $this->answer['answer']= 'Now you`ll get notifications on You`r e-mail address. You can change this setting at any time';
+                }
+
+                $sql = $this->pdo->prepare("UPDATE `users` SET `notification` = ? WHERE `username` = ?");
+                $sql ->execute([$value, $user['user']]);
+                return $this->answer['answer'];
+            }
+        }
 
     }
 

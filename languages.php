@@ -69,7 +69,8 @@
         'wrongRecipient'=>"There is no such user who you are trying to send this document",
         'docMsg'=>"Your document was generated and sended to recipient to sign it",
         'blogHeader'=>'Future updates',
-        'goHome'=>'Take me back home'
+        'goHome'=>'Take me back home',
+        'checkMail' => 'We`ve send You a verification message on You`r mail. Please check it and follow the nstructions'
     );
 
     $ua =  array(
@@ -105,7 +106,7 @@
         //here all the rest docs must be!!!!
         'create.docs'=>'Створити',
         'example.docs'=>'Переглянути приклад',
-        'goSignIn.reg'=>'Вже є маєте акаунт?',
+        'goSignIn.reg'=>'Вже маєте акаунт?',
         'registreLink'=>'Зареєструватися',
         'signInLink'=>'Увійти',
         //'ur.acc'=>'Ваш акаунт',
@@ -140,7 +141,8 @@
         'wrongRecipient'=>"Користувача, якому ви намагаєтесь надіслати документ НЕ існує",
         'docMsg'=>"Ваш документ було створено і надіслано отримувасу для підписання",
         'blogHeader'=>'Майбутні оновлення',
-        'goHome'=>'На головну'
+        'goHome'=>'На головну',
+        'checkMail' => 'Ми надіслали Вам лист за вказаною поштовою адресою. Будь ласка прочитайте його і виконайте інструкції'
     );
 
 ?>

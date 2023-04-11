@@ -157,6 +157,32 @@
 
         private function signTemplated($documentName, $directorate, $docPath, $signaturePath, $docInfo)//Не працює накладання тексту ніде у цій функції, ТРЕБА ВИПРАВИТИ!!!
         {
+            //$start = microtime(true);
+            $pointsOfSignatures = [ 
+                [
+                    [921, 1159],
+                    [281, 1284],
+                    [469, 1278]
+                ],
+                [
+                    [1255, 1400],
+                    [273, 1910],
+                    [469, 1910]
+                ], 
+                [
+                    [1181, 1640],
+                    [959, 1750],
+                    [1135, 1750]
+                ], 
+                [
+                    [1181, 1820],
+                    [959, 1910],
+                    [1111, 1910]
+                ],
+                [
+                    [211, 135]
+                    ]
+                ];
 
             $document = imagecreatefrompng($docPath);
             $directorateSignature = imagecreatefrompng($signaturePath);
@@ -175,44 +201,20 @@
             }
             else{
 
-                $already_signed = explode(',', $docInfo->reciever);   
-                $userIndex = array_search($directorateMail->mail, $already_signed);
-
-                switch($userIndex){
-                    case 1://Larin
-                        imagecopy($document, $directorateSignature, 921, 1159, 0, 0 ,126, 100);
-                        imagettftext($document, 30, 0, 281, 1284, imagecolorallocate($document,0,0,0), 'arial.ttf', date('d'));
-                        imagettftext($document, 30, 0, 469, 1278, imagecolorallocate($document,0,0,0), 'arial.ttf', date('m'));
-
-                        $sql = $this->pdo->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
-                        $sql->execute([$docInfo->already_signed.','.$directorateMail->mail,$docInfo->document_name]);
-                        break;
-                    case 2://Secretary
-                        imagecopy($document, $directorateSignature, 1115, 1530, 0, 0 ,126, 100);
-                        imagettftext($document, 30, 0, 273, 1910, imagecolorallocate($document,0,0,0), 'arial.ttf', date('d'));
-                        imagettftext($document, 30, 0, 469, 1910, imagecolorallocate($document,0,0,0), 'arial.ttf', date('m'));
+                    $already_signed = explode(',', $docInfo->reciever);   
+                    $userIndex = array_search($directorateMail->mail, $already_signed);
+                    $index = $userIndex-1;
+                    if($userIndex!=5){
+                        imagecopy($document, $directorateSignature, $pointsOfSignatures[$index][0][0], $pointsOfSignatures[$index][0][1], 0, 0 ,126, 100);
+                        imagettftext($document, 30, 0, $pointsOfSignatures[$index][1][0], $pointsOfSignatures[$index][1][1], imagecolorallocate($document,0,0,0), 'arial.ttf', date('d'));
+                        imagettftext($document, 30, 0, $pointsOfSignatures[$index][2][0], $pointsOfSignatures[$index][2][1], imagecolorallocate($document,0,0,0), 'arial.ttf', date('m'));
 
                         $sql = $this->pdo->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
                         $sql->execute([$docInfo->already_signed.','.$directorateMail->mail,$docInfo->document_name]);
-                        break;
-                    case 3://Viddil cadriv
-                        imagecopy($document, $directorateSignature, 1181, 1640, 0, 0 ,126, 100);
-                        imagettftext($document, 30, 0, 959, 1750, imagecolorallocate($document,0,0,0), 'arial.ttf', date('d'));
-                        imagettftext($document, 30, 0, 1135, 1750, imagecolorallocate($document,0,0,0), 'arial.ttf', date('m'));
+                    }
 
-                        $sql = $this->pdo->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
-                        $sql->execute([$docInfo->already_signed.','.$directorateMail->mail,$docInfo->document_name]);
-                        break;
-                    case 4://prorector
-                        imagecopy($document, $directorateSignature, 1181, 1820, 0, 0 ,126, 100);
-                        imagettftext($document, 30, 0, 959, 1910, imagecolorallocate($document,0,0,0), 'arial.ttf', date('d'));
-                        imagettftext($document, 30, 0, 1111, 1910, imagecolorallocate($document,0,0,0), 'arial.ttf', date('m'));
-
-                        $sql = $this->pdo->prepare("UPDATE `docs` SET `already_signed` = ? WHERE `document_name` = ?");
-                        $sql->execute([$docInfo->already_signed.','.$directorateMail->mail,$docInfo->document_name]);
-                        break;
-                    case 5://Myguschenko
-                        imagecopy($document, $directorateSignature, 211, 135, 0, 0 ,126, 100);
+                    else{
+                        imagecopy($document, $directorateSignature, $pointsOfSignatures[$index][0][0], $pointsOfSignatures[$index][0][1], 0, 0 ,126, 100);
                         imagepng($document, $docPath);
                         $newFile = new Imagick();
                         $newFile->readImage($docPath);
@@ -227,8 +229,23 @@
                        // unlink($removeSig);
                         unlink($docPath);
                         //return "Thank You";
+                        $sqlName = $this->pdo->prepare("SELECT `sender` FROM `docs` WHERE `document_name` =?");
+                        $sqlName->execute([$fName]);
+                        $name = $sqlName->fetch();
+                        
+                        $sqlSender = $this->pdo->prepare("SELECT * FROM `users` WHERE `username` =?");
+                        $sqlSender->execute([$name->sender]);
+                        $Sender = $sqlSender->fetch();
+                        if($Sender->notification ==1){
+                            $header = "Ваш документ готовий для завантаження!";
+                            $message = "Документ ".basename($fName, '.pdf')." щойно було підписано. Перейдіть у розділ 'Завантажити' у вашому профілі для того, аби скачати документ.";
+                            self::sendMail($Sender->mail, $header, $message);
+
+                        }
+                    }
+                      
                 }
-            }
+
             $img = "E:/xampp/htdocs/System_of_electronic_document_circulation/".$documentName.".png";
             //unlink($img);
             imagepng($document, $img);
@@ -244,7 +261,7 @@
             }
             //
             return "Thank You";
-            
+            //'Время выполнения скрипта: '.round(microtime(true) - $start, 4).' сек.';
 
         }
 
@@ -274,6 +291,21 @@
                        // unlink($removeSig);
             unlink($docPath);
             unlink($signaturePath);
+
+            $sqlName = $this->pdo->prepare("SELECT `sender` FROM `docs` WHERE `document_name` =?");
+            $sqlName->execute([$fName]);
+            $name = $sqlName->fetch();
+            
+            $sqlSender = $this->pdo->prepare("SELECT * FROM `users` WHERE `username` =?");
+            $sqlSender->execute([$name->sender]);
+            $Sender = $sqlSender->fetch();
+
+            if($Sender->notification == 1){
+                $header = "Ваш документ готовий для завантаження!";
+                $message = "Документ ".basename($fName, '.pdf')." щойно було підписано. Перейдіть у розділ 'Завантажити' у вашому профілі для того, аби скачати документ.";
+                self::sendMail($Sender->mail, $header, $message);
+            }
+
             return "Thank You";
         }
 

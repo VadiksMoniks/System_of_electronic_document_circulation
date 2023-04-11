@@ -38,6 +38,31 @@
 </html>
 <script>
  $(document).ready(function(){
+    let token = (new URL(document.location)).searchParams; 
+    token = token.get('token'); 
+
+    if(typeof(token) != "undefined" && token !== null){
+        console.log(token);
+        $.ajax({
+                type:'POST',
+                url:'http://localhost/System_of_electronic_document_circulation/index.php/account/verificateUser',
+                data:{token:token},
+                //cache: false,
+                //contentType: false,
+                //processData: false,
+                
+                success:function(data){
+                        data = JSON.parse(data);
+                        $('#answer').html(data.answer);
+                        $('#answer').fadeIn();
+                        if(data.answer == "OK"){
+                            location.reload();
+                        }
+                        //console.log($('#answer').val());
+                }
+            });
+    }
+
     $(document).on('click', '#reg', function(event){
         event.preventDefault()
         //function uploadfiles(){
@@ -85,9 +110,9 @@
                         $('#answer').html(data.answer);
                         $('#answer').fadeIn();
                         console.log($('#answer').val());
-                        if(data.answer == "OK"){
-                            location.reload();
-                        }
+                       // if(data.answer == "OK"){
+                       //     location.reload();
+                       // }
                 }
             });
     });

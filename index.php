@@ -9,5 +9,4 @@
     //include 'languages.php';
     Router::start();
     //$lang = 'en';
-    
 ?>

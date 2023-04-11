@@ -22,6 +22,11 @@ else{
 <ul>
     <li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/changePasswordForm"><?php echo $$lang['account.changePass'];?></a></li>
 </ul>
+<div>
+    <p id="status"></p>
+    <button id="change">change setting</button>
+    <p id="answer"></p>
+</div>
 <?php
    // session_start();
    //var_dump($_COOKIE);
@@ -34,6 +39,47 @@ else{
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
 
+  <script>
+
+$(document).ready(function(){
+    let user = '<?php echo $_SESSION['user'];?>';
+    $.ajax({
+                type:'POST',
+                url:'http://localhost/System_of_electronic_document_circulation/index.php/account/notificationStatus',
+                data:{user:user},
+                
+                success:function(data){
+                    console.log(data);
+                        if(data == '1'){
+                            $('#status').html("You'r getting notifications from us");
+                        }
+                        else{
+                            $('#status').html("You'r NOT getting notifications from us");
+                        }
+                       
+                }
+            });
+            $(document).on('click', '#change', function(event){
+                event.preventDefault()
+                $.ajax({
+                    type:'POST',
+                    url:'http://localhost/System_of_electronic_document_circulation/index.php/account/notification',
+                    data:{user:user},
+                    //cache: false,
+                    //contentType: false,
+                    //processData: false,
+                    
+                    success:function(data){
+                        $('#answer').html(data);
+                        $('#answer').fadeIn();
+                            console.log(data);
+                    }
+                });
+            });
+    
+});
+
+  </script>
 <style>
     .docsList{
         

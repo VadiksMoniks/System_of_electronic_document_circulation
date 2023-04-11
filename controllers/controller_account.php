@@ -43,7 +43,6 @@
         }
 
         public function action_account(){
-
             $this->view->generate('template_view.php');
 
         }
@@ -83,6 +82,10 @@
             $this->view->generate('template_view.php');
         }
 
+        public function action_verificateUser(){
+             echo $this->model->verificate($_POST['token'],$_COOKIE['lang']);
+        }
+
         /*public function action_docs_for_sign(){
             echo $this->model->signList($_POST['user'],$_COOKIE['lang']);
         }*/
@@ -106,6 +109,14 @@
 
         public function action_showDoc(){
             echo $this->model->show_doc($_GET['name'],$_COOKIE['lang']);
+        }
+
+        public function action_notificationStatus(){
+            echo $this->model->notificationStatus($_POST);
+        }
+
+        public function action_notification(){
+            echo $this->model->turnNotification($_POST);
         }
     }
 
