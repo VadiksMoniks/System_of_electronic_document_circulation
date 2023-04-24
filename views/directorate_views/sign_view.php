@@ -2,6 +2,17 @@
 <html>
     <head>
         <tittle></tittle>
+        <style>
+            #image{
+                
+                margin-left:30%;  
+                width: 600px;
+                height: 800px;
+                border: 5px solid;
+                border-color: #000;
+            }
+            img { width: auto; height: 100%; }
+        </style>
     </head>
     
 <body>
@@ -10,6 +21,16 @@
         <input type="file" id="signature"><br/>
         <button id="sign">sign</button>
     </form>
+    <div id="image">
+        <?php 
+            if($data[0]['type']==='msg'){
+                echo $data[0]['answer'];
+            }
+            else{
+                echo '<img src="http://localhost/System_of_electronic_document_circulation/'.$data[0]['answer'].'.png">';
+            }
+        ?>
+    </div>
     <div id="answer">
 
     </div>
@@ -35,7 +56,7 @@
         $(document).on('click', '#sign', function(event){
             event.preventDefault();
             var img = $('#signature').prop('files')[0];
-            var docName = '<?php echo $_GET['u'];?>';
+            var docName = '<?php echo $_GET['d'];?>';
             var data = new FormData;
             data.append('file', img);
             data.append('document_name', docName);

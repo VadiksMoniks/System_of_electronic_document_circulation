@@ -14,9 +14,34 @@
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
-
-    <div id="docs">
-       <div id="notHandwritten">
+<div id="docs">
+ <div id="docs">
+    <div id="categories">
+        <p><?php echo $$lang['list.docs'];?></p>
+        <ul class="category">
+            <a href="#" class="link"><li><?php echo $$lang['doc1.docs'];?></li></a>
+            <a href="#" class="link"><li><?php echo $$lang['doc1.headers'];?></li></a>
+            <a href="#" class="link"><li><?php echo $$lang['doc2.headers'];?></li></a>
+            <a href="#" class="link"><li><?php echo $$lang['doc6.docs'];?></li></a>
+            <a href="#" class="link"><li><?php echo $$lang['doc7.docs'];?></li></a>
+            <a href="#" class="link"><li><?php echo $$lang['doc8.docs'];?></li></a>
+        </ul></br>
+        <p><?php echo $$lang['HWList.docs'];?></p>
+        <ul class="category">
+        <a href="#" class="link"><li><?php echo $$lang['doc3.headers'];?></li></a>
+        <a href="#" class="link"><li><?php echo $$lang['doc11.docs'];?></li></a>
+        <a href="#" class="link"><li><?php echo $$lang['doc12.docs'];?></li></a>
+        <a href="#" class="link"><li><?php echo $$lang['doc13.docs'];?></li></a>
+        <a href="#" class="link"><li><?php echo $$lang['doc14.docs'];?></li></a>
+        <a href="#" class="link"><li><?php echo $$lang['doc15.docs'];?></li></a>
+        </ul></br>
+    </div>
+    <div id="examples">
+        <p id="label">Chose type of document</p>
+    </div>
+</div> 
+</div>
+ <!--  <div id="notHandwritten">
         <p id="h1"><?php echo $$lang['list.docs'];?></p>
             <ul id="doclist">
                 <li class="doc"><?php echo $$lang['doc1.docs'];?> <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/formating?name=voluntary_deduction"><?php echo $$lang['create.docs'];?></a></li>
@@ -48,9 +73,48 @@
                 <li class="doc"><?php echo $$lang['doc15.docs'];?> <a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/handwritten?name=re_enrollment_of_grades"><?php echo $$lang['example.docs'];?></a></li>
             </ul>
        </div>
-    </div>
+    -->
 
 </body>
 </html>
 <script>
+    $(document).ready(function(){
+        $(document).on('click', '.link', function(event){
+            event.preventDefault();
+            let name = $(this).text();
+            //console.log(name);
+
+            $.ajax({
+                    type:'POST',
+                    url:'http://localhost/System_of_electronic_document_circulation/index.php/documents/getDocuments',
+                    data:{name:name},
+
+                    success:function(data){
+                        $('#label').attr('visibility','hiden');
+                        $('#label').attr('display','none');
+                        //$('#dwnld').attr('href', 'http://localhost/System_of_electronic_document_circulation/index.php/documents/download?name='+data); 
+                        data = JSON.parse(data);
+                        let names = data.answer.split('/');
+                        let links = data.links.split('/');
+                        for(i=0; i<names.length; i++){
+                            if(i==0){
+                                $('#examples').html(names[i]+'<a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/'+links[i]+'"> '+'<?php echo $$lang['create.docs'];?>'+'</a></br>');
+                            }
+                            else{
+                                $('#examples').append(names[i]+'<a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/'+links[i]+'"> '+'<?php echo $$lang['create.docs'];?>'+'</a></br>');
+                            }
+                        }
+                        //$('#examples').html(names[0]+'</br>');
+                        //$('#examples').html(names);
+                        //$('#examples').html(data.links);
+                        //$('#examples').html('<p>'+data.answer+'</p>');
+                        //let arr = data.answer.split('/');
+                        //for(let i=0; i<arr.length; i++){
+                        //    $('#examples').html('<p>'+arr[i].toLowerCase().replaceAll(' ','_')+'</p><a href=""></a>');
+                       // }
+                       // console.log(arr.length);
+                    }
+                });
+        });
+    });
 </script>

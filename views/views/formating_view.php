@@ -115,8 +115,7 @@
                     }
                 });
 
-        });
-
+        })
     /*    $('#recipient').keyup(function(){
 
             var recipientName = $(this).val();

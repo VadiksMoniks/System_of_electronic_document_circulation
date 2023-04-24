@@ -1,10 +1,17 @@
 <?php
+    include './core/validator.php'; 
     require  'E:/xampp/htdocs/System_of_electronic_document_circulation/vendor/autoload.php';
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception;
 
     class Model{
+
+        use Core\Validator\Validator;
+
+        const USER = 'user';
+        const ADMIN = 'admin';
+        const DIRECTORATE = 'directorate';
 
         protected $pdo;
         protected $answer = array();
@@ -18,6 +25,28 @@
             $this->pdo = new PDO($dsn, $userLog, $passwordUser);
             $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
             //return $this->pdo;
+        }
+
+        public function signOut($mode)
+        {
+            if(isset($_SESSION[$mode])){
+                //setcookie('username', 'a', 1, '/');
+                session_start();
+                unset($_SESSION[$mode]); // или $_SESSION = array() для очистки всех данных сессии
+                session_destroy();
+
+                if($mode == 'user'){
+                    $link = 'http://localhost/System_of_electronic_document_circulation/index.php';
+                }
+                else if($mode == 'admin'){
+                    $link = 'http://localhost/System_of_electronic_document_circulation/index.php/admin/authorization';
+                }
+                else if($mode == 'directorate'){
+                    $link = 'http://localhost/System_of_electronic_document_circulation/index.php/directorate/signIn';
+                }
+
+                header('Location:'.$link);
+            }
         }
 
         protected function sendMail($address,$header, $body)

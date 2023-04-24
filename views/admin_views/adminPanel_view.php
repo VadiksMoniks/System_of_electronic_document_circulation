@@ -18,11 +18,20 @@
 <div id="filters">
     <select id="names">
         <option class="variant">Select document name</option>
-        <option class="variant">Accural of social scholarship</option>
+        <option class="variant">accural of social scholarship</option>
         <option class="variant">voluntary deduction</option>
         <option class="variant">returning to study on a repeat course</option>
         <option class="variant">providing a repeat course</option>
         <option class="variant">granting academic leave</option>
+        <option class="variant">change of personal data (surname)</option>
+        <option class="variant">continuation of the payment of the social scholarship</option>
+        <option class="variant">extension of academic leave</option>
+        <option class="variant">improvement of assessment</option>
+        <option class="variant">issuance of the original ZNO</option>
+        <option class="variant">re enrollment of grades</option>
+        <option class="variant">removal of copies of documents located in the personnel department</option>
+        <option class="variant">renewal to higher education institution</option>
+        <option class="variant">transfer from the budget to the contract</option>
     </select>
 </div>
 <div id="list">

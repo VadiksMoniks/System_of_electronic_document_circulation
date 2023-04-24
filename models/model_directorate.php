@@ -1,17 +1,17 @@
 <?php
     session_start();
-
+    //include './core/validator.php';
     class Model_Directorate extends Model{
+
+        //use Core\Validator\Validator;
 
         public function logIn($data)
         {
-            $data['mail'] = trim($data['mail']);
-            $data['password'] = trim($data['password']);
-            
-            if($data['mail']==="" || $data['password']===""){
-                $this->answer['answer'] = "Input fields can't be empty";
-                return json_encode($this->answer); 
-            }
+
+          $this->answer['answer'] = self::checkEmptity($data, 'ua');
+          if($this->answer['answer']!=1){
+              return json_encode($this->answer);
+          }
 
             $sql = $this->pdo->prepare("SELECT * FROM `directorate_accounts` WHERE `mail` =?");
             $sql->execute([$data['mail']]);
@@ -43,7 +43,7 @@
             }
         }
 
-        public function logOut()
+        /*public function logOut()
         {
             if(isset($_SESSION['directorate'])){
                 session_start();
@@ -51,7 +51,7 @@
                 session_destroy();
                 header("Location: http://localhost/System_of_electronic_document_circulation/index.php/directorate/signIn");
             }
-        }
+        }*/
 
         public function documents_for_signature($user)
         {
@@ -104,6 +104,19 @@
                 }
             }
             return $list;
+        }
+
+        public function showDoc($documentName)
+        {
+            if(file_exists("E:/xampp/htdocs/System_of_electronic_document_circulation/".$documentName.".png")){
+                //return '<img src="http://localhost/System_of_electronic_document_circulation/document_examples/'.$documentName.'_example.png">';
+                array_push($this->answer,['answer'=>$documentName, 'type'=>"image"]);
+                return $this->answer;
+            }
+            else{
+                array_push($this->answer,['answer'=>"Wrong name", 'type'=>"msg"]);
+                return $this->answer; 
+            }
         }
 
         public function signDocument($data, $directorate)

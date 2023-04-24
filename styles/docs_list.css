@@ -36,5 +36,28 @@ p, li{
 #docs{
     
     display: flex;
+    font-size: 20px;
 
+}
+
+#categories{
+    padding-right: 30px;
+    max-width: 10%;
+    margin-right: 50px;
+    height: 100%;
+    border-right: 2px solid #D5C3AA;
+}
+
+#examples{
+    max-width: 90%;
+    margin: 200px;
+}
+
+#label{
+    font-size: 30px;
+    margin: 200px ;
+}
+
+.dname{
+    font-size: 20px;
 }

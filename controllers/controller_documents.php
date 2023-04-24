@@ -14,7 +14,7 @@
 
 
         public function action_generate(){
-            echo $this->model->generateDoc($_POST, $_COOKIE['lang']);
+             echo $this->model->generateDoc($_POST, $_COOKIE['lang']);
         }
 
         public function action_formating(){
@@ -30,17 +30,14 @@
         {
             echo $this->model->handwrittenDoc($_POST,$_COOKIE['lang']);
         }
-       // public function action_showExample(){
-       //     echo $this->model->showExample($_POST['name']);
-       // }
 
         public function action_getList(){
             echo $this->model->recipientList($_POST['recipientName']);
         }
 
-        /*function action_downloadExample(){
-            $this->model->downloadExample($_GET['name']);
-        }*/
+        public function action_getDocuments(){
+            echo $this->model->documentList($_POST['name'], $_COOKIE['lang']);
+        }
 
     }
 

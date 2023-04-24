@@ -2,46 +2,45 @@
 
     class Router{
 
-                    
-        private static $controller_name = 'Main';
-        private static $action_name = 'index';
-        private static $model_name = '';
-
         public static function start(){
 
-            $routes = explode('/', trim($_SERVER['REQUEST_URI'],'/'));
+            $controller_name = 'Main';
+            $action_name = 'index';
+            $model_name = '';
 
-            if(!empty($routes[2]) && isset($routes[2])){
-                self::$controller_name = $routes[2];
+
+            if(isset($_SERVER['PATH_INFO'])){
+                $routes = explode('/', trim($_SERVER['PATH_INFO'],'/'));
+            }
+            
+            else{
+                $routes[] = 'Main';
             }
 
-            if(!empty($routes[3]) && isset($routes[3])){
+            if(!empty($routes[0]) && isset($routes[0])){
+                $controller_name = $routes[0];
+            }
 
-                if(preg_match('/\?\w/', $routes[3])==1){
-                    $r=explode('?',$routes[3]);
-                    self::$action_name = $r[0];
-                }
-                else{
-                    self::$action_name = $routes[3];
-                }
+            if(!empty($routes[1]) && isset($routes[1])){
+                $action_name = $routes[1];
             }  
 
-            if(!isset($routes[3]) && strtolower(self::$controller_name)!='main'){
+            if(!isset($routes[1]) && strtolower($controller_name)!='main'){
                 Router::ErrorPage404();
             }
 
-            self::$model_name = 'Model_'.self::$controller_name;
-            self::$controller_name = 'Controller_'.self::$controller_name;
-            self::$action_name = 'action_'.self::$action_name;
+            $model_name = 'Model_'.$controller_name;
+            $controller_name = 'Controller_'.$controller_name;
+            $action_name = 'action_'.$action_name;
 
-            $model_file = strtolower(self::$model_name).'.php';
+            $model_file = strtolower($model_name).'.php';
             $model_path = 'models/'.$model_file;
 
             if(file_exists($model_path)){
                 include $model_path;
             }
 
-            $controller_file = strtolower(self::$controller_name).'.php';
+            $controller_file = strtolower($controller_name).'.php';
             $controller_path = 'controllers/'.$controller_file;
 
             if(file_exists($controller_path)){
@@ -53,18 +52,13 @@
                 exit;
             }
 
-            $controller = new self::$controller_name;
-            $action = self::$action_name;
+            $controller = new $controller_name;
+            $action = $action_name;
 
             if(method_exists($controller, $action)){
 
-       /*         if($getParam!=null){
-                    $controller->$action($getParam[1]);
-                }
-                else{*/
-                    $controller->$action();
-            //    / }
-                
+                $controller->$action();
+   
             }
 
             else{

@@ -106,10 +106,8 @@
                 //processData: false,
                 
                 success:function(data){
-                        data = JSON.parse(data);
-                        $('#answer').html(data.answer);
-                        $('#answer').fadeIn();
-                        console.log($('#answer').val());
+                    data = JSON.parse(data);
+                    $('#answer').html(data.answer);
                        // if(data.answer == "OK"){
                        //     location.reload();
                        // }

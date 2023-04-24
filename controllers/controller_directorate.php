@@ -25,7 +25,7 @@
 
         public function action_logOut()//done
         {
-            $this->model->logOut();
+            $this->model->signOut(model::DIRECTORATE);
         }
 
         public function action_for_signature()
@@ -36,7 +36,8 @@
 
         public function action_sign()
         {
-            $this->view->generate('directorate_template_view.php'); 
+            $data = $this->model->showDoc($_GET['d']);
+            $this->view->generate('directorate_template_view.php', $data); 
         }
 
         public function action_signDoc()

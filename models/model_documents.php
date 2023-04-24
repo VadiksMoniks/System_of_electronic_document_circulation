@@ -1,18 +1,14 @@
 <?php
     include 'languages.php';
+    //include './core/validator.php';
     class Model_Documents extends Model{
-//для рукописних заяв можна зробити можливіть завантажити скан
-//адмін пропустить тільки скан а далі підпишуть документ отримувачі
-//для цього треба окремі функції мб хз поки
-       // private $answer = array();//FOR JSON ANSWER
 
+        //use Core\Validator\Validator;
+        
         public function showExample($document_name){
 
             if(isset($document_name)){
                 if(trim($document_name)!=''){
-                  //  $method_name='document_'.$document_name;
-                  //  if(method_exists('Model_Documents',$method_name)){
-                  //      return self::$method_name();
                     return self::documentCreation($document_name);
                 
                 }
@@ -26,61 +22,24 @@
 
         public function generateDoc($data, $lang)
         {
-            /*
-                значит смотри сюда, урод. ты когда эту хуету кодил, вызывал функцию '( $userSignature = imagecreatefrompng($removeSig);)' строка 105 - так вот она толбко для пнг изображений, какой сюрприз блять. короче
-                нужно либо создать переменную, которая будет хранить формат и потом вызывать функцию для этого формата или так же в переменную записать формат ,
-                но потом ее конкатенировать с названием метода(хз можно ли так) и нужно глянуть в мануале, какие функции есть кропе png i jpeg
-            */ 
-            //
+
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
-            //var_dump($data);
-            $data['initials']=trim($data['initials']);
-            $data['group']=trim($data['group']);
-          //  $data['recipient']=trim($data['recipient']);
-            $data['text'] = trim($data['text']);
 
             $slice = array_slice($data, 5, 4);
-
-            foreach($slice as $key => $value){
-                if($slice[$key]==""){
-                    $this->answer['answer']= $$lang['docError1'];
-                    return json_encode($this->answer);
-                }
-            }
-           // var_dump($slice);
-           
-           // if($data['mail']===$data['recipient']){
-           //     return $$lang['docError2'];
-          //  }            
-            foreach($slice as $key => $value){
-                if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ\s\-`]+/',$slice[$key] )){
-                    $this->answer['answer']='only ukr';
-                    return json_encode($this->answer);
-                }
-            }
-
-            if(preg_match('/[0-9]+/',$slice['initials'] )){
-                $this->answer['answer']= "name can't contain numbers";
+            $this->answer['answer'] = self::checkEmptity($slice, $lang);
+            if($this->answer['answer']!=1){
                 return json_encode($this->answer);
             }
+
+          $this->answer['answer'] = self::validateByLanguage($slice, $lang);  
+            if($this->answer['answer']!=1){
+                return json_encode($this->answer);
+            }       
 
             if (empty($_FILES['file']['name'])){
                 $this->answer['answer']= $$lang['docError4'];
                 return json_encode($this->answer);
             }
-
-
-           /* if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ\s\-`]+/',$data['initials'] )){
-                return 'only ukr';
-            }
-            else if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ0-9\-]+/',$data['group'] )){
-                return 'only ukr';
-            }
-            else if(!preg_match('/[А-Яа-яёЁЇїІіЄєҐґ0-9\/\s\-,:.`]+/',$data['text'] )){
-                return 'only ukr';
-            }*/
-
-
             
 
             $filetype = new SplFileInfo($_FILES['file']['name']);
@@ -97,39 +56,14 @@
                
             }
 
-           /* $recipientMailSQL = parent::connection()->prepare('SELECT * FROM `users` WHERE `mail` =?');
-            $recipientMailSQL->execute([$data['recipient']]);
-            $recipientMail=$recipientMailSQL->fetch();
-            if($recipientMail==false){
-                return $$lang['wrongRecipient'];
-            }*/
-
-           // else{
-              //  $method_name='document_'.$data['name'];
-              //  if(method_exists($this,$method_name)){
-              //      return self::$method_name($data, $lang, $removeSig);
-              //  }                
-           // else{
             $this->answer['answer']=self::documentCreation($data['name'], $data, $lang, $removeSig);
             return json_encode($this->answer);
-           // }
-   
-           // }
 
         }
 
         public function handwrittenDoc($data, $lang)
         {
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
-
-            $data['name'] = trim($data['name']);
-            $data['sender'] = trim($data['sender']);
-          /*  if($data['name']===""){
-                return "empty username";
-            }
-            else if($data['sender']===""){
-                return "empty document name";
-            }*/
 
             if(empty($_FILES['file']['name'])){
                 $this->answer['answer']= $$lang['hdocError2'];
@@ -234,13 +168,7 @@
         private function storeHandwrittenDoc($data, $document, $lang)
         {
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
-            /*$accural_of_social_scholarship = "Myguschenko@khpi.edu.ua";
-            $continuation_of_the_payment_of_the_social_scholarship = "Myguschenko@khpi.edu.ua";
-            $removal_of_copies_of_documents_located_in_the_personnel_department = "Myguschenko@khpi.edu.ua";
-            $issuance_of_the_original_ZNO = "Myguschenko@khpi.edu.ua";
-            $improvement_of_assessment = "Myguschenko@khpi.edu.ua";
-            $re_enrollment_of_grades = "Larin@infiz.khpi.edu.ua";
-*/
+
             $picName=$data['sender'].'_'.date("Y-m-d_H-i-s");
             $newDocName = 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.$data['name'].'_'.$picName.'.png';
             rename($document, $newDocName);
@@ -256,28 +184,43 @@
             return $$lang['docMsg'];
         }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////!!! I CAN  MAKE ONLY ONE FUNCTION WHERE THERE WILL BE CHANGING ONLY NAMES OF DOCUMENTS 
-//////////////////////////////////////////////////////////////////////////////////////////////////!!! CAUSE ALL THE REST IS THE SAME
-/*       public function recipientList($searchingName){
-            $searchingName = trim($searchingName);
-            if($searchingName!=''){
-                $sql = parent::connection()->prepare('SELECT `mail` FROM `users` WHERE `mail` LIKE ?');
-                $sql->execute(["%$searchingName%"]);
-                $output='<ul>';
-                $result = $sql->fetchAll();
-                if($result!=NULL){
-                    
-                    foreach($result as $name){
-                        $output.='<a name='.$name->mail.' class="variants"><li style="font-size:15px; font-color:#000;">'.$name->mail.'</li></a>';
-                    }
-                }
-                else{
-                    $output.= '<li style="font-size:15px;font-color:#000;">No such user</li>';
-                }
-                 $output.='</ul>';
-                 return $output;
-            }
-        }*/
+        public function documentList($name, $lang)
+        {
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
+            $documents = [
+                $$lang['doc1.headers'] => $$lang['doc2.docs'].'/'.$$lang['doc3.docs'],
+                $$lang['doc2.headers'] => $$lang['doc4.docs'].'/'.$$lang['doc5.docs'],
+                $$lang['doc1.docs'] => $$lang['doc1.docs'],
+                $$lang['doc6.docs'] => $$lang['doc6.docs'],
+                $$lang['doc7.docs'] => $$lang['doc7.docs'],
+                $$lang['doc8.docs'] => $$lang['doc8.docs'],
+                $$lang['doc3.headers'] => $$lang['doc9.docs'].'/'.$$lang['doc10.docs'],
+                $$lang['doc11.docs'] => $$lang['doc11.docs'],
+                $$lang['doc12.docs'] => $$lang['doc12.docs'],
+                $$lang['doc13.docs'] => $$lang['doc13.docs'],
+                $$lang['doc14.docs'] => $$lang['doc14.docs'],
+                $$lang['doc15.docs'] => $$lang['doc15.docs'],
+            ];
+
+            $links = [
+                $$lang['doc1.headers'] => 'formating?name=returning_to_study_on_a_repeat_course/formating?name=providing_a_repeat_course',
+                $$lang['doc2.headers'] => 'formating?name=granting_academic_leave/formating?name=extension_of_academic_leave',
+                $$lang['doc1.docs'] => 'formating?name=voluntary_deduction',
+                $$lang['doc6.docs'] => 'formating?name=renewal_to_higher_education_institution',
+                $$lang['doc7.docs'] => 'formating?name=transfer_from_the_budget_to_the_contract',
+                $$lang['doc8.docs'] => 'formating?name=change_of_personal_data_(surname)',
+                $$lang['doc3.headers'] => 'handwritten?name=accural_of_social_scholarship/handwritten?name=continuation_of_the_payment_of_the_social_scholarship',
+                $$lang['doc11.docs'] => 'handwritten?name=voluntary_deduction',
+                $$lang['doc12.docs'] => 'handwritten?name=removal_of_copies_of_documents_located_in_the_personnel_department',
+                $$lang['doc13.docs'] => 'handwritten?name=issuance_of_the_original_ZNO',
+                $$lang['doc14.docs'] => 'handwritten?name=improvement_of_assessment',
+                $$lang['doc15.docs'] => 'handwritten?name=re_enrollment_of_grades',
+            ];
+
+            $this->answer['answer'] = $documents[$name];
+            $this->answer['links'] = $links[$name];
+            return json_encode($this->answer);
+        }
 
     }
 

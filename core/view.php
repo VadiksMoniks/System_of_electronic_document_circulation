@@ -6,10 +6,6 @@
         {
            
             include 'views/templates/'.$template_view;
-
-           // if(isset($data)){
-           //     return $data;
-           // }
             
         }
 

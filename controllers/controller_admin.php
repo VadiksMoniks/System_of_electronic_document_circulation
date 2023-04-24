@@ -34,7 +34,7 @@
 
       public function action_logOut()//DONE
       {
-          $this->model->signOut();
+          $this->model->signOut(model::ADMIN);
       }
 
       public function action_checkDocument()//view for checking documents
@@ -48,15 +48,6 @@
           echo $this->model->documentList();
       }
 
-      /*public function action_numOfRecords()
-      {
-        echo $this->model->numOfRecords();
-      }*/
-
-    /*  public function action_showDocument()//model that returns a pick of document to the view DONE
-      {
-          return $this->model->showDocument($_POST['docName']);
-      }*/
 
       public function action_manipulate()
       {
@@ -73,23 +64,5 @@
         echo $this->model->sortByDocName($_POST['docName']);
       }
 
-     /* public function action_post()
-      {
-        $this->view->generate('admin_view.php');
-      }
-
-      public function action_makePost()
-      {
-        echo $this->model->makePost($_POST);
-      }
-
-      public function action_articles_list()
-      {
-        $data = $this->model->articles_list();
-        $this->view->generate('admin_view.php', $data);
-//ТУТ МОЖНА ЗВЕРНУТИСЯ СПОЧАТКУ ДО МОДЕЛІ А ПОТІМ В₴ЮВУ ПЕРЕДАТИ ДАННІ
-      }*/
-
     }
-//НУЖНО КАКТО ИЗМЕНИТЬ РАБОТУ ВИДА ЧТОБЫ ОН ПРИНИМАЛ ПАРАМЕТР ДАТА И В КОНТРОЛЛЕРЕ ВЫЗЫВАТЬ СНАЧАЛА МОДЕЛЬ ПОЛУЧАТЬ ДАТУ И ОТПРАВЛЯТЬ В ВИД А НЕ ИССПОЛЬЗОВАТЬ ДВЕ ФУНКЦИИ
 ?>

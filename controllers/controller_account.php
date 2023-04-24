@@ -56,27 +56,16 @@
             echo $this->model->downloadBlank($_GET['name']);
         }
 
-    /*    public function action_docList(){
-            echo $this->model->dwnlist($_POST['user'],$_COOKIE['lang']);
-        }*/
-
         public function action_deleteDoc(){
             echo $this->model->deleteDocument($_POST,$_COOKIE['lang']);
         }
 
-      /*  public function action_history(){
-            echo $this->model->historyList($_POST['user'],$_COOKIE['lang']);
-        }*/
 
         public function action_history_list(){
             $data = $this->model->historyList($_GET['u'],$_COOKIE['lang']);
             $this->view->generate('template_view.php', $data);
         }
 
-        /*public function action_for_signature(){
-            $data =$this->model->signList($_GET['u'],$_COOKIE['lang']);
-            $this->view->generate('template_view.php', $data);
-        }*/
 
         public function action_sign(){
             $this->view->generate('template_view.php');
@@ -86,24 +75,8 @@
              echo $this->model->verificate($_POST['token'],$_COOKIE['lang']);
         }
 
-        /*public function action_docs_for_sign(){
-            echo $this->model->signList($_POST['user'],$_COOKIE['lang']);
-        }*/
-
-       // public function action_show(){
-       //     echo $this->model->show_doc($_POST['docName'],$_COOKIE['lang']);
-       // }
-
-        /*function action_sign_document(){
-            $this->model->signDoc($_POST['docName']);
-        }*/
-
-       /* public function action_signDoc(){
-            echo $this->model->sign_document($_POST['docName'],$_COOKIE['lang']);
-        }*/
-
         public function action_logOut(){
-            $this->model->signOut();
+            $this->model->signOut(model::USER);
             
         }
 

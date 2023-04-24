@@ -1,29 +1,22 @@
 <?php
 session_start();
+//include './core/validator.php';
+
     class Model_Admin extends Model{
+
+        //use Core\Validator\Validator;
 
         public function signIn($data)//authorization
         {
 
-            $data['username'] = trim($data['username']);
-            $data['password'] = trim($data['password']);
-
-            if($data['username']===''){
-                $this->answer['answer']= 'empty username-field';
-                return json_encode($this->answer);
-            }
-
-            if($data['password']===''){
-                $this->answer['answer']= 'empty password-field';
-                return json_encode($this->answer);
-            }
+            $this->answer['answer'] = self::checkEmptity($data, 'en');
 
             $usernameValid = $this->pdo->prepare("SELECT * FROM `admins` WHERE `admin` = ?");
             $usernameValid->execute([$data['username']]);
 
             $result = $usernameValid->fetch();
 
-            if($result===NULL){
+            if($result == false){
                 $this->answer['answer']= 'wrong username or password';
                 return json_encode($this->answer);
             }
@@ -39,7 +32,7 @@ session_start();
 
         }
 
-        public function signOut()
+        /*public function signOut()
         {
             if(isset($_SESSION['admin'])){
                 //setcookie('username', 'a', 1, '/');
@@ -48,7 +41,7 @@ session_start();
                 session_destroy();
                 header("Location: http://localhost/System_of_electronic_document_circulation/index.php/admin/authorization");
             }
-        }
+        }*/
 
         public function documentList()//return list of all records
         {

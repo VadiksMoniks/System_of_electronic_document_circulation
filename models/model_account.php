@@ -1,38 +1,24 @@
 <?php
 session_start();
+//include './core/validator.php';
     class Model_Account extends Model
     {
+        //use Core\Validator\Validator;
         //private $data = array();
 
         public function registre($data, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
-            //var_dump($_POST);
-            $data['mail']=trim($data['mail']);
-            $data['username']=trim($data['username']);
-            $data['password']=trim($data['password']);
-            $pattern='/[a-zA-Z_\s.]+@infiz.khpi.edu.ua/';
 
-            if($data['mail']==""){
-                $this->answer['answer']= $$lang['errorRegEmptyMail'];
+            $this->answer['answer'] = self::checkEmptity($data, $lang);
+            if($this->answer['answer']!=1){
                 return json_encode($this->answer);
             }
 
-            else if($data['username']==""){
-                $this->answer['answer']= $$lang['errorRegEmptyName'];
+            $this->answer['answer'] = self::validateMail($data['mail'], $lang);
+            if($this->answer['answer']!=1){
                 return json_encode($this->answer);
             }
 
-            else if($data['password']==""){
-                $this->answer['answer']= $$lang['errorRegEmptyPass'];
-                return json_encode($this->answer);
-            }
-
-            else{
-
-                if(preg_match($pattern, $data['mail'])!=1){
-                    $this->answer['answer']= $$lang['errorRegDomain'];
-                    return json_encode($this->answer);
-                }
                 $password = password_hash($data['password'], PASSWORD_DEFAULT);
 
                 $sql = $this->pdo->prepare("SELECT * FROM `users` WHERE `username` =?");
@@ -60,19 +46,11 @@ session_start();
                             $header = 'Verification Mail';
                             $message = 'This is No-reply letter. Please follow this link to end your registration on our web-site. <a href=http://localhost/System_of_electronic_document_circulation/index.php/account/registre?token='.$token.'>http://localhost/System_of_electronic_document_circulation/index.php/account/registre?token='.$token.'</a></br>';
                             self::sendMail($data['mail'], $header, $message);
-                       // if($data['keepSigned']==='keep'){
-                            //setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
-                            //$_SESSION['user'] = $data['mail'];
-                       // }
-                      //  else if($data['keepSigned']==='no'){
-                            //setcookie('username', $data['mail'],strtotime( '+1 day' ) ,'/');
-                           // $_SESSION['user'] = $data['username'];
-                      //  }
                         
                             $this->answer['answer']= $$lang['checkMail'];//$$lang['okMsg'];
                             return json_encode($this->answer);
                     }
-                }
+               // }
 
             }
 
@@ -107,36 +85,21 @@ session_start();
         public function signIn($data, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
-            $data['mail']=trim($data['mail']);
-            $data['password']=trim($data['password']);
-
-            if($data['mail']==""){
-                $this->answer['answer']= $$lang['errorRegEmptyMail'];
+            $this->answer['answer'] = self::checkEmptity($data, $lang);
+            if($this->answer['answer']!=1){
                 return json_encode($this->answer);
             }
 
-            else if($data['password']==""){
-                $this->answer['answer']= $$lang['errorRegEmptyPass'];
-                return json_encode($this->answer);
-            }
-
-            else{
                 $sql = $this->pdo->prepare("SELECT * FROM `users` WHERE `mail` =?");
                 $sql->execute([$data['mail']]);
                 $result = $sql->fetch();
                 if($result!=false){
                     if(password_verify($data['password'], $result->password)==1){
-                    
-                       // if($data['keepSigned']==='keep'){
-                            //setcookie('username', $data['mail'],strtotime( '+30 days' ) ,'/');
-                            //$_SESSION['user'] = $data['mail'];
-                       // }
-                      //  else if($data['keepSigned']==='no'){
-                            //setcookie('username', $data['mail'],strtotime( '+1 day' ) ,'/');
-                            $_SESSION['user'] = $result->username;
-                       // }
-                       $this->answer['answer']= $$lang['okMsg'];
-                       return json_encode($this->answer);
+
+                        $_SESSION['user'] = $result->username;
+                       
+                        $this->answer['answer']= $$lang['okMsg'];
+                        return json_encode($this->answer);
                     }
                     else{
                         $this->answer['answer']= $$lang['errorSignIn'];
@@ -147,10 +110,10 @@ session_start();
                     $this->answer['answer']= $$lang['errorSignIn'];
                     return json_encode($this->answer);
                 }
-            }
+            
         }
 
-        public function signOut(){
+       /* public function signOut(){
             if(isset($_SESSION['user'])){
                 //setcookie('username', 'a', 1, '/');
                 session_start();
@@ -158,18 +121,15 @@ session_start();
                 session_destroy();
                 header("Location: http://localhost/System_of_electronic_document_circulation/index.php");
             }
-        }
+        }*/
 
         public function change_password($data){//ADD LANGUAGE MSGS
 
-            $data['oldPass'] = trim($data['oldPass']);
-            $data['newPass'] = trim($data['newPass']);
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
-            if($data['oldPass']=="" || $data['newPass']==""){
-                    
-                $this->answer['answer']= "password field can't be empty";
+            $this->answer['answer'] = self::checkEmptity($data, 'en');
+            if($this->answer['answer']!=1){
                 return json_encode($this->answer);
-
             }
 
             $sql = $this->pdo->prepare("SELECT `password` FROM `users` WHERE `username` =?");
@@ -222,7 +182,7 @@ session_start();
             }
         }
 
-        public function historyList($user, $lang){//тут короче переделать в массив вместо строки возврат и в джейсон его и еще возвращать инфу кто сейчас должен подписать
+        public function historyList($user, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
             //$answer = array();
@@ -296,37 +256,6 @@ session_start();
             
         }
 
-        /*public function signList($user, $lang){
-            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
-            $answer='';
-
-            $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
-            $sqlMail->execute([$user]);
-            $mail= $sqlMail->fetch();
-
-            $sql= parent::connection()->prepare("SELECT `username` FROM `users` WHERE `mail`=?");
-            $sql->execute([$mail->mail]);
-
-            $recieverMail=$sql->fetch();
-
-            if($recieverMail!=null){
-                $sql= parent::connection()->prepare("SELECT `document_name` FROM `docs` WHERE `status`='unsigned' AND `reciever`=?");
-                $sql->execute([$recieverMail->username]);
-                $result=$sql->fetchAll(PDO::FETCH_ASSOC);
-                if($result!=NULL){
-                    for($i=0; $i<count($result); $i++){
-                        $answer.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/account/sign?name='.basename($result[$i]['document_name'], '.pdf').'">'.basename($result[$i]['document_name']).'</a><br/>';
-                    }
-                    return $answer;
-                }
-                else{
-                    return $$lang['Msgsign'];
-                }
-            }
-
-            return "Wrong user data";
-        }*/
-
         public function show_doc($docName, $lang){//now it can return also a msg from admin if doc was deleted by admins
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             if(file_exists('E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName)){
@@ -354,44 +283,6 @@ session_start();
                
             }
         }
-
-
-       /* public function sign_document($docName, $lang){
-            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
-            $filetype = new SplFileInfo($_FILES['file']['name']);
-            
-            if($filetype->getExtension() != 'png'){
-                return $$lang['sign_documentError'];
-            }
-
-            else{
-                $dir = 'E:/xampp/htdocs/System_of_electronic_document_circulation/';
-                $removeSig = $dir.basename($_FILES['file']['name']);
-                move_uploaded_file($_FILES['file']['tmp_name'], $removeSig);
-            }
-
-            $example = imagecreatefrompng('E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName);
-            $userSignature = imagecreatefrompng($removeSig);
-
-            imagecopy($example, $userSignature, 600, 950, 0, 0 ,126, 100);
-            $picName=$dir.$docName;
-            imagepng($example, $picName);
-            imagedestroy($example);
-            imagedestroy($userSignature);
-
-            $newFile = new Imagick();
-            $newFile->readImage($picName);
-            //$newFile->readImage();
-            $newFile->setFormat('pdf');
-            $fName = 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.basename($picName, '.png').".".$newFile->getFormat();
-            $newFile->writeImage($fName);
-            unlink($removeSig);
-            unlink($picName);
-
-            $sql = parent::connection()->prepare('UPDATE `docs` SET `status`=?, `document_name`=? WHERE `document_name`=?');
-            $sql->execute(['signed',$fName, 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName]);
-            return $$lang['sign_documentMsg'];
-        }*/
 
 
         public function deleteDocument($data, $lang){

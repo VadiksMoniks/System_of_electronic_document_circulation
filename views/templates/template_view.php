@@ -25,6 +25,7 @@
                 margin: 0;
                 overflow-x: hidden;
                 height: 100%;
+
             }
             ul{
                 list-style-type: none;
@@ -35,8 +36,9 @@
                 display: inline-flex;
             }
             .menuP{
-                margin-left: 100px;
+                margin-left: 90px;
                 font-size: 23px;
+                color: #fff;
             }
             li{
                 
@@ -55,7 +57,7 @@
             #headerMenu{
                 min-width: 100%;
                 height: 90px;
-                background-color: #A8D0E6;
+                background-color: #262F34;
                 padding-top: 30px;
                 margin: 0;
             }
@@ -71,7 +73,7 @@
             #logo{
                 margin-top: -10px;
                 margin-left: 100px;
-                margin-right: 50px;
+                margin-right: 90px;
             }
             #acc:hover #outBlock{
                 visibility: visible;
@@ -91,14 +93,15 @@
 
             #content{
                 min-height: 100%;
-                padding: 50px;
+                padding-top: 50px;
+                padding-left: 120px;
+            
             }
 
             #footer{
-                margin-left: 0;
-                margin-right: 0;
                 width: 100%;
-                height: 200px;
+                height: 150px;
+                margin-top: 50px;
                 background-color: #07575B;
                 flex: 0 0 auto;
                 padding: 30px;
