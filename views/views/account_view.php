@@ -1,7 +1,6 @@
 <?php
-//session_start();
 if(!isset($_SESSION['user'])){
-    header("Location: http://localhost/System_of_electronic_document_circulation/index.php");
+    header("Location:http://localhost/System_of_electronic_document_circulation/index.php");
 }
 if(isset($_COOKIE['lang'])){
     $lang = $_COOKIE['lang'];

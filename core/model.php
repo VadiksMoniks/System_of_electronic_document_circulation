@@ -4,19 +4,22 @@
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception;
+    use Core\Validator\Validator;
 
-    class Model{
-
-        use Core\Validator\Validator;
+    abstract class Model{
 
         const USER = 'user';
         const ADMIN = 'admin';
         const DIRECTORATE = 'directorate';
 
+        private $validator;
         protected $pdo;
         protected $answer = array();
 
-        public function __construct(){       
+        public function __construct(){ 
+            
+            $this->validator = new Core\Validator\Validator();
+
             $host = "localhost";
             $userLog = "root";
             $passwordUser = "";
@@ -79,20 +82,20 @@
 
         }
 
-       /* protected function connection(){
-            $host = "localhost";
-            $userLog = "root";
-            $passwordUser = "";
-            $dbname = "document circulating system";
-            $dsn = 'mysql:host='.$host.';dbname='.$dbname;
-            $this->pdo = new PDO($dsn, $userLog, $passwordUser);
-            $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-            return $this->pdo;
+        public function validateMail($data, $language)
+        {
+            return $this->validator->validateMail($data, $language);
         }
 
-        public function get_data($param=null){
+        public function validateByLanguage(array $data, string $language)
+        {
+            return $this->validator->validateByLanguage($data, $language);
+        }
 
-        }*/
+        public function checkEmptity(array $data, string $language)
+        {
+            return $this->validator->checkEmptity($data, $language);
+        }
 
     }
 

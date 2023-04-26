@@ -18,22 +18,22 @@
  <div id="docs">
     <div id="categories">
         <p><?php echo $$lang['list.docs'];?></p>
-        <ul class="category">
-            <a href="#" class="link"><li><?php echo $$lang['doc1.docs'];?></li></a>
-            <a href="#" class="link"><li><?php echo $$lang['doc1.headers'];?></li></a>
-            <a href="#" class="link"><li><?php echo $$lang['doc2.headers'];?></li></a>
-            <a href="#" class="link"><li><?php echo $$lang['doc6.docs'];?></li></a>
-            <a href="#" class="link"><li><?php echo $$lang['doc7.docs'];?></li></a>
-            <a href="#" class="link"><li><?php echo $$lang['doc8.docs'];?></li></a>
+        <ul>
+            <a href="#" class="link"><li class="category"><?php echo $$lang['doc1.docs'];?></li></a>
+            <a href="#" class="link"><li class="category"><?php echo $$lang['doc1.headers'];?></li></a>
+            <a href="#" class="link"><li class="category"><?php echo $$lang['doc2.headers'];?></li></a>
+            <a href="#" class="link"><li class="category"><?php echo $$lang['doc6.docs'];?></li></a>
+            <a href="#" class="link"><li class="category"><?php echo $$lang['doc7.docs'];?></li></a>
+            <a href="#" class="link"><li class="category"><?php echo $$lang['doc8.docs'];?></li></a>
         </ul></br>
         <p><?php echo $$lang['HWList.docs'];?></p>
-        <ul class="category">
-        <a href="#" class="link"><li><?php echo $$lang['doc3.headers'];?></li></a>
-        <a href="#" class="link"><li><?php echo $$lang['doc11.docs'];?></li></a>
-        <a href="#" class="link"><li><?php echo $$lang['doc12.docs'];?></li></a>
-        <a href="#" class="link"><li><?php echo $$lang['doc13.docs'];?></li></a>
-        <a href="#" class="link"><li><?php echo $$lang['doc14.docs'];?></li></a>
-        <a href="#" class="link"><li><?php echo $$lang['doc15.docs'];?></li></a>
+        <ul>
+        <a href="#" class="link"><li class="category"><?php echo $$lang['doc3.headers'];?></li></a>
+        <a href="#" class="link"><li class="category"><?php echo $$lang['doc11.docs'];?></li></a>
+        <a href="#" class="link"><li class="category"><?php echo $$lang['doc12.docs'];?></li></a>
+        <a href="#" class="link"><li class="category"><?php echo $$lang['doc13.docs'];?></li></a>
+        <a href="#" class="link"><li class="category"><?php echo $$lang['doc14.docs'];?></li></a>
+        <a href="#" class="link"><li class="category"><?php echo $$lang['doc15.docs'];?></li></a>
         </ul></br>
     </div>
     <div id="examples">

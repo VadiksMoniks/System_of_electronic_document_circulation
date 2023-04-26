@@ -1,10 +1,8 @@
 <?php
 session_start();
-//include './core/validator.php';
+
     class Model_Account extends Model
     {
-        //use Core\Validator\Validator;
-        //private $data = array();
 
         public function registre($data, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
@@ -112,16 +110,6 @@ session_start();
                 }
             
         }
-
-       /* public function signOut(){
-            if(isset($_SESSION['user'])){
-                //setcookie('username', 'a', 1, '/');
-                session_start();
-                unset($_SESSION['user']); // или $_SESSION = array() для очистки всех данных сессии
-                session_destroy();
-                header("Location: http://localhost/System_of_electronic_document_circulation/index.php");
-            }
-        }*/
 
         public function change_password($data){//ADD LANGUAGE MSGS
 
@@ -233,11 +221,6 @@ session_start();
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
             if(!empty($user)){
-
-                $sqlMail = $this->pdo->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
-                $sqlMail->execute([$user]);
-                $mail= $sqlMail->fetch();
-                
                 $sql= $this->pdo->prepare("SELECT `document_name` FROM `docs` WHERE `status`=? AND `sender`=?");
                 $sql->execute(['signed',$user]);
                 $result=$sql->fetchAll(PDO::FETCH_ASSOC);
@@ -256,7 +239,7 @@ session_start();
             
         }
 
-        public function show_doc($docName, $lang){//now it can return also a msg from admin if doc was deleted by admins
+        public function show_doc($docName, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
             if(file_exists('E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName)){
                 return '<img src="http://localhost/System_of_electronic_document_circulation/'.$docName.'">';

@@ -25,8 +25,8 @@
                 $action_name = $routes[1];
             }  
 
-            if(!isset($routes[1]) && strtolower($controller_name)!='main'){
-                Router::ErrorPage404();
+            if(!isset($routes[1])){
+                $action_name = 'index';
             }
 
             $model_name = 'Model_'.$controller_name;

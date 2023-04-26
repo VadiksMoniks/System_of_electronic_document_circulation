@@ -1,13 +1,12 @@
 <?php
     session_start();
-    //include './core/validator.php';
+
     class Model_Directorate extends Model{
 
-        //use Core\Validator\Validator;
-
-        public function logIn($data)
+        public function signIn($data, $lang = 'ua')
         {
-
+          include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
+          
           $this->answer['answer'] = self::checkEmptity($data, 'ua');
           if($this->answer['answer']!=1){
               return json_encode($this->answer);
@@ -18,21 +17,21 @@
             $result = $sql->fetch();
 
             if($result===false){
-                $this->answer['answer'] = "Wrong mail or password";
+                $this->answer['answer'] = $$lang['errorSignIn'];
                 return json_encode($this->answer); 
             }
 
             else{
                 if(password_verify($data['password'], $result->password)==0)
                 {
-                    $this->answer['answer'] = "Wrong mail or password";
+                    $this->answer['answer'] = $$lang['errorSignIn'];
                     return json_encode($this->answer); 
                 }
                 else{
                     if(password_verify($data['ip'], $result->ip)==1){
                        // return "yes";
                         $_SESSION['directorate'] = $result->username;
-                        $this->answer['answer'] = "OK";
+                        $this->answer['answer'] = $$lang['okMsg'];
                         return json_encode($this->answer);
                     }
                     else{
@@ -42,16 +41,6 @@
                 }
             }
         }
-
-        /*public function logOut()
-        {
-            if(isset($_SESSION['directorate'])){
-                session_start();
-                unset($_SESSION['directorate']);
-                session_destroy();
-                header("Location: http://localhost/System_of_electronic_document_circulation/index.php/directorate/signIn");
-            }
-        }*/
 
         public function documents_for_signature($user)
         {

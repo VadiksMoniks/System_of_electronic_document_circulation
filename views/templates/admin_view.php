@@ -11,15 +11,16 @@
 
 <?php
 
-if(!isset($_SERVER['PATH_INFO'])){
-    include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/views/main_view.php';
-}
-else{
-    if(file_exists('E:/xampp/htdocs/System_of_electronic_document_circulation/views/admin_views/'.basename($_SERVER['PATH_INFO']).'_view.php')){
-        include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/admin_views/'.basename($_SERVER['PATH_INFO']).'_view.php';
+    if(!isset($view)){
+        if(isset($_SERVER['PATH_INFO'])){
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/admin_views/'.trim($_SERVER['PATH_INFO'], '/').'_view.php';
+        }
+        else{
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/views/main_view.php';
+        }
     }
     else{
-        include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/404_view.php';
+        include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/admin_views/'.$view.'_view.php';
     }
-}
+
 ?>

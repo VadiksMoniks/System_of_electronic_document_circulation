@@ -8,7 +8,7 @@
             $this->model = new Model_Documents();
         }
 
-        public function action_document(){
+        public function action_index(){
             $this->view->generate('template_view.php');
         }
 
@@ -19,12 +19,12 @@
 
         public function action_formating(){
             $data = $this->model->showExample($_GET['name']);
-            echo $this->view->generate('template_view.php', $data);
+            echo $this->view->generate('template_view.php', 'formating', $data);
         }
 
         public function action_handwritten(){
             $data = $this->model->showExample($_GET['name']);
-            echo $this->view->generate('template_view.php', $data);
+            echo $this->view->generate('template_view.php', 'handwritten', $data);
         }
         public function action_makeHandwritten()
         {

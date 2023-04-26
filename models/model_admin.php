@@ -1,15 +1,15 @@
 <?php
 session_start();
-//include './core/validator.php';
 
     class Model_Admin extends Model{
 
-        //use Core\Validator\Validator;
-
-        public function signIn($data)//authorization
+        public function signIn($data, $lang='en')//authorization
         {
 
             $this->answer['answer'] = self::checkEmptity($data, 'en');
+            if($this->answer['answer']!=1){
+                return json_encode($this->answer);
+            }
 
             $usernameValid = $this->pdo->prepare("SELECT * FROM `admins` WHERE `admin` = ?");
             $usernameValid->execute([$data['username']]);
@@ -31,17 +31,6 @@ session_start();
             return json_encode($this->answer);
 
         }
-
-        /*public function signOut()
-        {
-            if(isset($_SESSION['admin'])){
-                //setcookie('username', 'a', 1, '/');
-                session_start();
-                unset($_SESSION['admin']); // или $_SESSION = array() для очистки всех данных сессии
-                session_destroy();
-                header("Location: http://localhost/System_of_electronic_document_circulation/index.php/admin/authorization");
-            }
-        }*/
 
         public function documentList()//return list of all records
         {

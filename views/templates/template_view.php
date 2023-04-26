@@ -129,18 +129,17 @@
         <div id="headerMenu">
             <ul class="list">
                 <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/main" class="menuP"><?php echo $$lang['main.menu'];?></a></li>
-                <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents/document" class="menuP"><?php echo $$lang['documents.menu'];?></a></li>
+                <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/documents" class="menuP"><?php echo $$lang['documents.menu'];?></a></li>
                 <li ><a href="https://web.kpi.kharkov.ua/infiz/uk/home/" class="menuP"><img src="http://localhost/System_of_electronic_document_circulation/img/logo.png" id="logo"></a></li>
               <!--  <li ><a href="http://localhost/System_of_electronic_document_circulation/index.php/newsANDupdates/newsANDupdates" class="menuP"><?php echo $$lang['nANDu.menu'];?></a></li>-->
-                    <?php
+                <?php
                         if(isset($_SESSION['user'])){
-                            echo '<li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/account" class="menuP">'.$$lang['account.menu'].'</a></li>';
+                            echo '<li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account" class="menuP">'.$$lang['account.menu'].'</a></li>';
                         }
                         else{
                             echo '<li><a href="http://localhost/System_of_electronic_document_circulation/index.php/account/registre" class="menuP" id="acc">'.$$lang['reg.menu'].'</a></li>';
                         }
-                    ?>
-                        
+                ?>     
                 <li>
                     <div id="langDiv">
                         <ul id="langs">
@@ -153,8 +152,7 @@
         </div>
         <div id="content">
         <?php
-        
-            if(!isset($_SERVER['PATH_INFO']) || basename($_SERVER['PATH_INFO'])==''){
+           /* if(!isset($_SERVER['PATH_INFO']) || basename($_SERVER['PATH_INFO'])==''){
                 include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/views/main_view.php';
             }
             else{
@@ -165,6 +163,19 @@
                     include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/404_view.php';
                 }
             }
+
+           */
+          if(!isset($view)){
+            if(isset($_SERVER['PATH_INFO'])){
+                include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/views/'.trim($_SERVER['PATH_INFO'], '/').'_view.php';
+            }
+            else{
+                include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/views/main_view.php';
+            }
+          }
+          else{
+            include 'E:/xampp/htdocs/System_of_electronic_document_circulation/views/views/'.$view.'_view.php';
+          }
         ?>
         </div>
         <div id="footer">

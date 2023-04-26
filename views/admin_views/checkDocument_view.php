@@ -2,7 +2,7 @@
     if(!$_SESSION['admin']){
         header('Location:http://localhost/System_of_electronic_document_circulation/index.php/admin/authorization');
     }
-    echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/adminPanel">main</a>';
+    echo '<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin">main</a>';
 ?>
 
 <style>

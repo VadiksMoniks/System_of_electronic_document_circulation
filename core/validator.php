@@ -2,9 +2,9 @@
 namespace Core\Validator;
 //include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
-trait Validator{
+class Validator{
 
-    protected function validateMail(string $data, string $language)
+    public function validateMail(string $data, string $language)
     {       
         include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
@@ -17,7 +17,7 @@ trait Validator{
 
 
 
-    protected function validateByLanguage(array $data, string $language)
+    public function validateByLanguage(array $data, string $language)
     {
         foreach($data as $key => $value){
             if(!preg_match('/[А-Яа-яЇїІіЄєҐґ\s\d\-`]+/',$data[$key] )){
@@ -32,7 +32,7 @@ trait Validator{
         return true;
     }
 
-    protected function checkEmptity(array $data, string $language)
+    public function checkEmptity(array $data, string $language)
     {
         include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
@@ -46,7 +46,7 @@ trait Validator{
         return true;
     }
 
-    protected function validateFile($file){
+    public function validateFile($file){
 
     }
 }

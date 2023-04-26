@@ -9,10 +9,15 @@
             $this->model = new Model_Account();
         }
 
+        public function action_index(){
+            $this->view->generate('template_view.php');
+
+        }
+
 
         public function action_signIn(){
 
-            $this->view->generate('template_view.php');
+            $this->view->generate('template_view.php', 'signIn');
 
         }
 
@@ -23,7 +28,7 @@
 
         public function action_registre(){
 
-            $this->view->generate('template_view.php');
+            $this->view->generate('template_view.php', 'registre');
 
         }
 
@@ -35,21 +40,16 @@
         }
 
         public function action_changePasswordForm(){
-            $this->view->generate('template_view.php');
+            $this->view->generate('template_view.php', 'changePasswordForm');
         }
 
         public function action_change_password(){
             echo $this->model->change_password($_POST);
         }
 
-        public function action_account(){
-            $this->view->generate('template_view.php');
-
-        }
-
         public function action_documents_to_download(){
             $data = $this->model->dwnlist($_GET['u'],$_COOKIE['lang']);
-            $this->view->generate('template_view.php', $data);
+            $this->view->generate('template_view.php','documents_to_download', $data);
         }
 
         public function action_download(){
@@ -63,13 +63,13 @@
 
         public function action_history_list(){
             $data = $this->model->historyList($_GET['u'],$_COOKIE['lang']);
-            $this->view->generate('template_view.php', $data);
+            $this->view->generate('template_view.php', 'history_list', $data);
         }
 
 
-        public function action_sign(){
-            $this->view->generate('template_view.php');
-        }
+       // public function action_sign(){
+       //     $this->view->generate('template_view.php');
+       // }
 
         public function action_verificateUser(){
              echo $this->model->verificate($_POST['token'],$_COOKIE['lang']);

@@ -16,15 +16,15 @@
           $this->model = new Model_Admin();
       }
 
-      public function action_adminPanel()//use view
+      public function action_index()//use view
       {
           $data = $this->model->documentList();
-          $this->view->generate('admin_view.php', $data);
+          $this->view->generate('admin_view.php', 'adminPanel', $data);
       }
 
       public function action_authorization()//DONE
       {
-          $this->view->generate('admin_view.php');//sign form
+          $this->view->generate('admin_view.php', 'authorization');//sign form
       }
 
       public function action_authorizeAdmin()//DONE
@@ -40,7 +40,7 @@
       public function action_checkDocument()//view for checking documents
       {
           $data=$this->model->showDocument($_GET['n']);
-          $this->view->generate('admin_view.php', $data);//show doc
+          $this->view->generate('admin_view.php', 'checkDocument', $data);//show doc
       }
 
       public function action_documentsList()//model with the list of docs DONE

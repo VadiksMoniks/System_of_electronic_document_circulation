@@ -1,7 +1,7 @@
 <?php
 
 if(isset($_SESSION['directorate'])){
-        header('Location:http://localhost/System_of_electronic_document_circulation/index.php/directorate/account');
+        header('Location:http://localhost/System_of_electronic_document_circulation/index.php/directorate');
     }
 
 ?>

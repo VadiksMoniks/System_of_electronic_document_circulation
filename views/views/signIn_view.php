@@ -2,7 +2,7 @@
 
     //session_start();
     if(isset($_SESSION['user'])){
-        header("Location:http://localhost/System_of_electronic_document_circulation/index.php/account/account");
+        header("Location:http://localhost/System_of_electronic_document_circulation/index.php/account");
     }
 ?>
 <!DOCTYPE html>

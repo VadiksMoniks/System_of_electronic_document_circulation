@@ -1,11 +1,7 @@
 
 <?php
-
-    //session_start();
-    //setcookie('username', 'ttt', 1);
-    //var_dump($_COOKIE);
     if(isset($_SESSION['user'])){
-        header("Location:http://localhost/System_of_electronic_document_circulation/index.php/account/account");
+        header("Location:http://localhost/System_of_electronic_document_circulation/index.php/account");
     }
     $lang = $_COOKIE['lang'];
        // <input type="file" name="seal" id="seal">
