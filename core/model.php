@@ -1,12 +1,15 @@
 <?php
+
+    namespace Core;
+
     include './core/validator.php'; 
     require  'E:/xampp/htdocs/System_of_electronic_document_circulation/vendor/autoload.php';
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception;
-    use Core\Validator\Validator;
+    //use Validator\Validator;
 
-    abstract class Model{
+    class Model{
 
         const USER = 'user';
         const ADMIN = 'admin';
@@ -18,22 +21,21 @@
 
         public function __construct(){ 
             
-            $this->validator = new Core\Validator\Validator();
+            $this->validator = new Validator\Validator();
 
             $host = "localhost";
             $userLog = "root";
             $passwordUser = "";
             $dbname = "document circulating system";
             $dsn = 'mysql:host='.$host.';dbname='.$dbname;
-            $this->pdo = new PDO($dsn, $userLog, $passwordUser);
-            $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+            $this->pdo = new \PDO($dsn, $userLog, $passwordUser);
+            $this->pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_OBJ);
             //return $this->pdo;
         }
 
         public function signOut($mode)
         {
             if(isset($_SESSION[$mode])){
-                //setcookie('username', 'a', 1, '/');
                 session_start();
                 unset($_SESSION[$mode]); // или $_SESSION = array() для очистки всех данных сессии
                 session_destroy();

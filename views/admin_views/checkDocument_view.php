@@ -25,13 +25,17 @@
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
 <p id="info"></p>
-<div id="doc"><img src="http://localhost/System_of_electronic_document_circulation/<?php echo $data;?>"></div>
+<div id="doc"><img src="http://localhost/System_of_electronic_document_circulation/<?php echo $data['path'];?>"></div>
 <button id="delete">Delete the document</button>
 <form>
     <textarea id="message"></textarea>
     <button id="deleteDoc">Delete the document</button>
 </form>
-    <button id="checkDoc">Checked</button>
+    <?php
+        if($data['status']=='unchecked'){
+            echo '<button id="checkDoc">Checked</button>';
+        }
+    ?>
 <script>
     $(document).ready(function(){
 

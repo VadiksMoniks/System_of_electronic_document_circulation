@@ -8,12 +8,16 @@
        и потом пользователь будет видеть это но нужно переработать в model_account отображение чтобы не было ошибок ибо файл удален а пользователь пытается его глянуть
     
     */
-    class Controller_Admin extends Controller{
+    use Models\Model_Admin;
+    use Core\Controller;
+    use Core\View;
+
+    class Controller_Admin extends Core\Controller{
 
       public function __construct()
       {
-          $this->view = new View();
-          $this->model = new Model_Admin();
+          $this->view = new Core\View();
+          $this->model = new \Models\Model_Admin();
       }
 
       public function action_index()//use view
@@ -34,7 +38,7 @@
 
       public function action_logOut()//DONE
       {
-          $this->model->signOut(model::ADMIN);
+          $this->model->signOut(\Core\Model::ADMIN);
       }
 
       public function action_checkDocument()//view for checking documents
@@ -59,9 +63,9 @@
         echo  $this->model->checkDocument($_POST['docName']);
       }
 
-      public function action_byDocName()
+      public function action_filter()
       {
-        echo $this->model->sortByDocName($_POST['docName']);
+        echo $this->model->sort($_POST);
       }
 
     }

@@ -1,7 +1,11 @@
 <?php
+    namespace Models;
+
     session_start();
 
-    class Model_Directorate extends Model{
+    use Core\Model;
+
+    class Model_Directorate extends \Core\Model{
 
         public function signIn($data, $lang = 'ua')
         {
@@ -60,7 +64,7 @@
             $sql = $this->pdo->prepare("SELECT `reciever`, `already_signed`, `document_name` FROM `docs` WHERE `status`=?");
             $sql->execute(["unsigned"]);
 
-            $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $result = $sql->fetchAll(\PDO::FETCH_ASSOC);
             if($result===false){
                 return "Something went wrong";
             }
@@ -127,7 +131,7 @@
                 return "add your signature";
             }
             $path= "E:/xampp/htdocs/System_of_electronic_document_circulation/".$data['document_name'].".png";
-            $filetype = new SplFileInfo($_FILES['file']['name']);
+            $filetype = new \SplFileInfo($_FILES['file']['name']);
             
             if($filetype->getExtension() != 'png'){
                
@@ -218,7 +222,7 @@
                     else{
                         imagecopy($document, $directorateSignature, $pointsOfSignatures[$index][0][0], $pointsOfSignatures[$index][0][1], 0, 0 ,126, 100);
                         imagepng($document, $docPath);
-                        $newFile = new Imagick();
+                        $newFile = new \Imagick();
                         $newFile->readImage($docPath);
                         //$newFile->readImage();
                         $newFile->setFormat('pdf');
@@ -278,7 +282,7 @@
             
             imagecopy($document, $directorateSignature, 211, 135, 0, 0 ,126, 100);
             imagepng($document, $docPath);
-            $newFile = new Imagick();
+            $newFile = new \Imagick();
             $newFile->readImage($docPath);
                         //$newFile->readImage();
             $newFile->setFormat('pdf');

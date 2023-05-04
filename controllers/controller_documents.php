@@ -1,11 +1,15 @@
 <?php
 
-    class Controller_Documents extends Controller{
+    use Models\Model_Documents;
+    use Core\Controller;
+    use Core\View;
+
+    class Controller_Documents extends Core\Controller{
 
         public function __construct()
         {
-            $this->view = new View();
-            $this->model = new Model_Documents();
+            $this->view = new Core\View();
+            $this->model = new \Models\Model_Documents();
         }
 
         public function action_index(){

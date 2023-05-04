@@ -1,12 +1,15 @@
 <?php
 
+    use Models\Model_Account;
+    use Core\Controller;
+    use Core\View;
 
-    class Controller_Account extends Controller{
+    class Controller_Account extends Core\Controller{
 
         public function __construct()
         {
-            $this->view = new View();
-            $this->model = new Model_Account();
+            $this->view = new Core\View();
+            $this->model = new \Models\Model_Account();
         }
 
         public function action_index(){
@@ -76,7 +79,7 @@
         }
 
         public function action_logOut(){
-            $this->model->signOut(model::USER);
+            $this->model->signOut(\Core\Model::USER);
             
         }
 

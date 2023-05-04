@@ -1,7 +1,10 @@
 <?php
-session_start();
+    namespace Models;
+    session_start();
 
-    class Model_Account extends Model
+    use Core\Model;
+
+    class Model_Account extends \Core\Model
     {
 
         public function registre($data, $lang){
@@ -180,9 +183,9 @@ session_start();
                 //$sqlMail->execute([$user]);
                 //$mail= $sqlMail->fetch();
 
-                $sql= $this->pdo->prepare("SELECT * FROM `docs` WHERE `sender`=?");
+                $sql= $this->pdo->prepare("SELECT * FROM `docs` WHERE `sender`=? AND `status` !='signed'");
                 $sql->execute([$user]);
-                $result=$sql->fetchAll(PDO::FETCH_ASSOC);
+                $result=$sql->fetchAll(\PDO::FETCH_ASSOC);
                 if($result!=false){
                     for($i=0; $i<count($result); $i++){
                         if($result[$i]['status']=="unchecked"){
@@ -223,7 +226,7 @@ session_start();
             if(!empty($user)){
                 $sql= $this->pdo->prepare("SELECT `document_name` FROM `docs` WHERE `status`=? AND `sender`=?");
                 $sql->execute(['signed',$user]);
-                $result=$sql->fetchAll(PDO::FETCH_ASSOC);
+                $result=$sql->fetchAll(\PDO::FETCH_ASSOC);
                 if($result!=false){
                     for($i=0; $i<count($result); $i++){
                         array_push($this->answer, basename($result[$i]['document_name']));

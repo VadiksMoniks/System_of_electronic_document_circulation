@@ -1,7 +1,12 @@
 <?php
+    namespace Models;
+
     include 'languages.php';
+    
+    use Core\Model;
+
     //include './core/validator.php';
-    class Model_Documents extends Model{
+    class Model_Documents extends \Core\Model{
 
         //use Core\Validator\Validator;
         
@@ -42,7 +47,7 @@
             }
             
 
-            $filetype = new SplFileInfo($_FILES['file']['name']);
+            $filetype = new \SplFileInfo($_FILES['file']['name']);
             
             if($filetype->getExtension() != 'png'){
                 $this->answer['answer']= $$lang['docError5'];
@@ -70,7 +75,7 @@
                 return json_encode($this->answer);
             }
 
-            $filetype = new SplFileInfo($_FILES['file']['name']);
+            $filetype = new \SplFileInfo($_FILES['file']['name']);
 
             if($filetype->getExtension() != 'png'){
                 //$this->answer['answer']= "File must be offtype PNG";

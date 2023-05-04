@@ -1,16 +1,21 @@
 <?php
 
-    class Controller_Directorate extends Controller{
+    use Models\Model_Directorate;
+    use Core\Controller;
+    use Core\View;
+
+    class Controller_Directorate extends Core\Controller{
         
         public function __construct()
         {
-            $this->view = new View();
-            $this->model = new Model_Directorate();
+            $this->view = new Core\View();
+            $this->model = new \Models\Model_Directorate();
         }
 
         public function action_index()//done
         {
-            $this->view->generate('directorate_template_view.php', 'account');
+            $data = $this->model->documents_for_signature($_GET['u']);
+            $this->view->generate('directorate_template_view.php', 'account', $data);
         }
 
         public function action_signIn()//done
@@ -25,14 +30,14 @@
 
         public function action_logOut()//done
         {
-            $this->model->signOut(model::DIRECTORATE);
+            $this->model->signOut(Core\Model::DIRECTORATE);
         }
 
-        public function action_for_signature()
+       /* public function action_for_signature()
         {
             $data = $this->model->documents_for_signature($_GET['u']);
             $this->view->generate('directorate_template_view.php','for_signature', $data);
-        }
+        }*/
 
         public function action_sign()
         {

@@ -1,10 +1,13 @@
 <?php
 
-    class Controller_Main extends Controller{
+    use Core\Controller;
+    use Core\View;
+
+    class Controller_Main extends Core\Controller{
 
         public function __construct()
         {
-            $this->view = new View();
+            $this->view = new Core\View();
         }
 
 

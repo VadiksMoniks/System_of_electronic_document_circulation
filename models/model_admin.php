@@ -1,9 +1,13 @@
 <?php
-session_start();
+    namespace Models;
 
-    class Model_Admin extends Model{
+    session_start();
 
-        public function signIn($data, $lang='en')//authorization
+    use Core\Model;
+
+    class Model_Admin extends \Core\Model{
+
+        public function signIn($data, $lang='en')
         {
 
             $this->answer['answer'] = self::checkEmptity($data, 'en');
@@ -40,8 +44,13 @@ session_start();
             $sqlData->execute();
 
             $resultList = $sqlData->fetchAll();
+            $this->answer['path'] =[];
+            $this->answer['status']=[];
+            $this->answer['sender']=[];
             foreach($resultList as $docInfo){
-                array_push($this->answer,basename($docInfo->document_name));
+                array_push($this->answer['path'],basename($docInfo->document_name));
+                array_push($this->answer['status'], $docInfo->status);
+                    array_push($this->answer['sender'], $docInfo->sender);
             }
 
           //  $list.=' </table>';
@@ -75,7 +84,9 @@ session_start();
                 return 'wrong document name';
             }
 
-            return basename($docPath->document_name);
+            $this->answer['path']=basename($docPath->document_name);
+            $this->answer['status']=$docPath->status;
+            return $this->answer;
         }
 
         public function manipulateDocument($docName, $message)
@@ -120,102 +131,50 @@ session_start();
         }
 
         //SORTIROVKI
-        public function sortByDocName($docName)
+        public function sort($data)
         { 
-            // /$list = '';
-            //$data = array();
-            if($docName!="Select document name"){
-                $docName= str_replace(" ", "_", $docName);
-               
-
-                $sqlData = $this->pdo->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked' AND `document_name` LIKE ? ORDER BY `id` DESC");
-                $sqlData->execute(["%$docName%"]);
-
-                $resultList = $sqlData->fetchAll();
+            $this->answer['path'] =[];
+            $this->answer['status']=[];
+            $this->answer['sender']=[];
+            
+            $status = $data['status'];
+            $type = str_replace(" ", "_", $data['type']);
+            $data['name'] = trim($data['name']);
+            if(!empty($data['name'])){
+                $name = $data['name'];
+            }
+            //var_dump($data);
+            if(isset($name)){
+                if($type=="Select_document_name"){
+                    $sqlData = $this->pdo->prepare("SELECT * FROM `docs` WHERE `status` = ? AND `sender` LIKE ? ORDER BY `id` DESC");
+                    $sqlData->execute([$status, "%$name%"]);
+                }
+                else{
+                    $sqlData = $this->pdo->prepare("SELECT * FROM `docs` WHERE `status` = ? AND `sender` LIKE ? AND `document_name` LIKE ? ORDER BY `id` DESC");
+                     $sqlData->execute([$status, "%$name%", "%$type%"]);
+                }
+            }
+            else{
+                if($type=="Select_document_name"){
+                    $sqlData = $this->pdo->prepare("SELECT * FROM `docs` WHERE `status` = ? ORDER BY `id` DESC");
+                    $sqlData->execute([$status]);
+                }
+                else{
+                    $sqlData = $this->pdo->prepare("SELECT * FROM `docs` WHERE `status` = ? AND `document_name` LIKE ? ORDER BY `id` DESC");
+                    $sqlData->execute([$status,"%$type%"]);
+                }
+            }
+            $resultList = $sqlData->fetchAll();
                 foreach($resultList as $docInfo){
                    // array_push($data,[])
                     //$list.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.basename($docInfo->document_name).'">'.basename($docInfo->document_name).'</a></br>';
-                    array_push($this->answer, basename($docInfo->document_name));
+                    array_push($this->answer['path'], basename($docInfo->document_name));
+                    array_push($this->answer['status'], $docInfo->status);
+                    array_push($this->answer['sender'], $docInfo->sender);
                 }
-
-            }
-            else{
-
-                $sqlData = $this->pdo->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked 'ORDER BY `id` DESC");
-                $sqlData->execute();
-    
-                $resultList = $sqlData->fetchAll();
-                foreach($resultList as $docInfo){
-                   // $list.='<a href="http://localhost/System_of_electronic_document_circulation/index.php/admin/checkDocument?n='.basename($docInfo->document_name).'">'.basename($docInfo->document_name).'</a></br>';
-                    array_push($this->answer, basename($docInfo->document_name));
-                }
-
-            }
-
+            
             return json_encode($this->answer);
         }
-
-     /*   public function makePost($data)
-        {   
-           // var_dump($_FILES);
-            $path='E:/xampp/htdocs/System_of_electronic_document_circulation/articles/';
-            if(trim($data['name'])===""){
-                return "please add article name";
-            }
-            if(empty($_FILES['text']['name'])){
-                return "please add article text";
-            }
-
-            $filetype = new SplFileInfo($_FILES['text']['name']);
-            if($filetype->getExtension() != 'txt'){
-                return "article must be a txt file";
-            }
-
-            $filePath1=$path.basename($_FILES['text']['name']);
-            move_uploaded_file($_FILES['text']['tmp_name'], $filePath1);
-
-            if(count($_FILES)<2){
-                $sql = parent::connection()->prepare("INSERT INTO `articles` VALUES(NULL, ?, ?, NULL, ?)");
-                $sql->execute([$data['name'], $filePath1,date('d-m-Y')]);
-                return "post was created";
-            }
-            else{
-                $filetype = new SplFileInfo($_FILES['image']['name']);
-            
-                if($filetype->getExtension() != 'png'){
-                    return "image must be offtype png";
-                }
-                
-                $filePath2=$path.basename($_FILES['image']['name']);
-                move_uploaded_file($_FILES['image']['tmp_name'], $filePath2);
-
-                $sql = parent::connection()->prepare("INSERT INTO `articles` VALUES(NULL, ?, ?, ?, ?)");
-                $sql->execute([$data['name'], $filePath1,$filePath2,date('d-m-Y')]);
-                return "post was created";
-            }
-        }
-
-        public function articles_list()
-        {
-            $list='';
-            $sqlData = parent::connection()->prepare("SELECT * FROM `articles` ORDER BY `id` DESC");
-            $sqlData->execute();
-
-            $resultList = $sqlData->fetchAll();
-            if(!$resultList){
-                return '0 articles exists';
-            }
-            foreach($resultList as $postInfo){
-               //ТУТ МОЖНА ССИЛКУ НА ПОСТ И НАЗВАНИЕ ПОСТА 
-               $list.="<ahref='http://localhost/System_of_electronic_document_circulation/index.php/admin/viewPost?n='".basename($postInfo->articles_name)."'>".basename($postInfo->articles_name)."</a></br>";
-            }
-            return $list;
-        }
-
-        public function searchByArticlesList($name)
-        {
-            
-        }*/
 
     }
 
