@@ -14,7 +14,7 @@
 
             if(isset($document_name)){
                 if(trim($document_name)!=''){
-                    return self::documentCreation($document_name);
+                    return $this->documentCreation($document_name);
                 
                 }
                 else{
@@ -31,18 +31,27 @@
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
             $slice = array_slice($data, 5, 4);
-            $this->answer['answer'] = self::checkEmptity($slice, $lang);
+            $this->answer['answer'] = $this->checkEmptity($slice, $lang);
             if($this->answer['answer']!=1){
+                if(isset($_FILES['file']['tmp_name'])){
+                    unlink($_FILES['file']['tmp_name']);
+                }
                 return json_encode($this->answer);
             }
 
-          $this->answer['answer'] = self::validateByLanguage($slice, $lang);  
+          $this->answer['answer'] = $this->validateByLanguage($slice, $lang);  
             if($this->answer['answer']!=1){
+                if(isset($_FILES['file']['tmp_name'])){
+                    unlink($_FILES['file']['tmp_name']);
+                }
                 return json_encode($this->answer);
             }       
 
             if (empty($_FILES['file']['name'])){
                 $this->answer['answer']= $$lang['docError4'];
+                if(isset($_FILES['file']['tmp_name'])){
+                    unlink($_FILES['file']['tmp_name']);
+                }
                 return json_encode($this->answer);
             }
             
@@ -51,6 +60,7 @@
             
             if($filetype->getExtension() != 'png'){
                 $this->answer['answer']= $$lang['docError5'];
+                unlink($_FILES['file']['tmp_name']);
                 return json_encode($this->answer);
             }
 
@@ -60,8 +70,8 @@
                 move_uploaded_file($_FILES['file']['tmp_name'], $removeSig);
                
             }
-
-            $this->answer['answer']=self::documentCreation($data['name'], $data, $lang, $removeSig);
+            //here openssl method
+            $this->answer['answer']=$this->documentCreation($data['name'], $data, $lang, $removeSig);
             return json_encode($this->answer);
 
         }
@@ -80,6 +90,7 @@
             if($filetype->getExtension() != 'png'){
                 //$this->answer['answer']= "File must be offtype PNG";
                 $this->answer['answer']= $$lang['docError5'];
+                unlink($_FILES['file']['name']);
                 return json_encode($this->answer);
             }
 
@@ -228,6 +239,3 @@
         }
 
     }
-
-
-?>

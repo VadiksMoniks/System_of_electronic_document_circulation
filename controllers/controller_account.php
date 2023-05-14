@@ -95,5 +95,3 @@
             echo $this->model->turnNotification($_POST);
         }
     }
-
-?>

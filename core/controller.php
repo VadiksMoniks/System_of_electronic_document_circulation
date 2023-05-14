@@ -12,8 +12,6 @@
        //     $this->view = new View();
        // }
 
-        abstract function action_index();
+        abstract public function action_index();
 
     }
-
-?>

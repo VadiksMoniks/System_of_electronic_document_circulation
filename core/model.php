@@ -2,34 +2,39 @@
 
     namespace Core;
 
-    include './core/validator.php'; 
+    require './core/validator.php'; 
     require  'E:/xampp/htdocs/System_of_electronic_document_circulation/vendor/autoload.php';
+
+    use PDOException;
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception;
-    //use Validator\Validator;
 
     class Model{
+
+        use Validator\Validator;
 
         const USER = 'user';
         const ADMIN = 'admin';
         const DIRECTORATE = 'directorate';
 
-        private $validator;
         protected $pdo;
         protected $answer = array();
 
         public function __construct(){ 
             
-            $this->validator = new Validator\Validator();
-
-            $host = "localhost";
-            $userLog = "root";
-            $passwordUser = "";
-            $dbname = "document circulating system";
-            $dsn = 'mysql:host='.$host.';dbname='.$dbname;
-            $this->pdo = new \PDO($dsn, $userLog, $passwordUser);
-            $this->pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_OBJ);
+            try{
+                $host = "localhost";
+                $userLog = "root";
+                $passwordUser = "";
+                $dbname = "document circulating system";
+                $dsn = 'mysql:host='.$host.';dbname='.$dbname;
+                $this->pdo = new \PDO($dsn, $userLog, $passwordUser);
+                $this->pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_OBJ);
+            }
+            catch (PDOException $e){
+                echo 'Database Connection Error:'.$e->getMessage();
+            }
             //return $this->pdo;
         }
 
@@ -84,21 +89,4 @@
 
         }
 
-        public function validateMail($data, $language)
-        {
-            return $this->validator->validateMail($data, $language);
-        }
-
-        public function validateByLanguage(array $data, string $language)
-        {
-            return $this->validator->validateByLanguage($data, $language);
-        }
-
-        public function checkEmptity(array $data, string $language)
-        {
-            return $this->validator->checkEmptity($data, $language);
-        }
-
     }
-
-?>

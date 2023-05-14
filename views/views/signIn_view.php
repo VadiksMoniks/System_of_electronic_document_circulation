@@ -18,7 +18,7 @@
   crossorigin="anonymous"></script>
 
     <div id="formDiv">
-        <p class="text"><?php  echo $$lang['goSignIn.reg'];  ?></p>
+        <p class="text"><?php  echo $$lang['goReg.reg'];  ?></p>
         <a href='http://localhost/System_of_electronic_document_circulation/index.php/account/registre' class="text"><?php  echo $$lang['registreLink'];?></a>
         <form>
             <input type="text" placeholder="e-mail" id="mail"><br>

@@ -10,7 +10,7 @@
         public function signIn($data, $lang='en')
         {
 
-            $this->answer['answer'] = self::checkEmptity($data, 'en');
+            $this->answer['answer'] = $this->checkEmptity($data, 'en');
             if($this->answer['answer']!=1){
                 return json_encode($this->answer);
             }
@@ -177,5 +177,3 @@
         }
 
     }
-
-?>

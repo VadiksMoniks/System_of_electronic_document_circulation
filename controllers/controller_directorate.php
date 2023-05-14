@@ -50,5 +50,3 @@
             echo $this->model->signDocument($_POST, $_SESSION['directorate']);
         }
     }
-
-?>

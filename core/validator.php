@@ -2,7 +2,7 @@
 namespace Core\Validator;
 //include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
-class Validator{
+trait Validator{
 
     public function validateMail(string $data, string $language)
     {       
@@ -20,7 +20,7 @@ class Validator{
     public function validateByLanguage(array $data, string $language)
     {
         foreach($data as $key => $value){
-            if(!preg_match('/[А-Яа-яЇїІіЄєҐґ\s\d\-`]+/',$data[$key] )){
+            if(!preg_match('/^[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ \-\.,\?! \d]+$/u',$data[$key] )){
                 return 'only ukr';
             }
         }
@@ -50,4 +50,3 @@ class Validator{
 
     }
 }
-?>

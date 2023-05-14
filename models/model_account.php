@@ -10,12 +10,12 @@
         public function registre($data, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
-            $this->answer['answer'] = self::checkEmptity($data, $lang);
+            $this->answer['answer'] = $this->checkEmptity($data, $lang);
             if($this->answer['answer']!=1){
                 return json_encode($this->answer);
             }
 
-            $this->answer['answer'] = self::validateMail($data['mail'], $lang);
+            $this->answer['answer'] = $this->validateMail($data['mail'], $lang);
             if($this->answer['answer']!=1){
                 return json_encode($this->answer);
             }
@@ -46,7 +46,7 @@
 
                             $header = 'Verification Mail';
                             $message = 'This is No-reply letter. Please follow this link to end your registration on our web-site. <a href=http://localhost/System_of_electronic_document_circulation/index.php/account/registre?token='.$token.'>http://localhost/System_of_electronic_document_circulation/index.php/account/registre?token='.$token.'</a></br>';
-                            self::sendMail($data['mail'], $header, $message);
+                            $this->sendMail($data['mail'], $header, $message);
                         
                             $this->answer['answer']= $$lang['checkMail'];//$$lang['okMsg'];
                             return json_encode($this->answer);
@@ -86,7 +86,7 @@
         public function signIn($data, $lang){
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
-            $this->answer['answer'] = self::checkEmptity($data, $lang);
+            $this->answer['answer'] = $this->checkEmptity($data, $lang);
             if($this->answer['answer']!=1){
                 return json_encode($this->answer);
             }
@@ -118,7 +118,7 @@
 
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
-            $this->answer['answer'] = self::checkEmptity($data, 'en');
+            $this->answer['answer'] = $this->checkEmptity($data, 'en');
             if($this->answer['answer']!=1){
                 return json_encode($this->answer);
             }
@@ -333,5 +333,3 @@
         }
 
     }
-
-?>

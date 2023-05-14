@@ -11,7 +11,7 @@
         {
           include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
           
-          $this->answer['answer'] = self::checkEmptity($data, 'ua');
+          $this->answer['answer'] = $this->checkEmptity($data, 'ua');
           if($this->answer['answer']!=1){
               return json_encode($this->answer);
           }
@@ -134,7 +134,9 @@
             $filetype = new \SplFileInfo($_FILES['file']['name']);
             
             if($filetype->getExtension() != 'png'){
-               
+                if(isset($_FILES['file']['tmp_name'])){
+                    unlink($_FILES['file']['tmp_name']);
+                }
                 return "your signature must be offtype PNG";
             }
 
@@ -153,10 +155,10 @@
             }
 
             if($result->type==="templated"){
-                return self::signTemplated($data['document_name'],$directorate, $path, $removeSig, $result);
+                return $this->signTemplated($data['document_name'],$directorate, $path, $removeSig, $result);
             }
             else{
-                return self::signHandwritten($data['document_name'],$directorate, $path, $removeSig, $result);
+                return $this->signHandwritten($data['document_name'],$directorate, $path, $removeSig, $result);
             }
 
         }
@@ -245,7 +247,7 @@
                         if($Sender->notification ==1){
                             $header = "Ваш документ готовий для завантаження!";
                             $message = "Документ ".basename($fName, '.pdf')." щойно було підписано. Перейдіть у розділ 'Завантажити' у вашому профілі для того, аби скачати документ.";
-                            self::sendMail($Sender->mail, $header, $message);
+                            $this->sendMail($Sender->mail, $header, $message);
 
                         }
                     }
@@ -309,13 +311,10 @@
             if($Sender->notification == 1){
                 $header = "Ваш документ готовий для завантаження!";
                 $message = "Документ ".basename($fName, '.pdf')." щойно було підписано. Перейдіть у розділ 'Завантажити' у вашому профілі для того, аби скачати документ.";
-                self::sendMail($Sender->mail, $header, $message);
+                $this->sendMail($Sender->mail, $header, $message);
             }
 
             return "Thank You";
         }
 
     }
-
-
-?>

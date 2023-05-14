@@ -10,11 +10,14 @@
 
 
             if(isset($_SERVER['PATH_INFO'])){
+                if($_SERVER['PATH_INFO']=='/'){
+                    header('Location: http://localhost/System_of_electronic_document_circulation/index.php/main'); 
+                }
                 $routes = explode('/', trim($_SERVER['PATH_INFO'],'/'));
             }
             
             else{
-                $routes[] = 'Main';
+                header('Location: http://localhost/System_of_electronic_document_circulation/index.php/main');
             }
 
             if(!empty($routes[0]) && isset($routes[0])){
@@ -72,5 +75,3 @@
 
 
     }
-
-?>
