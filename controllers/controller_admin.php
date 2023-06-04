@@ -8,23 +8,27 @@
        и потом пользователь будет видеть это но нужно переработать в model_account отображение чтобы не было ошибок ибо файл удален а пользователь пытается его глянуть
     
     */
-    class Controller_Admin extends Controller{
+    use Models\Model_Admin;
+    use Core\Controller;
+    use Core\View;
+
+    class Controller_Admin extends Core\Controller{
 
       public function __construct()
       {
-          $this->view = new View();
-          $this->model = new Model_Admin();
+          $this->view = new Core\View();
+          $this->model = new \Models\Model_Admin();
       }
 
-      public function action_adminPanel()//use view
+      public function action_index()//use view
       {
           $data = $this->model->documentList();
-          $this->view->generate('admin_view.php', $data);
+          $this->view->generate('admin_view.php', 'adminPanel', $data);
       }
 
       public function action_authorization()//DONE
       {
-          $this->view->generate('admin_view.php');//sign form
+          $this->view->generate('admin_view.php', 'authorization');//sign form
       }
 
       public function action_authorizeAdmin()//DONE
@@ -34,28 +38,20 @@
 
       public function action_logOut()//DONE
       {
-          $this->model->signOut();
+          $this->model->signOut(\Core\Model::ADMIN);
       }
 
       public function action_checkDocument()//view for checking documents
       {
-          $this->view->generate('admin_view.php');//show doc
+          $data=$this->model->showDocument($_GET['n']);
+          $this->view->generate('admin_view.php', 'checkDocument', $data);//show doc
       }
 
-     /* public function action_documentsList()//model with the list of docs DONE
+      public function action_documentsList()//model with the list of docs DONE
       {
           echo $this->model->documentList();
-      }*/
-
-      public function action_numOfRecords()
-      {
-        echo $this->model->numOfRecords();
       }
 
-      public function action_showDocument()//model that returns a pick of document to the view DONE
-      {
-          return $this->model->showDocument($_POST['docName']);
-      }
 
       public function action_manipulate()
       {
@@ -67,28 +63,9 @@
         echo  $this->model->checkDocument($_POST['docName']);
       }
 
-      public function action_byDocName()
+      public function action_filter()
       {
-        echo $this->model->sortByDocName($_POST['docName']);
-      }
-
-      public function action_post()
-      {
-        $this->view->generate('admin_view.php');
-      }
-
-      public function action_makePost()
-      {
-        echo $this->model->makePost($_POST);
-      }
-
-      public function action_articles_list()
-      {
-        $data = $this->model->articles_list();
-        $this->view->generate('admin_view.php', $data);
-//ТУТ МОЖНА ЗВЕРНУТИСЯ СПОЧАТКУ ДО МОДЕЛІ А ПОТІМ В₴ЮВУ ПЕРЕДАТИ ДАННІ
+        echo $this->model->sort($_POST);
       }
 
     }
-//НУЖНО КАКТО ИЗМЕНИТЬ РАБОТУ ВИДА ЧТОБЫ ОН ПРИНИМАЛ ПАРАМЕТР ДАТА И В КОНТРОЛЛЕРЕ ВЫЗЫВАТЬ СНАЧАЛА МОДЕЛЬ ПОЛУЧАТЬ ДАТУ И ОТПРАВЛЯТЬ В ВИД А НЕ ИССПОЛЬЗОВАТЬ ДВЕ ФУНКЦИИ
-?>

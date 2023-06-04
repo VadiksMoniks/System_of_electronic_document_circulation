@@ -1,18 +1,14 @@
 <?php
 
+    namespace Core; 
+
     class View{
 
-        function generate($template_view, $data=null)
+        function generate($template_view, $view=null, $data=null)
         {
            
-            include 'views/'.$template_view;
-
-           // if(isset($data)){
-           //     return $data;
-           // }
+            include 'views/templates/'.$template_view;
             
         }
 
     }
-
-?>
