@@ -1,3 +1,8 @@
+<?php
+if(!isset($_SESSION['user'])){
+  header("Location:http://localhost/System_of_electronic_document_circulation/index.php");
+}
+?>
 <div id="answer">
     <?php 
         //echo $data;

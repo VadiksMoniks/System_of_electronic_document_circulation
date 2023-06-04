@@ -1,64 +1,41 @@
 <?php
 
     namespace Core;
-/*тут необхідно спочатку розглянути усі можливі варіанти запитів
-оскільки я використовую лише SELECT INSERT UPDATE DELETE - то основних методів буде лише 4
-далі треба врахувати метод WHERE, який буде додавати конструкцію WHERE до запиту 
- */
+
 trait QueryBuilder
 {
-    public function select($neededValues='*',$tableName, $params, $returningtype=\PDO::FETCH_OBJ)
+
+    public function makeQuery(string $queryType, string $query, $params=null, $fetchType='fetchAll', $fetchMode=\PDO::FETCH_OBJ)
     {
         try{
-            $sql = $this->pdo->prepare("SELECT $neededValues FROM $tableName");
-            $sql->execute([$params]);
-            return $sql->fetchAll($returningtype);
-        }
-        catch   (\PDOException $e){
-            echo 'Database Connection Error:'.$e->getMessage();
-        }
-    }
-
-    public function insert($tableName, $params)
-    {
-        try{
-            $this->pdo->prepare();
-        }
-        catch   (\PDOException $e){
-            echo 'Database Connection Error:'.$e->getMessage();
-        }
-    }
-
-    public function update($tableName, $params)
-    {
-        try{
-            $this->pdo->prepare();
-        }
-        catch   (\PDOException $e){
-            echo 'Database Connection Error:'.$e->getMessage();
-        }
-    }
-
-    public function delete($tableName)
-    {
-        try{
-            $this->pdo->prepare();
-        }
-        catch   (\PDOException $e){
-            echo 'Database Connection Error:'.$e->getMessage();
-        }
-    }
-
-    public function where($fields,$filterParams)
-    {   
-        if(gettype($filterParams)=='array'){
-            foreach($filterParams as $key){
-
+            $sql = $this->pdo->prepare($query);
+                
+            if($params!=null){
+                if(gettype($params)=='array'){
+                    $sql->execute($params);
+                }
+                else{
+                    $sql->execute([$params]);
+                }
+                
             }
+            else{
+                $sql->execute();
+            }
+                if($queryType=='select'){
+                    if($fetchMode!=\PDO::FETCH_OBJ){
+                        return $sql->$fetchType($fetchMode);
+                    }
+                    return $sql->$fetchType();
+                }
+                else{
+                    return 0;
+                }
         }
-        else{
 
+        catch (\PDOException $e){
+            echo 'Database Error:'.$e->getMessage();
         }
-        return "WHERE "
     }
+
 }

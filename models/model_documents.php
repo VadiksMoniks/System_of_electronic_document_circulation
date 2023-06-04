@@ -48,7 +48,7 @@
             }       
 
             if (empty($_FILES['file']['name'])){
-                $this->answer['answer']= $$lang['docError4'];
+                $this->answer['answer']= self::returnMessage('docError4', $$lang);
                 if(isset($_FILES['file']['tmp_name'])){
                     unlink($_FILES['file']['tmp_name']);
                 }
@@ -59,7 +59,7 @@
             $filetype = new \SplFileInfo($_FILES['file']['name']);
             
             if($filetype->getExtension() != 'png'){
-                $this->answer['answer']= $$lang['docError5'];
+                $this->answer['answer']= self::returnMessage('docError5', $$lang);
                 unlink($_FILES['file']['tmp_name']);
                 return json_encode($this->answer);
             }
@@ -81,7 +81,7 @@
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
             if(empty($_FILES['file']['name'])){
-                $this->answer['answer']= $$lang['hdocError2'];
+                $this->answer['answer']= self::returnMessage('hdocError2', $$lang);
                 return json_encode($this->answer);
             }
 
@@ -89,7 +89,7 @@
 
             if($filetype->getExtension() != 'png'){
                 //$this->answer['answer']= "File must be offtype PNG";
-                $this->answer['answer']= $$lang['docError5'];
+                $this->answer['answer']= self::returnMessage('docError5', $$lang);
                 unlink($_FILES['file']['name']);
                 return json_encode($this->answer);
             }
@@ -152,6 +152,12 @@
 
                 imagettftext($example, 30, 0, 275, 1045, imagecolorallocate($example,0,0,0), 'arial.ttf', date('d'));
                 imagettftext($example, 30, 0, 500, 1045, imagecolorallocate($example,0,0,0), 'arial.ttf', date('m'));
+
+                // imagealphablending($userSignature, false);
+                // imagesavealpha($userSignature, true);
+                // $transparent = imagecolorallocatealpha($userSignature, 0, 0, 0, 127);
+                // imagefill($userSignature, 0, 0, $transparent);
+
                 imagecopy($example, $userSignature, 1329, 965, 0, 0 ,126, 100);
 
                 $picName=$data['mail'].'_'.date("Y-m-d_H-i-s");
@@ -165,7 +171,7 @@
                 $sql = $this->pdo->prepare('INSERT INTO `docs` VALUES(?,?,?,?,?,?,?)');
                 $sql->execute([NULL, $data['mail'], $recipients, $fName, 'unchecked', NULL, "templated"]);
 
-                return $$lang['docMsg'];
+                return self::returnMessage('docMsg',$$lang);
             }
 
             else{
@@ -197,7 +203,7 @@
             else{
                 $sql->execute([NULL, $data['sender'],"Myguschenko@khpi.edu.ua", $newDocName, "unchecked", NULL, "handwritten"]);
             }
-            return $$lang['docMsg'];
+            return self::returnMessage('docMsg',$$lang);
         }
 
         public function documentList($name, $lang)

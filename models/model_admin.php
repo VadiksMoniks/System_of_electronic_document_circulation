@@ -10,15 +10,15 @@
         public function signIn($data, $lang='en')
         {
 
-            $this->answer['answer'] = $this->checkEmptity($data, 'en');
+            $this->answer['answer'] = $this->checkEmptity($data, $lang);
             if($this->answer['answer']!=1){
                 return json_encode($this->answer);
             }
 
-            $usernameValid = $this->pdo->prepare("SELECT * FROM `admins` WHERE `admin` = ?");
-            $usernameValid->execute([$data['username']]);
+            //$usernameValid = $this->pdo->prepare("SELECT * FROM `admins` WHERE `admin` = ?");
+           // $usernameValid->execute([$data['username']]);
 
-            $result = $usernameValid->fetch();
+            $result = self::makeQuery('select', "SELECT * FROM `admins` WHERE `admin` = ?", $data['username'], 'fetch');//$usernameValid->fetch();
 
             if($result == false){
                 $this->answer['answer']= 'wrong username or password';
@@ -40,10 +40,10 @@
         {
             //$list = array();
 
-            $sqlData = $this->pdo->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked 'ORDER BY `id` DESC");
-            $sqlData->execute();
+            //$sqlData = $this->pdo->prepare("SELECT * FROM `docs` WHERE `status` = 'unchecked 'ORDER BY `id` DESC");
+            //$sqlData->execute();
 
-            $resultList = $sqlData->fetchAll();
+            $resultList = self::makeQuery('select', "SELECT * FROM `docs` WHERE `status` = 'unchecked 'ORDER BY `id` DESC", null, 'fetchAll');//$sqlData->fetchAll();
             $this->answer['path'] =[];
             $this->answer['status']=[];
             $this->answer['sender']=[];
@@ -75,10 +75,10 @@
                 return 'document name is empty!';
             }
 
-            $docPathSql = $this->pdo->prepare("SELECT * FROM `docs` WHERE `document_name` = ?");
-            $docPathSql->execute(['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$name]);
+            //$docPathSql = $this->pdo->prepare("SELECT * FROM `docs` WHERE `document_name` = ?");
+            //$docPathSql->execute(['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$name]);
 
-            $docPath = $docPathSql->fetch();
+            $docPath = self::makeQuery('select', "SELECT * FROM `docs` WHERE `document_name` = ?", ['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$name], 'fetch');//$docPathSql->fetch();
 
             if($docPath===false){
                 return 'wrong document name';
@@ -103,31 +103,38 @@
                 $this->answer['answer'] = "Reasone of deletion must be on ukrainian language";
             }
 
-            $checkValid = $this->pdo->prepare("SELECT * FROM `docs` WHERE `document_name` = ?");
-            $checkValid->execute(["E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
+            //$checkValid = $this->pdo->prepare("SELECT * FROM `docs` WHERE `document_name` = ?");
+            //$checkValid->execute(["E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
 
-            $result = $checkValid->fetch();
+            $result = self::makeQuery('select', "SELECT * FROM `docs` WHERE `document_name` = ?", ["E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName], 'fetch');//$checkValid->fetch();
 
             if($result===NULL){
                 $this->answer['answer'] = 'wrong document name';
             }
 
             unlink($result->document_name);
-            $deleteStatement = $this->pdo->prepare("UPDATE `docs` SET `status` = ?  WHERE `document_name` = ?");
-            $deleteStatement->execute([$message, "E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
+            //$deleteStatement = $this->pdo->prepare("UPDATE `docs` SET `status` = ?  WHERE `document_name` = ?");
+            //$deleteStatement->execute([$message, "E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
+            $result = self::makeQuery('update', "UPDATE `docs` SET `status` = ?  WHERE `document_name` = ?", [$message, "E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
+            if($result==0){
+                $this->answer['answer'] = "Document Was DELETED";
+                return json_encode($this->answer);
+            }
+            
 
-            $this->answer['answer'] = "Document Was DELETED";
-
-            return json_encode($this->answer);
+            
         }
 
         public function checkDocument($docName)
         {
-            $checkedStatus = $this->pdo->prepare("UPDATE `docs` SET `status` = ? WHERE `document_name` = ?");
-            $checkedStatus->execute(["unsigned","E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
+            //$checkedStatus = $this->pdo->prepare("UPDATE `docs` SET `status` = ? WHERE `document_name` = ?");
+            //$checkedStatus->execute(["unsigned","E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
 
-            $this->answer['answer'] = 'Thank You!';
-            return json_encode($this->answer);
+            $result = self::makeQuery('update', "UPDATE `docs` SET `status` = ? WHERE `document_name` = ?", ["unsigned","E:/xampp/htdocs/System_of_electronic_document_circulation/".$docName]);
+            if($result==0){
+                $this->answer['answer'] = 'Thank You!';
+                return json_encode($this->answer);
+            }
         }
 
         //SORTIROVKI

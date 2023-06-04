@@ -3,6 +3,7 @@
     namespace Core;
 
     require './core/validator.php'; 
+    require './core/QueryBuilder.php'; 
     require  'E:/xampp/htdocs/System_of_electronic_document_circulation/vendor/autoload.php';
 
     use PDOException;
@@ -13,6 +14,7 @@
     class Model{
 
         use Validator\Validator;
+        use QueryBuilder;
 
         const USER = 'user';
         const ADMIN = 'admin';

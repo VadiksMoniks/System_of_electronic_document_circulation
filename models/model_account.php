@@ -22,33 +22,30 @@
 
                 $password = password_hash($data['password'], PASSWORD_DEFAULT);
 
-                $sql = $this->pdo->prepare("SELECT * FROM `users` WHERE `username` =?");
-                $sql->execute([$data['username']]);
-                $result = $sql->fetch();
+                $result = self::makeQuery('select',"SELECT * FROM `users` WHERE `username` =?", $data['username'],'fetch');
                 //return var_dump($data);
                 if($result!=false){
-                    $this->answer['answer']= $$lang['errorRegununiqName'];//checking username's unicity
+                    $this->answer['answer']= self::returnMessage('errorRegununiqName',$$lang);//checking username's unicity
                     return json_encode($this->answer);
                 }
                 else{
-                    $sql = $this->pdo->prepare("SELECT * FROM `users` WHERE `mail` =?");
-                    $sql->execute([$data['mail']]);
-                    $result = $sql->fetch();
+
+                        $result = self::makeQuery('select', "SELECT * FROM `users` WHERE `mail` =?", $data['mail'],'fetch');
                    // return var_dump($data);
                     if($result!=false){
-                        $this->answer['answer']= $$lang['errorRegununiqMail'];//checking mail unicity
+                        $this->answer['answer']= self::returnMessage('errorRegununiqMail',$$lang);//checking mail unicity
                         return json_encode($this->answer);
                     }
                     else{
                             $token = md5(time());
-                            $sql = $this->pdo->prepare("INSERT INTO `waiting_for_auth` VALUES(?,?,?,?,?)");
-                            $sql->execute([NULL, $data['mail'], $data['username'], $password, $token]);
+
+                            self::makeQury('insert', "INSERT INTO `waiting_for_auth` VALUES(?,?,?,?,?)", [NULL, $data['mail'], $data['username'], $password, $token]);
 
                             $header = 'Verification Mail';
                             $message = 'This is No-reply letter. Please follow this link to end your registration on our web-site. <a href=http://localhost/System_of_electronic_document_circulation/index.php/account/registre?token='.$token.'>http://localhost/System_of_electronic_document_circulation/index.php/account/registre?token='.$token.'</a></br>';
                             $this->sendMail($data['mail'], $header, $message);
                         
-                            $this->answer['answer']= $$lang['checkMail'];//$$lang['okMsg'];
+                            $this->answer['answer']= self::returnMessage('checkMail', $$lang);//$$lang['okMsg'];
                             return json_encode($this->answer);
                     }
                // }
@@ -61,23 +58,21 @@
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
             if(isset($token) && !empty($token)){
-                $sql = $this->pdo->prepare("SELECT * FROM `waiting_for_auth` WHERE `token` = ?");
-                $sql->execute([$token]);
 
-                $userData = $sql->fetch();
+                $userData =self::makeQuery('select', "SELECT * FROM `waiting_for_auth` WHERE `token` = ?", $token,'fetch');
 
                 if($userData == false){
                     $this->answer['answer'] = 'wrong URL';
                     return json_encode($this->answer);
                 }
                 else{
-                    $addUser = $this->pdo->prepare("INSERT INTO `users` VALUES(?,?,?,?,?)");
-                    $addUser->execute([NULL, $userData->mail, $userData->username, $userData->password, 1]);
-                    $dropData = $this->pdo->prepare("DELETE FROM `waiting_for_auth` WHERE `token` =?");
-                    $dropData->execute([$token]);
+
+                    self::makeQury('insert', "INSERT INTO `users` VALUES(?,?,?,?,?)", [NULL, $userData->mail, $userData->username, $userData->password, 1]);
+
+                    self::makeQuery('delete', "DELETE FROM `waiting_for_auth` WHERE `token` =?", $token);
                     $_SESSION['user'] = $userData->username;
 
-                    $this->answer['answer'] = $$lang['okMsg'];
+                    $this->answer['answer'] = self::returnMessage('okMsg', $$lang);
                     return json_encode($this->answer);
                 }
             }
@@ -90,25 +85,23 @@
             if($this->answer['answer']!=1){
                 return json_encode($this->answer);
             }
+                $result = self::makeQuery('select', "SELECT * FROM `users` WHERE `mail` =?", $data['mail'],'fetch');//$sql->fetch();
 
-                $sql = $this->pdo->prepare("SELECT * FROM `users` WHERE `mail` =?");
-                $sql->execute([$data['mail']]);
-                $result = $sql->fetch();
                 if($result!=false){
                     if(password_verify($data['password'], $result->password)==1){
 
                         $_SESSION['user'] = $result->username;
                        
-                        $this->answer['answer']= $$lang['okMsg'];
+                        $this->answer['answer']= self::returnMessage('okMsg',$$lang);
                         return json_encode($this->answer);
                     }
                     else{
-                        $this->answer['answer']= $$lang['errorSignIn'];
+                        $this->answer['answer']= self::returnMessage('errorSignIn', $$lang);
                         return json_encode($this->answer);
                     }
                 }
                 else{
-                    $this->answer['answer']= $$lang['errorSignIn'];
+                    $this->answer['answer']= self::returnMessage('errorSignIn', $$lang);
                     return json_encode($this->answer);
                 }
             
@@ -123,16 +116,12 @@
                 return json_encode($this->answer);
             }
 
-            $sql = $this->pdo->prepare("SELECT `password` FROM `users` WHERE `username` =?");
-            $sql->execute([$data['user']]);
-
-            $result = $sql->fetch();
+            $result = self::makeQuery('select', "SELECT `password` FROM `users` WHERE `username` =?", $data['user'],'fetch');
             if($result!=false){
                 if(password_verify($data['oldPass'], $result->password)==1){
                     $newPass = password_hash($data['newPass'], PASSWORD_DEFAULT);
 
-                    $newPassSql = $this->pdo->prepare("UPDATE `users` SET `password` =? WHERE `mail` =?");
-                    $newPassSql->execute([$newPass, $data['user']]);
+                    self::makeQuery('update', "UPDATE `users` SET `password` =? WHERE `mail` =?", [$newPass, $data['user']]);
 
                     $this->answer['answer']= "password was changed";
                     return json_encode($this->answer);
@@ -179,13 +168,7 @@
             //$answer = array();
             if(!empty($user)){
 
-                //$sqlMail = parent::connection()->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
-                //$sqlMail->execute([$user]);
-                //$mail= $sqlMail->fetch();
-
-                $sql= $this->pdo->prepare("SELECT * FROM `docs` WHERE `sender`=? AND `status` !='signed'");
-                $sql->execute([$user]);
-                $result=$sql->fetchAll(\PDO::FETCH_ASSOC);
+                $result= self::makeQuery('select', "SELECT * FROM `docs` WHERE `sender`=? AND `status` !='signed'", $user,'fetchAll', \PDO::FETCH_ASSOC);
                 if($result!=false){
                     for($i=0; $i<count($result); $i++){
                         if($result[$i]['status']=="unchecked"){
@@ -213,7 +196,7 @@
                     return $this->answer;
                 }
                 else{
-                    return $$lang['Msghistory'];
+                    return self::returnMessage('Msghistory', $$lang);
                 }
             }
         
@@ -224,9 +207,8 @@
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
             if(!empty($user)){
-                $sql= $this->pdo->prepare("SELECT `document_name` FROM `docs` WHERE `status`=? AND `sender`=?");
-                $sql->execute(['signed',$user]);
-                $result=$sql->fetchAll(\PDO::FETCH_ASSOC);
+
+                $result = self::makeQuery('select', "SELECT `document_name` FROM `docs` WHERE `status`=? AND `sender`=?", ['signed',$user], 'fetchAll', \PDO::FETCH_ASSOC);
                 if($result!=false){
                     for($i=0; $i<count($result); $i++){
                         array_push($this->answer, basename($result[$i]['document_name']));
@@ -234,7 +216,7 @@
                     return $this->answer;
                 }
                 else{
-                    return $$lang['Msgdwn'];
+                    return self::returnMessage('Msgdwn', $$lang);
                 }
             }
         
@@ -249,18 +231,17 @@
             }
             else{
                // return $$lang['show_docError'];
-                $msgSQL = $this->pdo->prepare("SELECT `status` FROM `docs` WHERE `document_name` = ?");
-                $msgSQL->execute(['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName]);
-                $msg = $msgSQL->fetch();
+
+                $msg = self::makeQuery('select', "SELECT `status` FROM `docs` WHERE `document_name` = ?", ['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName],'fetch');
                 if(!$msg){
-                     return $$lang['show_docError'];
+                     return self::returnMessage('show_docError', $$lang);
                 }
                 
                 else{
                     if($msg->status!='unsigned' && $msg->status!='signed'){
 
-                        $deleteRecord = $this->pdo->prepare("DELETE FROM `docs` WHERE `document_name` = ?");
-                        $deleteRecord->execute(['E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName]);
+
+                        self::makeQuery('delete', "DELETE FROM `docs` WHERE `document_name` = ?", 'E:/xampp/htdocs/System_of_electronic_document_circulation/'.$docName);
 
                         return $this->answer['answet']=$msg->status;
                     }
@@ -275,26 +256,23 @@
 
             include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
 
-           // $sqlMail = parent::connection()->prepare("SELECT `mail` FROM `users` WHERE `username`=?");
-           // $sqlMail->execute([$data['user']]);
-           // $mail= $sqlMail->fetchAll();
             $path='E:/xampp/htdocs/System_of_electronic_document_circulation/';
-            $sql= $this->pdo->prepare("SELECT * FROM `docs` WHERE `document_name`=? AND `sender`=?");
-            $sql->execute([$path.$data['docName'], $data['user']]);
-            $result = $sql->fetch();
+
+            $result = self::makeQuery('select', "SELECT * FROM `docs` WHERE `document_name`=? AND `sender`=?", [$path.$data['docName'], $data['user']],'fetch');
             if($result===false){
-                return $$lang['deleteDocError1'];
+                return self::returnMessage('deleteDocError1', $$lang);
             }
 
             else{
                 if(file_exists($path.$data['docName'])){
                     unlink($path.$data['docName']); 
-                    $del=$this->pdo->prepare("DELETE FROM `docs` WHERE `document_name`=? AND `sender`=?");
-                    $del->execute([$path.$data['docName'], $data['user']]);
-                    return $$lang['deleteDocMsg'];
+
+                    self::makeQuery('delete', "DELETE FROM `docs` WHERE `document_name`=? AND `sender`=?", [$path.$data['docName'], $data['user']]);
+
+                    return self::returnMessage('deleteDocMsg', $$lang);
                 }
                 else{
-                    return $$lang['deleteDocError2'];
+                    return self::returnMessage('deleteDocError2', $$lang);
                 }
 
             
@@ -304,9 +282,8 @@
         } 
 
         public function notificationStatus($user){
-            $sql = $this->pdo->prepare("SELECT `notification` FROM `users` WHERE `username` = ?");
-            $sql->execute([$user['user']]);
-            $result = $sql->fetch();
+
+            $result = self::makeQuery('select', "SELECT `notification` FROM `users` WHERE `username` = ?", $user['user'],'fetch');
             if($result != false){
                 return $result->notification;
             }
@@ -314,9 +291,8 @@
 
         public function turnNotification($user){
             $value=0;
-            $sql = $this->pdo->prepare("SELECT `notification` FROM `users` WHERE `username` = ?");
-            $sql->execute([$user['user']]);
-            $result = $sql->fetch();
+
+            $result = self::makeQuery('select', "SELECT `notification` FROM `users` WHERE `username` = ?", $user['user'],'fetch');
             if($result != false){
                 if($result->notification == 1){
                     $this->answer['answer']= 'Now you`ll not get notifications on You`r e-mail address. You can change this setting at any time';
@@ -326,8 +302,8 @@
                     $this->answer['answer']= 'Now you`ll get notifications on You`r e-mail address. You can change this setting at any time';
                 }
 
-                $sql = $this->pdo->prepare("UPDATE `users` SET `notification` = ? WHERE `username` = ?");
-                $sql ->execute([$value, $user['user']]);
+                self::makeQuery('update', "UPDATE `users` SET `notification` = ? WHERE `username` = ?", [$value, $user['user']]);
+
                 return $this->answer['answer'];
             }
         }

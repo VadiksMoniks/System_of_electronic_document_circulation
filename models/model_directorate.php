@@ -11,31 +11,31 @@
         {
           include 'E:/xampp/htdocs/System_of_electronic_document_circulation/languages.php';
           
-          $this->answer['answer'] = $this->checkEmptity($data, 'ua');
+          $this->answer['answer'] = $this->checkEmptity($data, $lang);
           if($this->answer['answer']!=1){
               return json_encode($this->answer);
           }
 
-            $sql = $this->pdo->prepare("SELECT * FROM `directorate_accounts` WHERE `mail` =?");
-            $sql->execute([$data['mail']]);
-            $result = $sql->fetch();
+            //$sql = $this->pdo->prepare("SELECT * FROM `directorate_accounts` WHERE `mail` =?");
+            //$sql->execute([$data['mail']]);
+            $result = self::makeQuery('select', "SELECT * FROM `directorate_accounts` WHERE `mail` =?", $data['mail'],'fetch');
 
             if($result===false){
-                $this->answer['answer'] = $$lang['errorSignIn'];
+                $this->answer['answer'] = self::returnMessage('errorSignIn', $$lang);
                 return json_encode($this->answer); 
             }
 
             else{
                 if(password_verify($data['password'], $result->password)==0)
                 {
-                    $this->answer['answer'] = $$lang['errorSignIn'];
+                    $this->answer['answer'] = self::returnMessage('errorSignIn', $$lang);
                     return json_encode($this->answer); 
                 }
                 else{
                     if(password_verify($data['ip'], $result->ip)==1){
                        // return "yes";
                         $_SESSION['directorate'] = $result->username;
-                        $this->answer['answer'] = $$lang['okMsg'];
+                        $this->answer['answer'] =  self::returnMessage('okMsg', $$lang);
                         return json_encode($this->answer);
                     }
                     else{
@@ -56,15 +56,15 @@
                 header("Location: http://localhost/System_of_electronic_document_circulation/index.php");
             }
 
-            $sqlUser = $this->pdo->prepare("SELECT * FROM `directorate_accounts` WHERE `username`=?");
-            $sqlUser->execute([$user]);
-            $resultUser = $sqlUser->fetch();
+            //$sqlUser = $this->pdo->prepare("SELECT * FROM `directorate_accounts` WHERE `username`=?");
+            //$sqlUser->execute([$user]);
+            $resultUser = self::makeQuery('select', "SELECT * FROM `directorate_accounts` WHERE `username`=?", $user,'fetch');
 
 
-            $sql = $this->pdo->prepare("SELECT `reciever`, `already_signed`, `document_name` FROM `docs` WHERE `status`=?");
-            $sql->execute(["unsigned"]);
+            //$sql = $this->pdo->prepare("SELECT `reciever`, `already_signed`, `document_name` FROM `docs` WHERE `status`=?");
+            //$sql->execute(["unsigned"]);
 
-            $result = $sql->fetchAll(\PDO::FETCH_ASSOC);
+            $result = self::makeQuery('select', "SELECT `reciever`, `already_signed`, `document_name` FROM `docs` WHERE `status`=?", "unsigned", 'fetchAll',\PDO::FETCH_ASSOC);
             if($result===false){
                 return "Something went wrong";
             }
@@ -147,9 +147,9 @@
                
             }
 
-            $sql = $this->pdo->prepare("SELECT * FROM `docs` WHERE `document_name`=?");
-            $sql->execute([$path]);
-            $result = $sql->fetch();
+            //$sql = $this->pdo->prepare("SELECT * FROM `docs` WHERE `document_name`=?");
+            //$sql->execute([$path]);
+            $result =self::makeQuery('select', "SELECT * FROM `docs` WHERE `document_name`=?", $path, 'fetch');
             if($result===false){
                 return "something went wrong";
             }
@@ -195,9 +195,9 @@
             $document = imagecreatefrompng($docPath);
             $directorateSignature = imagecreatefrompng($signaturePath);
 
-            $sqlMail = $this->pdo->prepare("SELECT `mail` FROM `directorate_accounts` WHERE `username` =?");
-            $sqlMail->execute([$directorate]);
-            $directorateMail = $sqlMail->fetch();
+            //$sqlMail = $this->pdo->prepare("SELECT `mail` FROM `directorate_accounts` WHERE `username` =?");
+            //$sqlMail->execute([$directorate]);
+            $directorateMail = self::makeQuery('select', "SELECT `mail` FROM `directorate_accounts` WHERE `username` =?",$directorate, 'fetch');
 
             if($docInfo->already_signed===NULL){//zav kafedry
                 imagecopy($document, $directorateSignature, 525, 1640, 0, 0 ,126, 100);
@@ -237,13 +237,13 @@
                        // unlink($removeSig);
                         unlink($docPath);
                         //return "Thank You";
-                        $sqlName = $this->pdo->prepare("SELECT `sender` FROM `docs` WHERE `document_name` =?");
-                        $sqlName->execute([$fName]);
-                        $name = $sqlName->fetch();
+                       // $sqlName = $this->pdo->prepare("SELECT `sender` FROM `docs` WHERE `document_name` =?");
+                       // $sqlName->execute([$fName]);
+                        $name = self::makeQuery('select', "SELECT `sender` FROM `docs` WHERE `document_name` =?", $fName, 'fetch');
                         
-                        $sqlSender = $this->pdo->prepare("SELECT * FROM `users` WHERE `username` =?");
-                        $sqlSender->execute([$name->sender]);
-                        $Sender = $sqlSender->fetch();
+                        //$sqlSender = $this->pdo->prepare("SELECT * FROM `users` WHERE `username` =?");
+                        //$sqlSender->execute([$name->sender]);
+                        $Sender = self::makeQuery('select', "SELECT * FROM `users` WHERE `username` =?",$name->sender, 'fetch');
                         if($Sender->notification ==1){
                             $header = "Ваш документ готовий для завантаження!";
                             $message = "Документ ".basename($fName, '.pdf')." щойно було підписано. Перейдіть у розділ 'Завантажити' у вашому профілі для того, аби скачати документ.";
@@ -261,9 +261,9 @@
             imagedestroy($directorateSignature);
             unlink($signaturePath);
             $deleteImg = "E:/xampp/htdocs/System_of_electronic_document_circulation/".$documentName.".pdf";
-            $sqlStatus = $this->pdo->prepare("SELECT `status` FROM `docs` WHERE `document_name` = ?");
-            $sqlStatus->execute([$deleteImg]);
-            $status = $sqlStatus->fetch();
+            //$sqlStatus = $this->pdo->prepare("SELECT `status` FROM `docs` WHERE `document_name` = ?");
+            //$sqlStatus->execute([$deleteImg]);
+            $status = self::makeQuery('select', "SELECT `status` FROM `docs` WHERE `document_name` = ?", $deleteImg, 'fetch');
             if($status!=false && $status->status==="signed"){
                 unlink($img);
             }
@@ -275,9 +275,9 @@
 
         private function signHandwritten($documentName, $directorate, $docPath, $signaturePath, $docInfo)
         {
-            $sqlMail = $this->pdo->prepare("SELECT `mail` FROM `directorate_accounts` WHERE `username` =?");
-            $sqlMail->execute([$directorate]);
-            $directorateMail = $sqlMail->fetch();
+            //$sqlMail = $this->pdo->prepare("SELECT `mail` FROM `directorate_accounts` WHERE `username` =?");
+            //$sqlMail->execute([$directorate]);
+            $directorateMail = self::makeQuery('select', "SELECT `mail` FROM `directorate_accounts` WHERE `username` =?", $directorate, 'fetch');
 
             $document = imagecreatefrompng($docPath);
             $directorateSignature = imagecreatefrompng($signaturePath);
@@ -300,13 +300,13 @@
             unlink($docPath);
             unlink($signaturePath);
 
-            $sqlName = $this->pdo->prepare("SELECT `sender` FROM `docs` WHERE `document_name` =?");
-            $sqlName->execute([$fName]);
-            $name = $sqlName->fetch();
+           // $sqlName = $this->pdo->prepare("SELECT `sender` FROM `docs` WHERE `document_name` =?");
+           // $sqlName->execute([$fName]);
+            $name =self::makeQuery('select', "SELECT `sender` FROM `docs` WHERE `document_name` =?", $fName, 'fetch');
             
-            $sqlSender = $this->pdo->prepare("SELECT * FROM `users` WHERE `username` =?");
-            $sqlSender->execute([$name->sender]);
-            $Sender = $sqlSender->fetch();
+           // $sqlSender = $this->pdo->prepare("SELECT * FROM `users` WHERE `username` =?");
+           // $sqlSender->execute([$name->sender]);
+            $Sender = self::makeQuery('select', "SELECT * FROM `users` WHERE `username` =?", $name->sender, 'fetch');
 
             if($Sender->notification == 1){
                 $header = "Ваш документ готовий для завантаження!";
