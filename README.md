@@ -5,7 +5,7 @@ Technologies whitch I used:
   - jQuery and AJAX for asynchronous requests
   - HTML and CSS
   - MySQL
-  - PHPMailer for mail notification
+  - PHPMailer for mail notification.
 Description:
   This project implements a simple DCM-system with options such ass creating, storing, downloading and deleting files.
   This project has such classes:
